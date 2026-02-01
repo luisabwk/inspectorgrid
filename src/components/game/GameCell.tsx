@@ -52,22 +52,27 @@ export const GameCell = ({
   // Get portrait component for placed suspect
   const SuspectPortrait = suspect ? PortraitMap[suspect.portraitId] : null;
   
+  // Build wall border styles
+  const wallStyles: React.CSSProperties = {
+    backgroundColor: roomColor || 'hsl(var(--muted))',
+    borderTopWidth: cell.walls.includes('top') ? '3px' : '1px',
+    borderRightWidth: cell.walls.includes('right') ? '3px' : '1px',
+    borderBottomWidth: cell.walls.includes('bottom') ? '3px' : '1px',
+    borderLeftWidth: cell.walls.includes('left') ? '3px' : '1px',
+    borderTopColor: cell.walls.includes('top') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
+    borderRightColor: cell.walls.includes('right') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
+    borderBottomColor: cell.walls.includes('bottom') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
+    borderLeftColor: cell.walls.includes('left') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
+  };
+
   return (
     <div
       className={cn(
-        "relative aspect-square flex items-center justify-center transition-all duration-150",
-        "border border-border/50 rounded-sm",
+        "relative aspect-square flex items-center justify-center transition-all duration-150 border-solid",
         isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
-        isSelected && "ring-2 ring-primary ring-offset-1 ring-offset-background",
-        // Wall styles
-        cell.walls.includes('top') && "border-t-2 border-t-foreground/70",
-        cell.walls.includes('right') && "border-r-2 border-r-foreground/70",
-        cell.walls.includes('bottom') && "border-b-2 border-b-foreground/70",
-        cell.walls.includes('left') && "border-l-2 border-l-foreground/70",
+        isSelected && "ring-2 ring-primary ring-inset",
       )}
-      style={{
-        backgroundColor: roomColor || 'hsl(var(--muted))',
-      }}
+      style={wallStyles}
       onClick={handleClick}
       onDrop={handleDrop}
       onDragOver={onDragOver}
@@ -85,7 +90,7 @@ export const GameCell = ({
       {/* Suspect layer (overlay) */}
       {suspect && SuspectPortrait && (
         <div 
-          className="absolute inset-0.5 flex items-center justify-center z-10 rounded-sm overflow-hidden"
+          className="absolute inset-0 flex items-center justify-center z-10 overflow-hidden"
           style={{ 
             backgroundColor: `${suspect.color.replace(')', ' / 0.15)').replace('hsl(', 'hsla(')}`,
           }}

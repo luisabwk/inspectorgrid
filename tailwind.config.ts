@@ -62,6 +62,7 @@ export default {
           kitchen: "hsl(var(--room-kitchen))",
           study: "hsl(var(--room-study))",
           guest: "hsl(var(--room-guest))",
+          corridor: "hsl(var(--room-corridor))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

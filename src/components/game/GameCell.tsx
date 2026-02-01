@@ -9,6 +9,7 @@ interface GameCellProps {
   pencilMarks: string[];
   suspects: Suspect[];
   isSelected: boolean;
+  isHighlighted: boolean;
   isPencilMode: boolean;
   roomColor?: string;
   // Walls info from neighboring cells for proper rendering
@@ -32,6 +33,7 @@ export const GameCell = ({
   pencilMarks,
   suspects,
   isSelected,
+  isHighlighted,
   isPencilMode,
   roomColor,
   hasWallTop,
@@ -82,6 +84,7 @@ export const GameCell = ({
         "border-r border-b border-foreground/10",
         isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
         isSelected && "ring-2 ring-primary ring-inset",
+        isHighlighted && !isSelected && "brightness-[0.92]",
       )}
       style={{
         backgroundColor: roomColor || 'hsl(var(--muted))',

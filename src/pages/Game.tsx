@@ -9,7 +9,8 @@ import { CluesPanel } from "@/components/game/CluesPanel";
 import { GameControls } from "@/components/game/GameControls";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, Trophy, XCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowLeft, Trophy, XCircle, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Game = () => {
@@ -79,7 +80,19 @@ const Game = () => {
             </Button>
           </div>
           <div className="text-center">
-            <h1 className="text-lg font-bold text-foreground">{testCase.title}</h1>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <h1 className="text-lg font-bold text-foreground cursor-help inline-flex items-center gap-1.5">
+                    {testCase.title}
+                    <Info className="w-3.5 h-3.5 text-muted-foreground" />
+                  </h1>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs text-center">
+                  <p className="text-sm">{testCase.description}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <p className="text-xs text-muted-foreground">
               {placedCount}/{totalSuspects} suspeitos posicionados
             </p>
@@ -147,15 +160,6 @@ const Game = () => {
             {/* Clues */}
             <CluesPanel clues={testCase.clues} />
 
-            {/* Case Description */}
-            <div className="bg-card border border-border rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-2 uppercase tracking-wide">
-                O Caso
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {testCase.description}
-              </p>
-            </div>
           </div>
         </div>
       </main>

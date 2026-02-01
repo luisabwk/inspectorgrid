@@ -2,6 +2,8 @@
 export type AssetType = 
   | 'empty'
   | 'bed'
+  | 'bed_head'
+  | 'bed_foot'
   | 'sofa'
   | 'armchair'
   | 'rug'
@@ -14,7 +16,7 @@ export type AssetType =
   | 'debris';
 
 // Assets that allow suspects
-export const OCCUPIABLE_ASSETS: AssetType[] = ['empty', 'bed', 'sofa', 'armchair', 'rug', 'window'];
+export const OCCUPIABLE_ASSETS: AssetType[] = ['empty', 'bed', 'bed_head', 'bed_foot', 'sofa', 'armchair', 'rug', 'window'];
 
 // Assets that block suspects
 export const BLOCKED_ASSETS: AssetType[] = ['plant', 'table', 'tv', 'bookshelf', 'rock', 'debris'];

@@ -88,11 +88,11 @@ export const testCase: GameCase = {
   layoutConfig: {
     cells: generateTestGrid(),
     rooms: [
-      { id: 'living', name: 'Sala de Estar', color: 'hsl(30 60% 85%)' },
-      { id: 'bedroom', name: 'Quarto', color: 'hsl(280 40% 90%)' },
-      { id: 'kitchen', name: 'Cozinha', color: 'hsl(45 60% 88%)' },
-      { id: 'study', name: 'Escritório', color: 'hsl(150 30% 88%)' },
-      { id: 'main', name: 'Corredor', color: 'hsl(30 30% 92%)' },
+      { id: 'living', name: 'Sala de Estar', color: 'hsl(30 50% 82%)' },
+      { id: 'bedroom', name: 'Quarto', color: 'hsl(280 35% 88%)' },
+      { id: 'kitchen', name: 'Cozinha', color: 'hsl(45 50% 85%)' },
+      { id: 'study', name: 'Escritório', color: 'hsl(150 30% 85%)' },
+      { id: 'main', name: 'Corredor', color: 'hsl(30 20% 90%)' },
     ],
   },
   suspects: [

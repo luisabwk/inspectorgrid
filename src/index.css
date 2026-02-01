@@ -18,8 +18,8 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 20%;
 
-    /* Warm terracotta accent */
-    --primary: 15 70% 50%;
+    /* Purple accent */
+    --primary: 280 60% 55%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 30 30% 90%;
@@ -36,7 +36,7 @@ All colors MUST be HSL.
 
     --border: 30 20% 85%;
     --input: 30 20% 92%;
-    --ring: 15 70% 50%;
+    --ring: 280 60% 55%;
 
     --radius: 0.5rem;
 
@@ -49,21 +49,22 @@ All colors MUST be HSL.
     --info-foreground: 0 0% 100%;
 
     /* Game-specific colors */
-    --room-living: 30 60% 85%;
-    --room-bedroom: 280 40% 90%;
-    --room-bathroom: 200 50% 88%;
-    --room-kitchen: 45 60% 88%;
-    --room-study: 150 30% 88%;
-    --room-guest: 15 50% 90%;
+    --room-living: 30 50% 82%;
+    --room-bedroom: 280 35% 88%;
+    --room-bathroom: 200 45% 85%;
+    --room-kitchen: 45 50% 85%;
+    --room-study: 150 30% 85%;
+    --room-guest: 15 40% 87%;
+    --room-corridor: 30 20% 90%;
 
     --sidebar-background: 30 30% 95%;
     --sidebar-foreground: 240 10% 30%;
-    --sidebar-primary: 15 70% 50%;
+    --sidebar-primary: 280 60% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 30 30% 90%;
     --sidebar-accent-foreground: 240 10% 20%;
     --sidebar-border: 30 20% 85%;
-    --sidebar-ring: 15 70% 50%;
+    --sidebar-ring: 280 60% 55%;
   }
 }
 

@@ -159,12 +159,23 @@ export const ArmchairIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
+// 60-degree perspective rug - flat on floor with subtle depth
 export const RugIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="6" y="14" width="36" height="20" rx="1" fill="#C4A77D" />
-    <rect x="10" y="18" width="28" height="12" rx="1" fill="#D4B88D" stroke="#A68B5B" strokeWidth="1" />
-    <path d="M10 18h28M10 30h28" stroke="#A68B5B" strokeWidth="0.5" />
-    <circle cx="24" cy="24" r="4" fill="#E8D4BE" stroke="#A68B5B" strokeWidth="0.5" />
+    {/* Rug base - top surface */}
+    <rect x="4" y="8" width="40" height="28" fill="#C4A77D" />
+    {/* Rug front edge - slight depth */}
+    <rect x="4" y="36" width="40" height="2" fill="#A68B5B" />
+    {/* Inner pattern border */}
+    <rect x="8" y="12" width="32" height="20" fill="#D4B88D" stroke="#A68B5B" strokeWidth="1" />
+    {/* Center medallion */}
+    <ellipse cx="24" cy="22" rx="8" ry="6" fill="#E8D4BE" />
+    <ellipse cx="24" cy="22" rx="5" ry="4" fill="#C4A77D" />
+    {/* Corner decorations */}
+    <rect x="10" y="14" width="4" height="4" fill="#A68B5B" />
+    <rect x="34" y="14" width="4" height="4" fill="#A68B5B" />
+    <rect x="10" y="26" width="4" height="4" fill="#A68B5B" />
+    <rect x="34" y="26" width="4" height="4" fill="#A68B5B" />
   </svg>
 );
 
@@ -180,14 +191,26 @@ export const WindowIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
+// 60-degree perspective plant with pot
 export const PlantIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="16" y="32" width="16" height="12" rx="2" fill="#D4A574" />
-    <rect x="18" y="34" width="12" height="8" rx="1" fill="#8B5A2B" />
-    <ellipse cx="24" cy="26" rx="10" ry="12" fill="#4A7C59" />
-    <ellipse cx="20" cy="22" rx="6" ry="8" fill="#5D9B6E" />
-    <ellipse cx="28" cy="24" rx="5" ry="7" fill="#5D9B6E" />
-    <ellipse cx="24" cy="18" rx="4" ry="6" fill="#6BAF7C" />
+    {/* Pot - back */}
+    <rect x="14" y="28" width="20" height="4" fill="#8B5A2B" />
+    {/* Pot - top surface */}
+    <rect x="16" y="26" width="16" height="6" fill="#D4A574" />
+    {/* Pot - front face */}
+    <rect x="14" y="32" width="20" height="10" fill="#A0704D" />
+    {/* Pot rim */}
+    <rect x="14" y="30" width="20" height="3" fill="#C4956A" />
+    {/* Soil visible */}
+    <ellipse cx="24" cy="28" rx="7" ry="2" fill="#5A3A20" />
+    {/* Foliage - layered leaves from back to front */}
+    <ellipse cx="24" cy="14" rx="6" ry="8" fill="#4A7C59" />
+    <ellipse cx="18" cy="18" rx="5" ry="6" fill="#5D9B6E" />
+    <ellipse cx="30" cy="18" rx="5" ry="6" fill="#5D9B6E" />
+    <ellipse cx="24" cy="20" rx="7" ry="5" fill="#6BAF7C" />
+    <ellipse cx="21" cy="16" rx="3" ry="4" fill="#7CC98D" />
+    <ellipse cx="27" cy="16" rx="3" ry="4" fill="#7CC98D" />
   </svg>
 );
 
@@ -266,45 +289,113 @@ export const TableIcon = ({
   );
 };
 
+// 60-degree perspective TV on stand
 export const TvIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="6" y="12" width="36" height="24" rx="2" fill="#2C2C2C" />
-    <rect x="8" y="14" width="32" height="20" rx="1" fill="#4A90A4" />
-    <rect x="20" y="36" width="8" height="2" fill="#2C2C2C" />
-    <rect x="14" y="38" width="20" height="3" rx="1" fill="#3C3C3C" />
+    {/* Stand legs */}
+    <rect x="14" y="38" width="3" height="6" fill="#1C1C1C" />
+    <rect x="31" y="38" width="3" height="6" fill="#1C1C1C" />
+    {/* Stand base - top surface */}
+    <rect x="10" y="36" width="28" height="4" fill="#3C3C3C" />
+    {/* Stand base - front face */}
+    <rect x="10" y="40" width="28" height="2" fill="#2C2C2C" />
+    {/* TV frame - back */}
+    <rect x="4" y="6" width="40" height="28" fill="#1C1C1C" />
+    {/* TV screen - top surface with reflection */}
+    <rect x="6" y="8" width="36" height="24" fill="#2A4A5A" />
+    <rect x="6" y="8" width="36" height="8" fill="#3A6A7A" opacity="0.5" />
+    {/* TV frame - front face */}
+    <rect x="4" y="34" width="40" height="2" fill="#2C2C2C" />
+    {/* Screen highlight */}
+    <rect x="8" y="10" width="8" height="4" fill="#4A8A9A" opacity="0.3" />
   </svg>
 );
 
+// 60-degree perspective bookshelf
 export const BookshelfIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8" y="6" width="32" height="36" fill="#8B7355" />
-    <rect x="10" y="8" width="28" height="8" fill="#6B5A48" />
-    <rect x="10" y="18" width="28" height="8" fill="#6B5A48" />
-    <rect x="10" y="28" width="28" height="8" fill="#6B5A48" />
-    <rect x="12" y="10" width="4" height="5" fill="#C75B5B" />
-    <rect x="17" y="9" width="3" height="6" fill="#5B8BC7" />
-    <rect x="21" y="10" width="5" height="5" fill="#5BC77C" />
-    <rect x="28" y="9" width="4" height="6" fill="#C7A85B" />
-    <rect x="14" y="20" width="5" height="5" fill="#7B5BC7" />
-    <rect x="20" y="19" width="4" height="6" fill="#C75B8B" />
-    <rect x="26" y="20" width="6" height="5" fill="#5BC7C7" />
+    {/* Back legs */}
+    <rect x="8" y="4" width="3" height="6" fill="#4A3D30" />
+    <rect x="37" y="4" width="3" height="6" fill="#4A3D30" />
+    {/* Front legs */}
+    <rect x="8" y="40" width="3" height="6" fill="#5A4A3A" />
+    <rect x="37" y="40" width="3" height="6" fill="#5A4A3A" />
+    
+    {/* Frame - top surface */}
+    <rect x="6" y="6" width="36" height="34" fill="#8B7355" />
+    {/* Frame - front face */}
+    <rect x="6" y="40" width="36" height="3" fill="#6B5A48" />
+    
+    {/* Shelves - 3 levels */}
+    <rect x="8" y="8" width="32" height="8" fill="#6B5A48" />
+    <rect x="8" y="18" width="32" height="8" fill="#6B5A48" />
+    <rect x="8" y="28" width="32" height="8" fill="#6B5A48" />
+    
+    {/* Books on top shelf */}
+    <rect x="10" y="9" width="4" height="6" fill="#C75B5B" />
+    <rect x="15" y="8" width="3" height="7" fill="#5B8BC7" />
+    <rect x="19" y="9" width="5" height="6" fill="#5BC77C" />
+    <rect x="25" y="8" width="4" height="7" fill="#C7A85B" />
+    <rect x="30" y="9" width="3" height="6" fill="#9B7BC7" />
+    
+    {/* Books on middle shelf */}
+    <rect x="10" y="19" width="5" height="6" fill="#7B5BC7" />
+    <rect x="16" y="18" width="4" height="7" fill="#C75B8B" />
+    <rect x="21" y="19" width="6" height="6" fill="#5BC7C7" />
+    <rect x="28" y="18" width="4" height="7" fill="#C7875B" />
+    
+    {/* Books on bottom shelf */}
+    <rect x="10" y="29" width="4" height="6" fill="#5B8BC7" />
+    <rect x="15" y="28" width="5" height="7" fill="#8BC75B" />
+    <rect x="21" y="29" width="3" height="6" fill="#C75B5B" />
+    <rect x="25" y="28" width="6" height="7" fill="#5BC7A8" />
   </svg>
 );
 
+// 60-degree perspective rock formation
 export const RockIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 32 L16 24 L24 28 L32 22 L40 30 L36 36 L12 36 Z" fill="#8B8B8B" />
-    <path d="M12 30 L18 26 L22 28 L16 32 Z" fill="#A0A0A0" />
-    <path d="M26 28 L32 24 L36 30 L30 32 Z" fill="#707070" />
+    {/* Shadow/base */}
+    <ellipse cx="24" cy="40" rx="16" ry="4" fill="#505050" opacity="0.3" />
+    {/* Main rock body - back */}
+    <path d="M10 32 L18 18 L28 14 L38 20 L40 34 L34 40 L14 40 Z" fill="#707070" />
+    {/* Main rock body - top surface */}
+    <path d="M12 30 L18 18 L28 14 L36 20 L34 32 L20 34 Z" fill="#909090" />
+    {/* Rock face - front */}
+    <path d="M12 30 L20 34 L14 40 L10 36 Z" fill="#606060" />
+    <path d="M20 34 L34 32 L34 40 L14 40 Z" fill="#585858" />
+    {/* Highlight */}
+    <path d="M20 20 L26 16 L30 20 L24 24 Z" fill="#A0A0A0" opacity="0.5" />
+    {/* Crack details */}
+    <line x1="22" y1="24" x2="26" y2="34" stroke="#505050" strokeWidth="1" />
   </svg>
 );
 
+// 60-degree perspective debris/rubble
 export const DebrisIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="10" y="28" width="8" height="6" fill="#B87333" transform="rotate(-10 10 28)" />
-    <rect x="22" y="30" width="10" height="5" fill="#A0522D" transform="rotate(5 22 30)" />
-    <rect x="30" y="26" width="6" height="8" fill="#CD853F" transform="rotate(-5 30 26)" />
-    <rect x="16" y="32" width="7" height="4" fill="#8B4513" transform="rotate(8 16 32)" />
+    {/* Shadow */}
+    <ellipse cx="24" cy="40" rx="18" ry="4" fill="#3A2A1A" opacity="0.3" />
+    
+    {/* Large plank - back */}
+    <rect x="6" y="26" width="16" height="4" fill="#8B6914" transform="rotate(-15 6 26)" />
+    <rect x="6" y="30" width="16" height="2" fill="#6B5010" transform="rotate(-15 6 26)" />
+    
+    {/* Medium plank - middle */}
+    <rect x="20" y="28" width="14" height="4" fill="#A0784B" transform="rotate(8 20 28)" />
+    <rect x="20" y="32" width="14" height="2" fill="#7A5A38" transform="rotate(8 20 28)" />
+    
+    {/* Small plank - front */}
+    <rect x="28" y="32" width="10" height="3" fill="#CD9B5F" transform="rotate(-5 28 32)" />
+    <rect x="28" y="35" width="10" height="1.5" fill="#A07A48" transform="rotate(-5 28 32)" />
+    
+    {/* Broken piece */}
+    <polygon points="12,34 18,32 20,38 14,40" fill="#9B7333" />
+    <polygon points="14,40 20,38 18,42" fill="#7A5A28" />
+    
+    {/* Small fragments */}
+    <rect x="32" y="36" width="4" height="3" fill="#B8864B" transform="rotate(20 32 36)" />
+    <rect x="8" y="38" width="3" height="2" fill="#8B6914" transform="rotate(-10 8 38)" />
   </svg>
 );
 

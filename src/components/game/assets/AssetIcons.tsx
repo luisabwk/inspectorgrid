@@ -77,11 +77,19 @@ export const PlantIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
+// Top-down table view - simple rectangular surface
 export const TableIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="6" y="18" width="36" height="4" rx="1" fill="#8B7355" />
-    <rect x="10" y="22" width="4" height="18" fill="#6B5A48" />
-    <rect x="34" y="22" width="4" height="18" fill="#6B5A48" />
+    {/* Table surface (top-down view) */}
+    <rect x="4" y="4" width="40" height="40" rx="2" fill="#8B7355" />
+    {/* Inner surface with slight color variation */}
+    <rect x="6" y="6" width="36" height="36" rx="1" fill="#A68B5B" />
+    {/* Wood grain lines */}
+    <line x1="6" y1="14" x2="42" y2="14" stroke="#9A7F4F" strokeWidth="0.5" opacity="0.6" />
+    <line x1="6" y1="24" x2="42" y2="24" stroke="#9A7F4F" strokeWidth="0.5" opacity="0.6" />
+    <line x1="6" y1="34" x2="42" y2="34" stroke="#9A7F4F" strokeWidth="0.5" opacity="0.6" />
+    {/* Subtle shadow on edges for depth */}
+    <rect x="6" y="6" width="36" height="36" rx="1" fill="none" stroke="#6B5A48" strokeWidth="1" opacity="0.3" />
   </svg>
 );
 

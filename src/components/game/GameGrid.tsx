@@ -90,37 +90,53 @@ export const GameGrid = ({
     };
   };
 
-  // Calculate room labels
+  // Calculate room labels with positions (center of each room)
   const roomLabels = useMemo(() => {
-    const labels: RoomLabel[] = [];
-    const seenRooms = new Set<string>();
+    const labelMap: Record<string, { id: string; name: string; color: string; minRow: number; maxRow: number; minCol: number; maxCol: number }> = {};
 
-    rooms.forEach((room) => {
-      if (!seenRooms.has(room.id) && room.id !== 'main') {
-        seenRooms.add(room.id);
-        labels.push({
-          id: room.id,
-          name: room.name,
-          color: room.color,
-        });
+    // Find bounds of each room
+    cells.flat().forEach((cell) => {
+      if (cell.roomId && cell.roomId !== 'main') {
+        if (!labelMap[cell.roomId]) {
+          const room = rooms.find(r => r.id === cell.roomId);
+          if (room) {
+            labelMap[cell.roomId] = {
+              id: room.id,
+              name: room.name,
+              color: room.color,
+              minRow: cell.row,
+              maxRow: cell.row,
+              minCol: cell.col,
+              maxCol: cell.col,
+            };
+          }
+        } else {
+          labelMap[cell.roomId].minRow = Math.min(labelMap[cell.roomId].minRow, cell.row);
+          labelMap[cell.roomId].maxRow = Math.max(labelMap[cell.roomId].maxRow, cell.row);
+          labelMap[cell.roomId].minCol = Math.min(labelMap[cell.roomId].minCol, cell.col);
+          labelMap[cell.roomId].maxCol = Math.max(labelMap[cell.roomId].maxCol, cell.col);
+        }
       }
     });
 
-    return labels;
-  }, [rooms]);
+    return Object.values(labelMap).map(room => ({
+      ...room,
+      centerRow: (room.minRow + room.maxRow) / 2,
+      centerCol: (room.minCol + room.maxCol) / 2,
+    }));
+  }, [cells, rooms]);
   
+  const cellSizePercent = 100 / gridSize;
+
   return (
-    <div className="relative">
+    <div className="relative" style={{ maxWidth: '500px', width: '100%' }}>
       {/* Main Grid */}
       <div 
-        className="bg-card border-[3px] border-foreground/70 rounded-sm overflow-hidden shadow-lg"
+        className="relative bg-card border-[3px] border-foreground/70 rounded-sm overflow-hidden shadow-lg"
         style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-          gap: '0px',
           aspectRatio: '1',
-          maxWidth: '500px',
-          width: '100%',
         }}
       >
         {cells.flat().map((cell) => {
@@ -155,24 +171,25 @@ export const GameGrid = ({
             />
           );
         })}
-      </div>
 
-      {/* Room Labels */}
-      <div className="flex flex-wrap gap-2 mt-3 justify-center">
+        {/* Room Labels Overlay */}
         {roomLabels.map((room) => (
           <div
             key={room.id}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium shadow-sm"
+            className="absolute pointer-events-none flex items-center justify-center"
             style={{
-              backgroundColor: room.color,
-              color: 'hsl(var(--foreground))',
+              left: `${room.centerCol * cellSizePercent}%`,
+              top: `${room.centerRow * cellSizePercent}%`,
+              width: `${cellSizePercent}%`,
+              height: `${cellSizePercent}%`,
             }}
           >
-            <div 
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: 'hsl(var(--foreground) / 0.3)' }}
-            />
-            {room.name}
+            <span 
+              className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider opacity-60 text-center leading-tight px-1"
+              style={{ color: 'hsl(var(--foreground))' }}
+            >
+              {room.name}
+            </span>
           </div>
         ))}
       </div>

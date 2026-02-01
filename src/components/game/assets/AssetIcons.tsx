@@ -21,27 +21,63 @@ export const BedIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
+// 60-degree perspective sofa - more top surface visible
 export const SofaIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="4" y="20" width="40" height="16" rx="3" fill="#7B68A0" />
-    <rect x="8" y="16" width="32" height="8" rx="2" fill="#9580B8" />
-    <rect x="4" y="18" width="6" height="18" rx="2" fill="#6B5A8C" />
-    <rect x="38" y="18" width="6" height="18" rx="2" fill="#6B5A8C" />
-    <rect x="10" y="20" width="12" height="6" rx="1" fill="#A894C8" />
-    <rect x="26" y="20" width="12" height="6" rx="1" fill="#A894C8" />
-    <rect x="6" y="34" width="4" height="6" rx="1" fill="#4A3D5C" />
-    <rect x="38" y="34" width="4" height="6" rx="1" fill="#4A3D5C" />
+    {/* Back legs */}
+    <rect x="6" y="6" width="3" height="8" fill="#3A2D4A" />
+    <rect x="39" y="6" width="3" height="8" fill="#3A2D4A" />
+    {/* Front legs */}
+    <rect x="6" y="36" width="3" height="8" fill="#4A3D5C" />
+    <rect x="39" y="36" width="3" height="8" fill="#4A3D5C" />
+    
+    {/* Backrest - top face */}
+    <rect x="4" y="8" width="40" height="8" fill="#9580B8" />
+    {/* Backrest - front face */}
+    <rect x="4" y="16" width="40" height="4" fill="#7B68A0" />
+    
+    {/* Seat cushion - top face */}
+    <rect x="4" y="20" width="40" height="14" fill="#A894C8" />
+    {/* Seat cushion divider */}
+    <line x1="24" y1="20" x2="24" y2="34" stroke="#9580B8" strokeWidth="1" />
+    {/* Seat cushion - front face */}
+    <rect x="4" y="34" width="40" height="3" fill="#7B68A0" />
+    
+    {/* Armrests - top face */}
+    <rect x="4" y="16" width="6" height="18" fill="#8B7AA8" />
+    <rect x="38" y="16" width="6" height="18" fill="#8B7AA8" />
+    {/* Armrests - front face */}
+    <rect x="4" y="34" width="6" height="3" fill="#6B5A8C" />
+    <rect x="38" y="34" width="6" height="3" fill="#6B5A8C" />
   </svg>
 );
 
+// 60-degree perspective armchair - more top surface visible
 export const ArmchairIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="10" y="22" width="28" height="14" rx="2" fill="#6B8E7B" />
-    <rect x="14" y="16" width="20" height="8" rx="2" fill="#7FA68D" />
-    <rect x="8" y="20" width="6" height="16" rx="2" fill="#5A7D6A" />
-    <rect x="34" y="20" width="6" height="16" rx="2" fill="#5A7D6A" />
-    <rect x="12" y="34" width="4" height="6" rx="1" fill="#3D5247" />
-    <rect x="32" y="34" width="4" height="6" rx="1" fill="#3D5247" />
+    {/* Back legs */}
+    <rect x="10" y="6" width="3" height="8" fill="#2D4237" />
+    <rect x="35" y="6" width="3" height="8" fill="#2D4237" />
+    {/* Front legs */}
+    <rect x="10" y="36" width="3" height="8" fill="#3D5247" />
+    <rect x="35" y="36" width="3" height="8" fill="#3D5247" />
+    
+    {/* Backrest - top face */}
+    <rect x="10" y="8" width="28" height="8" fill="#7FA68D" />
+    {/* Backrest - front face */}
+    <rect x="10" y="16" width="28" height="4" fill="#6B8E7B" />
+    
+    {/* Seat cushion - top face */}
+    <rect x="10" y="20" width="28" height="14" fill="#8FB89F" />
+    {/* Seat cushion - front face */}
+    <rect x="10" y="34" width="28" height="3" fill="#6B8E7B" />
+    
+    {/* Armrests - top face */}
+    <rect x="6" y="16" width="6" height="18" fill="#7FA68D" />
+    <rect x="36" y="16" width="6" height="18" fill="#7FA68D" />
+    {/* Armrests - front face */}
+    <rect x="6" y="34" width="6" height="3" fill="#5A7D6A" />
+    <rect x="36" y="34" width="6" height="3" fill="#5A7D6A" />
   </svg>
 );
 

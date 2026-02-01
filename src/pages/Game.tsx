@@ -5,7 +5,7 @@ import { useGame } from "@/hooks/useGame";
 import { testCase } from "@/data/testCase";
 import { GameGrid } from "@/components/game/GameGrid";
 import { SuspectClueCards } from "@/components/game/SuspectClueCards";
-import { GameControls } from "@/components/game/GameControls";
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -132,7 +132,7 @@ const Game = () => {
             </p>
           )}
 
-          <div className="w-full max-w-[70vw] sm:max-w-[350px] lg:max-w-[400px] aspect-square">
+          <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] aspect-square">
             <GameGrid
               cells={testCase.layoutConfig.cells}
               suspects={testCase.suspects}
@@ -147,15 +147,25 @@ const Game = () => {
             />
           </div>
 
-          {/* Controls */}
-          <GameControls
-            isPencilMode={isPencilMode}
-            onTogglePencilMode={setIsPencilMode}
-            onClearCell={handleClearCell}
-            onResetGame={handleResetGame}
-            onCheckSolution={handleCheckSolution}
-            canCheck={canCheck}
-          />
+          {/* Minimal Controls */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleResetGame}
+              className="h-8 px-3 text-xs"
+            >
+              Reiniciar
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleCheckSolution}
+              disabled={!canCheck}
+              className="h-8 px-4 text-xs"
+            >
+              Verificar
+            </Button>
+          </div>
         </div>
       </main>
 

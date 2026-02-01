@@ -79,6 +79,7 @@ export const GameCell = ({
     <div
       className={cn(
         "relative aspect-square flex items-center justify-center transition-all duration-150",
+        "border-r border-b border-foreground/10",
         isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
         isSelected && "ring-2 ring-primary ring-inset",
       )}
@@ -152,7 +153,7 @@ export const GameCell = ({
       {cell.asset !== 'empty' && !isWindowCell && (
         <div className={cn(
           "absolute inset-1 flex items-center justify-center",
-          !isOccupiable && "opacity-80"
+          isOccupiable ? "opacity-70" : "opacity-80"
         )}>
           <AssetIcon className="w-full h-full" />
         </div>

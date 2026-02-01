@@ -115,7 +115,7 @@ const Game = () => {
             </p>
           )}
 
-          <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] aspect-square">
+          <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] mx-auto">
             <GameGrid
               cells={testCase.layoutConfig.cells}
               suspects={testCase.suspects}

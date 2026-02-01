@@ -32,6 +32,11 @@ const hasWindowAsset = (cell: Cell | undefined): boolean => {
   return cell?.asset === 'window';
 };
 
+// Helper to check if cell has table asset
+const hasTableAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'table';
+};
+
 export const GameGrid = ({
   cells,
   suspects,
@@ -82,6 +87,12 @@ export const GameGrid = ({
     const hasWindowLeft = hasWallLeft && (hasWindowAsset(cell) || hasWindowAsset(leftCell));
     const hasWindowRight = hasWallRight && (hasWindowAsset(cell) || hasWindowAsset(rightCell));
 
+    // Table connections - check if adjacent cells also have tables
+    const hasTableTop = hasTableAsset(cell) && hasTableAsset(topCell);
+    const hasTableBottom = hasTableAsset(cell) && hasTableAsset(bottomCell);
+    const hasTableLeft = hasTableAsset(cell) && hasTableAsset(leftCell);
+    const hasTableRight = hasTableAsset(cell) && hasTableAsset(rightCell);
+
     return {
       hasWallTop,
       hasWallBottom,
@@ -91,6 +102,10 @@ export const GameGrid = ({
       hasWindowBottom,
       hasWindowLeft,
       hasWindowRight,
+      hasTableTop,
+      hasTableBottom,
+      hasTableLeft,
+      hasTableRight,
     };
   };
 
@@ -190,6 +205,10 @@ export const GameGrid = ({
               hasWindowBottom={wallInfo.hasWindowBottom}
               hasWindowLeft={wallInfo.hasWindowLeft}
               hasWindowRight={wallInfo.hasWindowRight}
+              hasTableTop={wallInfo.hasTableTop}
+              hasTableBottom={wallInfo.hasTableBottom}
+              hasTableLeft={wallInfo.hasTableLeft}
+              hasTableRight={wallInfo.hasTableRight}
               onCellClick={onCellClick}
               onCellDrop={onCellDrop}
               onDragOver={onDragOver}

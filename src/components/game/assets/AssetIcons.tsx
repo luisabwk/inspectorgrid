@@ -77,15 +77,67 @@ export const PlantIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
-// Top-down table view - simple wooden surface with border frame
-export const TableIcon = ({ className }: AssetIconProps) => (
-  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Table frame/border */}
-    <rect x="4" y="4" width="40" height="40" rx="1" fill="#6B5A48" />
-    {/* Table surface */}
-    <rect x="6" y="6" width="36" height="36" rx="0.5" fill="#A68B5B" />
-  </svg>
-);
+// Near-aerial table view with visible legs - supports connection to adjacent tables
+interface TableIconProps {
+  className?: string;
+  connectedTop?: boolean;
+  connectedBottom?: boolean;
+  connectedLeft?: boolean;
+  connectedRight?: boolean;
+}
+
+export const TableIcon = ({ 
+  className, 
+  connectedTop = false, 
+  connectedBottom = false, 
+  connectedLeft = false, 
+  connectedRight = false 
+}: TableIconProps) => {
+  // Calculate surface bounds based on connections
+  const surfaceTop = connectedTop ? 0 : 6;
+  const surfaceBottom = connectedBottom ? 48 : 42;
+  const surfaceLeft = connectedLeft ? 0 : 6;
+  const surfaceRight = connectedRight ? 48 : 42;
+  
+  return (
+    <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Legs (only show on non-connected sides) */}
+      {/* Top-left leg */}
+      {!connectedTop && !connectedLeft && (
+        <rect x="4" y="2" width="6" height="8" rx="1" fill="#5A4A3A" />
+      )}
+      {/* Top-right leg */}
+      {!connectedTop && !connectedRight && (
+        <rect x="38" y="2" width="6" height="8" rx="1" fill="#5A4A3A" />
+      )}
+      {/* Bottom-left leg */}
+      {!connectedBottom && !connectedLeft && (
+        <rect x="4" y="40" width="6" height="6" rx="1" fill="#4A3D30" />
+      )}
+      {/* Bottom-right leg */}
+      {!connectedBottom && !connectedRight && (
+        <rect x="38" y="40" width="6" height="6" rx="1" fill="#4A3D30" />
+      )}
+      
+      {/* Table surface frame */}
+      <rect 
+        x={surfaceLeft} 
+        y={surfaceTop} 
+        width={surfaceRight - surfaceLeft} 
+        height={surfaceBottom - surfaceTop} 
+        fill="#6B5A48" 
+      />
+      {/* Table surface */}
+      <rect 
+        x={surfaceLeft + (connectedLeft ? 0 : 2)} 
+        y={surfaceTop + (connectedTop ? 0 : 2)} 
+        width={surfaceRight - surfaceLeft - (connectedLeft ? 0 : 2) - (connectedRight ? 0 : 2)} 
+        height={surfaceBottom - surfaceTop - (connectedTop ? 0 : 2) - (connectedBottom ? 0 : 2)} 
+        fill="#A68B5B" 
+      />
+    </svg>
+  );
+};
 
 export const TvIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">

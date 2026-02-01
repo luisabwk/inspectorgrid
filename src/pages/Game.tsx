@@ -9,7 +9,7 @@ import { CluesPanel } from "@/components/game/CluesPanel";
 import { GameControls } from "@/components/game/GameControls";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ArrowLeft, Trophy, XCircle, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -80,19 +80,17 @@ const Game = () => {
             </Button>
           </div>
           <div className="text-center">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <h1 className="text-lg font-bold text-foreground cursor-help inline-flex items-center gap-1.5">
-                    {testCase.title}
-                    <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                  </h1>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-xs text-center">
-                  <p className="text-sm">{testCase.description}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Popover>
+              <PopoverTrigger asChild>
+                <h1 className="text-lg font-bold text-foreground cursor-pointer inline-flex items-center gap-1.5">
+                  {testCase.title}
+                  <Info className="w-3.5 h-3.5 text-muted-foreground" />
+                </h1>
+              </PopoverTrigger>
+              <PopoverContent side="bottom" className="max-w-xs text-center">
+                <p className="text-sm">{testCase.description}</p>
+              </PopoverContent>
+            </Popover>
             <p className="text-xs text-muted-foreground">
               {placedCount}/{totalSuspects} suspeitos posicionados
             </p>

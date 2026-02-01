@@ -84,12 +84,12 @@ export const testCase: GameCase = {
     ],
   },
   suspects: [
-    { id: 'suspect-1', name: 'Coronel Mostarda', portraitId: 'portrait6', color: 'hsl(45 90% 50%)' },
-    { id: 'suspect-2', name: 'Professora Violeta', portraitId: 'portrait2', color: 'hsl(280 60% 65%)' },
-    { id: 'suspect-3', name: 'Srta. Scarlet', portraitId: 'portrait7', color: 'hsl(0 85% 60%)' },
-    { id: 'suspect-4', name: 'Dr. Orchid', portraitId: 'portrait3', color: 'hsl(150 60% 45%)' },
-    { id: 'suspect-5', name: 'Chef White', portraitId: 'portrait8', color: 'hsl(0 0% 95%)' },
-    { id: 'suspect-6', name: 'Mordomo Black', portraitId: 'portrait4', color: 'hsl(220 15% 30%)' },
+    { id: 'suspect-1', name: 'Alberto', portraitId: 'portrait6', color: 'hsl(45 90% 50%)' },
+    { id: 'suspect-2', name: 'Beatriz', portraitId: 'portrait2', color: 'hsl(280 60% 65%)' },
+    { id: 'suspect-3', name: 'Carlos', portraitId: 'portrait3', color: 'hsl(150 60% 45%)' },
+    { id: 'suspect-4', name: 'Diana', portraitId: 'portrait7', color: 'hsl(0 85% 60%)' },
+    { id: 'suspect-5', name: 'Eduardo', portraitId: 'portrait8', color: 'hsl(200 70% 50%)' },
+    { id: 'suspect-6', name: 'Vitória', portraitId: 'portrait4', color: 'hsl(0 0% 25%)', isVictim: true },
   ],
   solution: {
     'suspect-1': { row: 0, col: 0 }, // Coronel no sofá
@@ -100,11 +100,11 @@ export const testCase: GameCase = {
     'suspect-6': { row: 5, col: 5 }, // Mordomo no tapete do escritório
   },
   clues: [
-    { id: 'clue-1', text: 'O Coronel Mostarda estava relaxando no sofá da sala quando ouviu o grito.', type: 'position' },
-    { id: 'clue-2', text: 'A Professora Violeta estava dormindo no quarto.', type: 'room' },
-    { id: 'clue-3', text: 'A Srta. Scarlet estava no corredor, mas não perto da cozinha.', type: 'position' },
-    { id: 'clue-4', text: 'O Dr. Orchid não estava adjacente a nenhuma parede externa.', type: 'position' },
-    { id: 'clue-5', text: 'O Chef White estava próximo à cozinha, mas não dentro dela.', type: 'adjacency' },
-    { id: 'clue-6', text: 'O Mordomo Black foi visto pela última vez no escritório.', type: 'room' },
+    { id: 'clue-1', text: 'Alberto estava relaxando no sofá da sala quando ouviu o grito.', type: 'position' },
+    { id: 'clue-2', text: 'Beatriz estava dormindo no quarto.', type: 'room' },
+    { id: 'clue-3', text: 'Carlos estava no corredor, mas não perto da cozinha.', type: 'position' },
+    { id: 'clue-4', text: 'Diana não estava adjacente a nenhuma parede externa.', type: 'position' },
+    { id: 'clue-5', text: 'Eduardo estava próximo à cozinha, mas não dentro dela.', type: 'adjacency' },
+    { id: 'clue-6', text: 'Vitória foi vista pela última vez no escritório.', type: 'room' },
   ],
 };

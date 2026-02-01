@@ -11,16 +11,10 @@ interface SuspectClueCardsProps {
   onSuspectDragStart: (e: React.DragEvent, suspectId: string) => void;
 }
 
-// Map suspect names to their clues (simplistic matching by name in clue text)
+// Map suspect names to their clues
 const findClueForSuspect = (suspect: Suspect, clues: Clue[]): Clue | undefined => {
-  // Extract first name for matching
-  const firstName = suspect.name.split(' ')[0];
-  const lastName = suspect.name.split(' ').slice(1).join(' ');
-  
   return clues.find(clue => 
-    clue.text.toLowerCase().includes(suspect.name.toLowerCase()) ||
-    clue.text.toLowerCase().includes(firstName.toLowerCase()) ||
-    (lastName && clue.text.toLowerCase().includes(lastName.toLowerCase()))
+    clue.text.toLowerCase().includes(suspect.name.toLowerCase())
   );
 };
 
@@ -39,7 +33,7 @@ export const SuspectClueCards = ({
       <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
         Suspeitos & Pistas
       </h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {suspects.map((suspect) => {
           const isPlaced = placedSuspects.has(suspect.id);
           const isSelected = selectedSuspect === suspect.id;
@@ -57,7 +51,7 @@ export const SuspectClueCards = ({
                 onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
                 onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
                 className={cn(
-                  "relative flex flex-col items-center p-2 rounded-lg border-4 transition-all cursor-pointer bg-card",
+                  "relative flex flex-col items-center p-3 rounded-lg border-4 transition-all cursor-pointer bg-card",
                   "hover:shadow-lg hover:scale-[1.02]",
                   isPlaced && "opacity-50 cursor-not-allowed",
                   isSelected && "ring-2 ring-offset-2 ring-offset-background shadow-lg scale-[1.02]",
@@ -69,7 +63,7 @@ export const SuspectClueCards = ({
               >
                 {/* Portrait */}
                 <div 
-                  className="w-12 h-14 sm:w-14 sm:h-16 drop-shadow-sm"
+                  className="w-16 h-20 sm:w-20 sm:h-24 drop-shadow-sm flex-shrink-0"
                   style={{ color: suspect.color }}
                 >
                   {Portrait && <Portrait className="w-full h-full" />}
@@ -77,22 +71,25 @@ export const SuspectClueCards = ({
                 
                 {/* Name Banner */}
                 <div 
-                  className="w-full text-center py-1 -mx-2 mt-1 rounded-b"
+                  className="w-[calc(100%+24px)] text-center py-1.5 -mx-3 mt-2 -mb-3 rounded-b-md"
                   style={{ 
                     backgroundColor: suspect.color,
                   }}
                 >
-                  <p className="text-xs font-bold text-white drop-shadow-sm leading-tight px-1" style={{
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                  <p className="text-sm font-bold text-white drop-shadow-sm px-2" style={{
+                    textShadow: '0 1px 2px rgba(0,0,0,0.4)'
                   }}>
-                    {suspect.name.split(' ')[0]}
+                    {suspect.name}
                   </p>
+                  {suspect.isVictim && (
+                    <p className="text-[10px] text-white/80 font-medium -mt-0.5">A Vítima</p>
+                  )}
                 </div>
 
                 {/* Placed indicator */}
                 {isPlaced && (
                   <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-lg">
-                    <span className="text-xs font-medium text-muted-foreground">✓</span>
+                    <span className="text-lg font-bold text-muted-foreground">✓</span>
                   </div>
                 )}
               </div>
@@ -100,13 +97,9 @@ export const SuspectClueCards = ({
               {/* Clue attached below */}
               {clue && (
                 <div 
-                  className="relative mt-[-4px] mx-1 p-2 bg-card border border-border rounded-b-lg shadow-sm"
-                  style={{
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                  }}
+                  className="mt-1 mx-0.5 p-2 bg-card border border-border rounded-lg shadow-sm"
                 >
-                  <p className="text-[10px] sm:text-xs text-foreground leading-tight">
+                  <p className="text-[11px] sm:text-xs text-foreground leading-snug">
                     {formatClueText(clue.text, suspect.name)}
                   </p>
                 </div>
@@ -119,25 +112,11 @@ export const SuspectClueCards = ({
   );
 };
 
-// Format clue text to highlight key terms
-const formatClueText = (text: string, suspectName: string): React.ReactNode => {
-  // Bold certain keywords
-  const keywords = ['sofá', 'cama', 'quarto', 'cozinha', 'escritório', 'sala', 'corredor', 'adjacente', 'parede', 'janela', 'tapete'];
-  
-  let result = text;
-  
-  // Remove suspect name from the beginning if present
-  const firstName = suspectName.split(' ')[0];
-  const patterns = [
-    new RegExp(`^O ${suspectName} `, 'i'),
-    new RegExp(`^A ${suspectName} `, 'i'),
-    new RegExp(`^O ${firstName} `, 'i'),
-    new RegExp(`^A ${firstName} `, 'i'),
-  ];
-  
-  for (const pattern of patterns) {
-    result = result.replace(pattern, '');
-  }
+// Format clue text - remove suspect name from beginning if present
+const formatClueText = (text: string, suspectName: string): string => {
+  // Remove patterns like "Alberto estava" -> "Estava"
+  const pattern = new RegExp(`^${suspectName}\\s+`, 'i');
+  let result = text.replace(pattern, '');
   
   // Capitalize first letter
   result = result.charAt(0).toUpperCase() + result.slice(1);

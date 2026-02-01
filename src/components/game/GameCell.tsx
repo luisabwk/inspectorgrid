@@ -1,6 +1,6 @@
 import { Cell, Suspect, isCellOccupiable, getCellKey, AssetType } from "@/types/game";
 import { cn } from "@/lib/utils";
-import { AssetIconMap, TableIcon } from "./assets/AssetIcons";
+import { AssetIconMap, TableIcon, BedIcon, SofaIcon } from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
 
 interface GameCellProps {
@@ -27,6 +27,16 @@ interface GameCellProps {
   hasTableBottom: boolean;
   hasTableLeft: boolean;
   hasTableRight: boolean;
+  // Adjacent bed connections
+  hasBedTop: boolean;
+  hasBedBottom: boolean;
+  hasBedLeft: boolean;
+  hasBedRight: boolean;
+  // Adjacent sofa connections
+  hasSofaTop: boolean;
+  hasSofaBottom: boolean;
+  hasSofaLeft: boolean;
+  hasSofaRight: boolean;
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -53,6 +63,14 @@ export const GameCell = ({
   hasTableBottom,
   hasTableLeft,
   hasTableRight,
+  hasBedTop,
+  hasBedBottom,
+  hasBedLeft,
+  hasBedRight,
+  hasSofaTop,
+  hasSofaBottom,
+  hasSofaLeft,
+  hasSofaRight,
   onCellClick,
   onCellDrop,
   onDragOver,
@@ -60,8 +78,11 @@ export const GameCell = ({
   // Window cells are occupiable but don't show an icon - they're wall markings
   const isWindowCell = cell.asset === 'window';
   const isTableCell = cell.asset === 'table';
+  const isBedCell = cell.asset === 'bed';
+  const isSofaCell = cell.asset === 'sofa';
+  const isConnectableAsset = isTableCell || isBedCell || isSofaCell;
   const isOccupiable = isCellOccupiable(cell);
-  const AssetIcon = !isWindowCell && !isTableCell ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
+  const AssetIcon = !isWindowCell && !isConnectableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
   
   const handleClick = () => {
     if (isOccupiable) {
@@ -162,8 +183,8 @@ export const GameCell = ({
         </div>
       )}
 
-      {/* Asset layer */}
-      {cell.asset !== 'empty' && !isWindowCell && !isTableCell && (
+      {/* Asset layer - non-connectable assets */}
+      {cell.asset !== 'empty' && !isWindowCell && !isConnectableAsset && (
         <div className={cn(
           "absolute inset-1 flex items-center justify-center",
           isOccupiable ? "opacity-70" : "opacity-80"
@@ -181,6 +202,32 @@ export const GameCell = ({
             connectedBottom={hasTableBottom}
             connectedLeft={hasTableLeft}
             connectedRight={hasTableRight}
+          />
+        </div>
+      )}
+      
+      {/* Bed asset with connection support */}
+      {isBedCell && (
+        <div className="absolute inset-0 flex items-center justify-center opacity-70">
+          <BedIcon 
+            className="w-full h-full" 
+            connectedTop={hasBedTop}
+            connectedBottom={hasBedBottom}
+            connectedLeft={hasBedLeft}
+            connectedRight={hasBedRight}
+          />
+        </div>
+      )}
+      
+      {/* Sofa asset with connection support */}
+      {isSofaCell && (
+        <div className="absolute inset-0 flex items-center justify-center opacity-70">
+          <SofaIcon 
+            className="w-full h-full" 
+            connectedTop={hasSofaTop}
+            connectedBottom={hasSofaBottom}
+            connectedLeft={hasSofaLeft}
+            connectedRight={hasSofaRight}
           />
         </div>
       )}

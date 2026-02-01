@@ -37,6 +37,16 @@ const hasTableAsset = (cell: Cell | undefined): boolean => {
   return cell?.asset === 'table';
 };
 
+// Helper to check if cell has bed asset
+const hasBedAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'bed';
+};
+
+// Helper to check if cell has sofa asset
+const hasSofaAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'sofa';
+};
+
 export const GameGrid = ({
   cells,
   suspects,
@@ -93,6 +103,18 @@ export const GameGrid = ({
     const hasTableLeft = hasTableAsset(cell) && hasTableAsset(leftCell);
     const hasTableRight = hasTableAsset(cell) && hasTableAsset(rightCell);
 
+    // Bed connections - check if adjacent cells also have beds
+    const hasBedTop = hasBedAsset(cell) && hasBedAsset(topCell);
+    const hasBedBottom = hasBedAsset(cell) && hasBedAsset(bottomCell);
+    const hasBedLeft = hasBedAsset(cell) && hasBedAsset(leftCell);
+    const hasBedRight = hasBedAsset(cell) && hasBedAsset(rightCell);
+
+    // Sofa connections - check if adjacent cells also have sofas
+    const hasSofaTop = hasSofaAsset(cell) && hasSofaAsset(topCell);
+    const hasSofaBottom = hasSofaAsset(cell) && hasSofaAsset(bottomCell);
+    const hasSofaLeft = hasSofaAsset(cell) && hasSofaAsset(leftCell);
+    const hasSofaRight = hasSofaAsset(cell) && hasSofaAsset(rightCell);
+
     return {
       hasWallTop,
       hasWallBottom,
@@ -106,6 +128,14 @@ export const GameGrid = ({
       hasTableBottom,
       hasTableLeft,
       hasTableRight,
+      hasBedTop,
+      hasBedBottom,
+      hasBedLeft,
+      hasBedRight,
+      hasSofaTop,
+      hasSofaBottom,
+      hasSofaLeft,
+      hasSofaRight,
     };
   };
 
@@ -209,6 +239,14 @@ export const GameGrid = ({
               hasTableBottom={wallInfo.hasTableBottom}
               hasTableLeft={wallInfo.hasTableLeft}
               hasTableRight={wallInfo.hasTableRight}
+              hasBedTop={wallInfo.hasBedTop}
+              hasBedBottom={wallInfo.hasBedBottom}
+              hasBedLeft={wallInfo.hasBedLeft}
+              hasBedRight={wallInfo.hasBedRight}
+              hasSofaTop={wallInfo.hasSofaTop}
+              hasSofaBottom={wallInfo.hasSofaBottom}
+              hasSofaLeft={wallInfo.hasSofaLeft}
+              hasSofaRight={wallInfo.hasSofaRight}
               onCellClick={onCellClick}
               onCellDrop={onCellDrop}
               onDragOver={onDragOver}

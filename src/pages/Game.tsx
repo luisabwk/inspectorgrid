@@ -130,7 +130,7 @@ const Game = () => {
       </header>
 
       {/* Main Game Area - centered grid */}
-      <main className="flex-1 container mx-auto px-2 py-3 flex flex-col items-center justify-center gap-3">
+      <main className="flex-1 container mx-auto px-2 py-2 flex flex-col items-center justify-center gap-2">
         {/* Selected suspect indicator */}
         {selectedSuspect && (
           <div className="text-center">
@@ -143,8 +143,8 @@ const Game = () => {
           </div>
         )}
 
-        {/* Grid - larger now */}
-        <div className="w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[450px]">
+        {/* Grid - maximize available space */}
+        <div className="w-full max-w-[85vw] sm:max-w-[400px] lg:max-w-[450px] max-h-[65vh] aspect-square">
           <GameGrid
             cells={testCase.layoutConfig.cells}
             suspects={testCase.suspects}

@@ -130,15 +130,32 @@ export const GameGrid = ({
 
   return (
     <div className="relative w-full">
-      {/* Main Grid */}
-      <div 
-        className="relative bg-card border-[3px] border-foreground/70 rounded-sm overflow-hidden shadow-lg"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-          aspectRatio: '1',
-        }}
-      >
+      <div className="flex">
+        {/* Row labels (left side) */}
+        <div 
+          className="flex flex-col justify-around pr-1"
+          style={{ height: 'auto' }}
+        >
+          {Array.from({ length: gridSize }, (_, i) => (
+            <div 
+              key={`row-${i}`} 
+              className="text-[8px] sm:text-[10px] text-muted-foreground/60 font-medium flex items-center justify-end"
+              style={{ height: `${100 / gridSize}%` }}
+            >
+              L{i + 1}
+            </div>
+          ))}
+        </div>
+
+        {/* Main Grid */}
+        <div 
+          className="relative flex-1 bg-card border-[3px] border-foreground/70 rounded-sm overflow-hidden shadow-lg"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+            aspectRatio: '1',
+          }}
+        >
         {cells.flat().map((cell) => {
           const cellKey = getCellKey(cell.row, cell.col);
           const suspectId = placements[cellKey];
@@ -172,24 +189,41 @@ export const GameGrid = ({
           );
         })}
 
-        {/* Room Labels Overlay */}
-        {roomLabels.map((room) => (
-          <div
-            key={room.id}
-            className="absolute pointer-events-none flex items-center justify-center"
-            style={{
-              left: `${room.centerCol * cellSizePercent}%`,
-              top: `${room.centerRow * cellSizePercent}%`,
-              width: `${cellSizePercent}%`,
-              height: `${cellSizePercent}%`,
-            }}
-          >
-            <span 
-              className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider opacity-60 text-center leading-tight px-1"
-              style={{ color: 'hsl(var(--foreground))' }}
+          {/* Room Labels Overlay */}
+          {roomLabels.map((room) => (
+            <div
+              key={room.id}
+              className="absolute pointer-events-none flex items-center justify-center"
+              style={{
+                left: `${room.centerCol * cellSizePercent}%`,
+                top: `${room.centerRow * cellSizePercent}%`,
+                width: `${cellSizePercent}%`,
+                height: `${cellSizePercent}%`,
+              }}
             >
-              {room.name}
-            </span>
+              <span 
+                className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider opacity-60 text-center leading-tight px-1"
+                style={{ color: 'hsl(var(--foreground))' }}
+              >
+                {room.name}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Column labels (bottom) */}
+      <div 
+        className="flex justify-around pt-1"
+        style={{ marginLeft: '16px' }}
+      >
+        {Array.from({ length: gridSize }, (_, i) => (
+          <div 
+            key={`col-${i}`} 
+            className="text-[8px] sm:text-[10px] text-muted-foreground/60 font-medium text-center"
+            style={{ width: `${100 / gridSize}%` }}
+          >
+            C{i + 1}
           </div>
         ))}
       </div>

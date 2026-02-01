@@ -4,8 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useGame } from "@/hooks/useGame";
 import { testCase } from "@/data/testCase";
 import { GameGrid } from "@/components/game/GameGrid";
-import { SuspectPanel } from "@/components/game/SuspectPanel";
-import { CluesPanel } from "@/components/game/CluesPanel";
+import { SuspectClueCards } from "@/components/game/SuspectClueCards";
 import { GameControls } from "@/components/game/GameControls";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -130,10 +129,11 @@ const Game = () => {
               canCheck={canCheck}
             />
 
-            {/* Suspect Panel - Mobile */}
+            {/* Suspect Cards with Clues - Mobile */}
             <div className="lg:hidden">
-              <SuspectPanel
+              <SuspectClueCards
                 suspects={testCase.suspects}
+                clues={testCase.clues}
                 placements={placements}
                 selectedSuspect={selectedSuspect}
                 onSuspectSelect={handleSuspectSelect}
@@ -142,22 +142,19 @@ const Game = () => {
             </div>
           </div>
 
-          {/* Right Column - Suspects and Clues */}
+          {/* Right Column - Suspects with Clues */}
           <div className="space-y-4">
-            {/* Suspect Panel - Desktop */}
+            {/* Suspect Cards with Clues - Desktop */}
             <div className="hidden lg:block">
-              <SuspectPanel
+              <SuspectClueCards
                 suspects={testCase.suspects}
+                clues={testCase.clues}
                 placements={placements}
                 selectedSuspect={selectedSuspect}
                 onSuspectSelect={handleSuspectSelect}
                 onSuspectDragStart={handleDragStart}
               />
             </div>
-
-            {/* Clues */}
-            <CluesPanel clues={testCase.clues} />
-
           </div>
         </div>
       </main>

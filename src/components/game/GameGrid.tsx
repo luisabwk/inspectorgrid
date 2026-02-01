@@ -96,7 +96,7 @@ export const GameGrid = ({
 
     // Find bounds of each room
     cells.flat().forEach((cell) => {
-      if (cell.roomId && cell.roomId !== 'main') {
+      if (cell.roomId) {
         if (!labelMap[cell.roomId]) {
           const room = rooms.find(r => r.id === cell.roomId);
           if (room) {

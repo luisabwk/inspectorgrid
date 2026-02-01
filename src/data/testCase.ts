@@ -12,69 +12,60 @@ const generateTestGrid = (): Cell[][] => {
         col,
         asset: 'empty',
         walls: [],
-        roomId: 'main',
+        roomId: 'corridor', // Default to corridor
       };
     }
   }
   
-  // Add some furniture and blocked cells
-  // Living room area (top-left)
-  grid[0][0].asset = 'sofa';
-  grid[0][1].asset = 'tv';
-  grid[1][0].asset = 'armchair';
-  grid[1][2].asset = 'plant';
-  
-  // Bedroom area (top-right)
-  grid[0][4].asset = 'bed';
-  grid[0][5].asset = 'bed';
-  grid[1][5].asset = 'window';
-  
-  // Kitchen area (bottom-left)
-  grid[4][0].asset = 'table';
-  grid[4][1].asset = 'table';
-  grid[5][0].asset = 'debris';
-  
-  // Study area (bottom-right)
-  grid[4][4].asset = 'bookshelf';
-  grid[5][5].asset = 'rug';
-  
-  // Add walls to create rooms
-  // Wall between living room and bedroom
-  grid[0][2].walls.push('right');
-  grid[0][3].walls.push('left');
-  grid[1][2].walls.push('right');
-  grid[1][3].walls.push('left');
-  
-  // Wall between top and bottom sections
-  grid[2][0].walls.push('bottom');
-  grid[2][1].walls.push('bottom');
-  grid[3][0].walls.push('top');
-  grid[3][1].walls.push('top');
-  
-  // Update room IDs
+  // === SALA DE ESTAR (top-left 3x2) ===
   grid[0][0].roomId = 'living';
   grid[0][1].roomId = 'living';
   grid[0][2].roomId = 'living';
   grid[1][0].roomId = 'living';
   grid[1][1].roomId = 'living';
   grid[1][2].roomId = 'living';
+  // Furniture
+  grid[0][0].asset = 'sofa';
+  grid[0][1].asset = 'tv';
+  grid[1][0].asset = 'armchair';
+  grid[1][2].asset = 'plant';
   
+  // === QUARTO (top-right 3x2) ===
   grid[0][3].roomId = 'bedroom';
   grid[0][4].roomId = 'bedroom';
   grid[0][5].roomId = 'bedroom';
   grid[1][3].roomId = 'bedroom';
   grid[1][4].roomId = 'bedroom';
   grid[1][5].roomId = 'bedroom';
+  // Beds spanning 2 cells each (head + foot)
+  grid[0][3].asset = 'bed_head';
+  grid[0][4].asset = 'bed_foot';
+  grid[1][3].asset = 'bed_head';
+  grid[1][4].asset = 'bed_foot';
+  // Window marking on exterior wall
+  grid[1][5].asset = 'window';
   
+  // === COZINHA (bottom-left 2x2) ===
   grid[4][0].roomId = 'kitchen';
   grid[4][1].roomId = 'kitchen';
   grid[5][0].roomId = 'kitchen';
   grid[5][1].roomId = 'kitchen';
+  // Furniture
+  grid[4][0].asset = 'table';
+  grid[4][1].asset = 'table';
+  grid[5][0].asset = 'debris';
   
+  // === ESCRITÓRIO (bottom-right 2x2) ===
   grid[4][4].roomId = 'study';
   grid[4][5].roomId = 'study';
   grid[5][4].roomId = 'study';
   grid[5][5].roomId = 'study';
+  // Furniture
+  grid[4][4].asset = 'bookshelf';
+  grid[5][5].asset = 'rug';
+  
+  // === CORREDOR (remaining center cells) ===
+  // Already set as default 'corridor'
   
   return grid;
 };
@@ -92,7 +83,7 @@ export const testCase: GameCase = {
       { id: 'bedroom', name: 'Quarto', color: 'hsl(280 35% 88%)' },
       { id: 'kitchen', name: 'Cozinha', color: 'hsl(45 50% 85%)' },
       { id: 'study', name: 'Escritório', color: 'hsl(150 30% 85%)' },
-      { id: 'main', name: 'Corredor', color: 'hsl(30 20% 90%)' },
+      { id: 'corridor', name: 'Corredor', color: 'hsl(30 20% 90%)' },
     ],
   },
   suspects: [

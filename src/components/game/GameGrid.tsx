@@ -19,11 +19,18 @@ interface RoomLabel {
   id: string;
   name: string;
   color: string;
-  startRow: number;
-  startCol: number;
-  endRow: number;
-  endCol: number;
 }
+
+// Helper to check if two cells are in different rooms
+const areDifferentRooms = (cell1: Cell | undefined, cell2: Cell | undefined): boolean => {
+  if (!cell1 || !cell2) return true; // Edge of grid = wall
+  return cell1.roomId !== cell2.roomId;
+};
+
+// Helper to check if cell has window asset
+const hasWindowAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'window';
+};
 
 export const GameGrid = ({
   cells,
@@ -45,49 +52,68 @@ export const GameGrid = ({
     roomColors[room.id] = room.color;
   });
 
-  // Calculate room label positions
+  // Get cell at position (with bounds checking)
+  const getCell = (row: number, col: number): Cell | undefined => {
+    if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) return undefined;
+    return cells[row]?.[col];
+  };
+
+  // Calculate wall and window info for each cell
+  const getCellWallInfo = (cell: Cell) => {
+    const { row, col } = cell;
+    const topCell = getCell(row - 1, col);
+    const bottomCell = getCell(row + 1, col);
+    const leftCell = getCell(row, col - 1);
+    const rightCell = getCell(row, col + 1);
+
+    // Walls appear between different rooms OR at grid edges
+    const hasWallTop = row === 0 || areDifferentRooms(cell, topCell) || cell.walls.includes('top');
+    const hasWallBottom = row === gridSize - 1 || areDifferentRooms(cell, bottomCell) || cell.walls.includes('bottom');
+    const hasWallLeft = col === 0 || areDifferentRooms(cell, leftCell) || cell.walls.includes('left');
+    const hasWallRight = col === gridSize - 1 || areDifferentRooms(cell, rightCell) || cell.walls.includes('right');
+
+    // Windows on walls - check if this cell or neighbor has window asset at the wall boundary
+    const hasWindowTop = hasWallTop && (hasWindowAsset(cell) || hasWindowAsset(topCell));
+    const hasWindowBottom = hasWallBottom && (hasWindowAsset(cell) || hasWindowAsset(bottomCell));
+    const hasWindowLeft = hasWallLeft && (hasWindowAsset(cell) || hasWindowAsset(leftCell));
+    const hasWindowRight = hasWallRight && (hasWindowAsset(cell) || hasWindowAsset(rightCell));
+
+    return {
+      hasWallTop,
+      hasWallBottom,
+      hasWallLeft,
+      hasWallRight,
+      hasWindowTop,
+      hasWindowBottom,
+      hasWindowLeft,
+      hasWindowRight,
+    };
+  };
+
+  // Calculate room labels
   const roomLabels = useMemo(() => {
     const labels: RoomLabel[] = [];
-    const roomBounds: Record<string, { minRow: number; maxRow: number; minCol: number; maxCol: number }> = {};
+    const seenRooms = new Set<string>();
 
-    // Find bounds for each room
-    cells.flat().forEach((cell) => {
-      if (cell.roomId) {
-        if (!roomBounds[cell.roomId]) {
-          roomBounds[cell.roomId] = { minRow: cell.row, maxRow: cell.row, minCol: cell.col, maxCol: cell.col };
-        } else {
-          roomBounds[cell.roomId].minRow = Math.min(roomBounds[cell.roomId].minRow, cell.row);
-          roomBounds[cell.roomId].maxRow = Math.max(roomBounds[cell.roomId].maxRow, cell.row);
-          roomBounds[cell.roomId].minCol = Math.min(roomBounds[cell.roomId].minCol, cell.col);
-          roomBounds[cell.roomId].maxCol = Math.max(roomBounds[cell.roomId].maxCol, cell.col);
-        }
-      }
-    });
-
-    // Create labels for each room
     rooms.forEach((room) => {
-      if (roomBounds[room.id]) {
-        const bounds = roomBounds[room.id];
+      if (!seenRooms.has(room.id) && room.id !== 'main') {
+        seenRooms.add(room.id);
         labels.push({
           id: room.id,
           name: room.name,
           color: room.color,
-          startRow: bounds.minRow,
-          startCol: bounds.minCol,
-          endRow: bounds.maxRow,
-          endCol: bounds.maxCol,
         });
       }
     });
 
     return labels;
-  }, [cells, rooms]);
+  }, [rooms]);
   
   return (
     <div className="relative">
       {/* Main Grid */}
       <div 
-        className="bg-card border-2 border-foreground/20 rounded-lg overflow-hidden shadow-lg"
+        className="bg-card border-[3px] border-foreground/70 rounded-sm overflow-hidden shadow-lg"
         style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
@@ -103,6 +129,7 @@ export const GameGrid = ({
           const suspect = suspectId ? suspects.find(s => s.id === suspectId) || null : null;
           const cellPencilMarks = pencilMarks[cellKey] || [];
           const roomColor = cell.roomId ? roomColors[cell.roomId] : undefined;
+          const wallInfo = getCellWallInfo(cell);
           
           return (
             <GameCell
@@ -114,6 +141,14 @@ export const GameGrid = ({
               isSelected={selectedCell === cellKey}
               isPencilMode={isPencilMode}
               roomColor={roomColor}
+              hasWallTop={wallInfo.hasWallTop && cell.row !== 0}
+              hasWallBottom={wallInfo.hasWallBottom && cell.row !== gridSize - 1}
+              hasWallLeft={wallInfo.hasWallLeft && cell.col !== 0}
+              hasWallRight={wallInfo.hasWallRight && cell.col !== gridSize - 1}
+              hasWindowTop={wallInfo.hasWindowTop}
+              hasWindowBottom={wallInfo.hasWindowBottom}
+              hasWindowLeft={wallInfo.hasWindowLeft}
+              hasWindowRight={wallInfo.hasWindowRight}
               onCellClick={onCellClick}
               onCellDrop={onCellDrop}
               onDragOver={onDragOver}
@@ -124,10 +159,10 @@ export const GameGrid = ({
 
       {/* Room Labels */}
       <div className="flex flex-wrap gap-2 mt-3 justify-center">
-        {roomLabels.filter(room => room.id !== 'main').map((room) => (
+        {roomLabels.map((room) => (
           <div
             key={room.id}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium shadow-sm"
             style={{
               backgroundColor: room.color,
               color: 'hsl(var(--foreground))',
@@ -135,7 +170,7 @@ export const GameGrid = ({
           >
             <div 
               className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: 'hsl(var(--foreground) / 0.4)' }}
+              style={{ backgroundColor: 'hsl(var(--foreground) / 0.3)' }}
             />
             {room.name}
           </div>

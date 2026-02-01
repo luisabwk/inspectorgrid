@@ -11,6 +11,16 @@ interface GameCellProps {
   isSelected: boolean;
   isPencilMode: boolean;
   roomColor?: string;
+  // Walls info from neighboring cells for proper rendering
+  hasWallTop: boolean;
+  hasWallRight: boolean;
+  hasWallBottom: boolean;
+  hasWallLeft: boolean;
+  // Window positions
+  hasWindowTop: boolean;
+  hasWindowRight: boolean;
+  hasWindowBottom: boolean;
+  hasWindowLeft: boolean;
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -24,12 +34,22 @@ export const GameCell = ({
   isSelected,
   isPencilMode,
   roomColor,
+  hasWallTop,
+  hasWallRight,
+  hasWallBottom,
+  hasWallLeft,
+  hasWindowTop,
+  hasWindowRight,
+  hasWindowBottom,
+  hasWindowLeft,
   onCellClick,
   onCellDrop,
   onDragOver,
 }: GameCellProps) => {
+  // Window cells are occupiable but don't show an icon - they're wall markings
+  const isWindowCell = cell.asset === 'window';
   const isOccupiable = isCellOccupiable(cell);
-  const AssetIcon = AssetIconMap[cell.asset];
+  const AssetIcon = !isWindowCell ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
   
   const handleClick = () => {
     if (isOccupiable) {
@@ -51,34 +71,85 @@ export const GameCell = ({
   
   // Get portrait component for placed suspect
   const SuspectPortrait = suspect ? PortraitMap[suspect.portraitId] : null;
-  
-  // Build wall border styles
-  const wallStyles: React.CSSProperties = {
-    backgroundColor: roomColor || 'hsl(var(--muted))',
-    borderTopWidth: cell.walls.includes('top') ? '3px' : '1px',
-    borderRightWidth: cell.walls.includes('right') ? '3px' : '1px',
-    borderBottomWidth: cell.walls.includes('bottom') ? '3px' : '1px',
-    borderLeftWidth: cell.walls.includes('left') ? '3px' : '1px',
-    borderTopColor: cell.walls.includes('top') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
-    borderRightColor: cell.walls.includes('right') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
-    borderBottomColor: cell.walls.includes('bottom') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
-    borderLeftColor: cell.walls.includes('left') ? 'hsl(var(--foreground) / 0.6)' : 'hsl(var(--border) / 0.3)',
-  };
+
+  const WALL_WIDTH = '3px';
+  const WALL_COLOR = 'hsl(var(--foreground) / 0.7)';
 
   return (
     <div
       className={cn(
-        "relative aspect-square flex items-center justify-center transition-all duration-150 border-solid",
+        "relative aspect-square flex items-center justify-center transition-all duration-150",
         isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
         isSelected && "ring-2 ring-primary ring-inset",
       )}
-      style={wallStyles}
+      style={{
+        backgroundColor: roomColor || 'hsl(var(--muted))',
+      }}
       onClick={handleClick}
       onDrop={handleDrop}
       onDragOver={onDragOver}
     >
+      {/* Wall overlays - rendered as absolutely positioned elements */}
+      {hasWallTop && (
+        <div 
+          className="absolute top-0 left-0 right-0 z-20" 
+          style={{ height: WALL_WIDTH, backgroundColor: WALL_COLOR }}
+        >
+          {/* Window marking in wall */}
+          {hasWindowTop && (
+            <div className="absolute inset-x-1/4 inset-y-0 flex gap-0.5 justify-center">
+              <div className="w-1 h-full bg-blue-300" />
+              <div className="w-1 h-full bg-blue-200" />
+              <div className="w-1 h-full bg-blue-300" />
+            </div>
+          )}
+        </div>
+      )}
+      {hasWallBottom && (
+        <div 
+          className="absolute bottom-0 left-0 right-0 z-20" 
+          style={{ height: WALL_WIDTH, backgroundColor: WALL_COLOR }}
+        >
+          {hasWindowBottom && (
+            <div className="absolute inset-x-1/4 inset-y-0 flex gap-0.5 justify-center">
+              <div className="w-1 h-full bg-blue-300" />
+              <div className="w-1 h-full bg-blue-200" />
+              <div className="w-1 h-full bg-blue-300" />
+            </div>
+          )}
+        </div>
+      )}
+      {hasWallLeft && (
+        <div 
+          className="absolute top-0 left-0 bottom-0 z-20" 
+          style={{ width: WALL_WIDTH, backgroundColor: WALL_COLOR }}
+        >
+          {hasWindowLeft && (
+            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col gap-0.5 justify-center">
+              <div className="h-1 w-full bg-blue-300" />
+              <div className="h-1 w-full bg-blue-200" />
+              <div className="h-1 w-full bg-blue-300" />
+            </div>
+          )}
+        </div>
+      )}
+      {hasWallRight && (
+        <div 
+          className="absolute top-0 right-0 bottom-0 z-20" 
+          style={{ width: WALL_WIDTH, backgroundColor: WALL_COLOR }}
+        >
+          {hasWindowRight && (
+            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col gap-0.5 justify-center">
+              <div className="h-1 w-full bg-blue-300" />
+              <div className="h-1 w-full bg-blue-200" />
+              <div className="h-1 w-full bg-blue-300" />
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Asset layer */}
-      {cell.asset !== 'empty' && (
+      {cell.asset !== 'empty' && !isWindowCell && (
         <div className={cn(
           "absolute inset-1 flex items-center justify-center",
           !isOccupiable && "opacity-80"

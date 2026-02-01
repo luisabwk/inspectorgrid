@@ -37,6 +37,7 @@ export interface Suspect {
   name: string;
   portraitId: string; // portrait key (portrait1, portrait2, etc.)
   color: string; // accent color for the suspect (HSL)
+  isVictim?: boolean; // true if this suspect is the victim
 }
 
 // Grid layout configuration

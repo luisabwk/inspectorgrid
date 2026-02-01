@@ -55,6 +55,14 @@ export default {
           DEFAULT: "hsl(var(--info))",
           foreground: "hsl(var(--info-foreground))",
         },
+        room: {
+          living: "hsl(var(--room-living))",
+          bedroom: "hsl(var(--room-bedroom))",
+          bathroom: "hsl(var(--room-bathroom))",
+          kitchen: "hsl(var(--room-kitchen))",
+          study: "hsl(var(--room-study))",
+          guest: "hsl(var(--room-guest))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

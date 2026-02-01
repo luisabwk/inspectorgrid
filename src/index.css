@@ -8,54 +8,62 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Noir Theme - Dark by default */
-    --background: 0 0% 5%;
-    --foreground: 0 0% 95%;
+    /* Clean Pastel Theme - Warm and inviting */
+    --background: 30 40% 96%;
+    --foreground: 240 10% 20%;
 
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 20%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 20%;
 
-    /* Blood red accent */
-    --primary: 0 72% 45%;
+    /* Warm terracotta accent */
+    --primary: 15 70% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 30 30% 90%;
+    --secondary-foreground: 240 10% 20%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 30 20% 92%;
+    --muted-foreground: 240 5% 45%;
 
-    --accent: 0 0% 18%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 280 30% 92%;
+    --accent-foreground: 280 30% 30%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 15%;
-    --ring: 0 72% 45%;
+    --border: 30 20% 85%;
+    --input: 30 20% 92%;
+    --ring: 15 70% 50%;
 
-    --radius: 0.25rem;
+    --radius: 0.5rem;
 
-    /* Crime scene yellow accent */
-    --warning: 45 100% 51%;
-    --warning-foreground: 0 0% 5%;
+    /* Warning - soft yellow */
+    --warning: 45 90% 60%;
+    --warning-foreground: 45 90% 20%;
 
-    /* Evidence blue */
-    --info: 210 100% 50%;
+    /* Info - soft teal */
+    --info: 180 50% 45%;
     --info-foreground: 0 0% 100%;
 
-    --sidebar-background: 0 0% 6%;
-    --sidebar-foreground: 0 0% 85%;
-    --sidebar-primary: 0 72% 45%;
+    /* Game-specific colors */
+    --room-living: 30 60% 85%;
+    --room-bedroom: 280 40% 90%;
+    --room-bathroom: 200 50% 88%;
+    --room-kitchen: 45 60% 88%;
+    --room-study: 150 30% 88%;
+    --room-guest: 15 50% 90%;
+
+    --sidebar-background: 30 30% 95%;
+    --sidebar-foreground: 240 10% 30%;
+    --sidebar-primary: 15 70% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 0 72% 45%;
+    --sidebar-accent: 30 30% 90%;
+    --sidebar-accent-foreground: 240 10% 20%;
+    --sidebar-border: 30 20% 85%;
+    --sidebar-ring: 15 70% 50%;
   }
 }
 

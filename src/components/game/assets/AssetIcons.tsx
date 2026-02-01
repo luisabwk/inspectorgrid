@@ -4,20 +4,33 @@ interface AssetIconProps {
   className?: string;
 }
 
-// Top-down bed view with pillows at top
+// 60-degree perspective bed - more top surface visible with legs
 export const BedIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Bed frame */}
-    <rect x="4" y="4" width="40" height="40" rx="2" fill="#8B7355" />
-    {/* Mattress */}
-    <rect x="6" y="6" width="36" height="36" rx="1" fill="#F5EDE3" />
-    {/* Pillows at top */}
-    <rect x="8" y="8" width="14" height="8" rx="2" fill="#E8D4BE" />
-    <rect x="26" y="8" width="14" height="8" rx="2" fill="#E8D4BE" />
-    {/* Blanket/duvet covering bottom portion */}
-    <rect x="6" y="18" width="36" height="22" rx="1" fill="#D4A574" />
+    {/* Back legs */}
+    <rect x="6" y="4" width="3" height="8" fill="#5A4030" />
+    <rect x="39" y="4" width="3" height="8" fill="#5A4030" />
+    {/* Front legs */}
+    <rect x="6" y="38" width="3" height="8" fill="#6B5040" />
+    <rect x="39" y="38" width="3" height="8" fill="#6B5040" />
+    
+    {/* Bed frame - top surface */}
+    <rect x="4" y="6" width="40" height="32" fill="#8B7355" />
+    
+    {/* Mattress - top surface */}
+    <rect x="6" y="8" width="36" height="28" fill="#F5EDE3" />
+    
+    {/* Pillows at head */}
+    <rect x="8" y="10" width="14" height="6" rx="1" fill="#E8D4BE" />
+    <rect x="26" y="10" width="14" height="6" rx="1" fill="#E8D4BE" />
+    
+    {/* Blanket/duvet - top surface */}
+    <rect x="6" y="18" width="36" height="18" fill="#D4A574" />
     {/* Blanket fold line */}
     <line x1="6" y1="22" x2="42" y2="22" stroke="#C4956A" strokeWidth="1" />
+    
+    {/* Bed frame - front face */}
+    <rect x="4" y="38" width="40" height="3" fill="#6B5A48" />
   </svg>
 );
 

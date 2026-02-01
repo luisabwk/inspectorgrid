@@ -104,7 +104,7 @@ const Game = () => {
         />
 
         {/* Grid - fills remaining space */}
-        <div className="flex-1 flex flex-col items-center justify-center gap-2 min-h-0">
+        <div className="flex-1 flex flex-col items-center gap-2 min-h-0">
           {/* Selected suspect indicator */}
           {selectedSuspect && (
             <p className="text-xs text-muted-foreground text-center">

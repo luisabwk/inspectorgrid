@@ -29,12 +29,11 @@ export const SuspectClueCards = ({
   const placedSuspects = new Set(Object.values(placements).filter(Boolean));
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+    <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
       {suspects.map((suspect) => {
         const isPlaced = placedSuspects.has(suspect.id);
         const isSelected = selectedSuspect === suspect.id;
         const Portrait = PortraitMap[suspect.portraitId];
-        const clue = findClueForSuspect(suspect, clues);
 
         return (
           <div
@@ -43,46 +42,37 @@ export const SuspectClueCards = ({
             onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
             onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
             className={cn(
-              "relative flex flex-col rounded-lg border-2 transition-all cursor-pointer bg-card p-2",
+              "relative flex-shrink-0 flex flex-col items-center rounded-lg border-2 transition-all cursor-pointer bg-card p-1.5",
               "hover:shadow-md active:scale-[0.98]",
               isPlaced && "opacity-40 cursor-not-allowed",
-              isSelected && "ring-2 ring-offset-2 ring-offset-background shadow-lg scale-[1.02]",
+              isSelected && "ring-2 ring-offset-1 ring-offset-background shadow-lg scale-[1.05]",
             )}
             style={{
               borderColor: suspect.color,
               '--tw-ring-color': suspect.color,
             } as React.CSSProperties}
           >
-            {/* Portrait + Name Row */}
-            <div className="flex items-center gap-2">
-              <div 
-                className="w-10 h-12 flex-shrink-0"
-                style={{ color: suspect.color }}
-              >
-                {Portrait && <Portrait className="w-full h-full" />}
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-foreground leading-tight">
-                  {suspect.name}
-                </p>
-                {suspect.isVictim && (
-                  <p className="text-[10px] text-destructive font-semibold">⚰️ Vítima</p>
-                )}
-              </div>
+            {/* Portrait */}
+            <div 
+              className="w-8 h-10 sm:w-10 sm:h-12"
+              style={{ color: suspect.color }}
+            >
+              {Portrait && <Portrait className="w-full h-full" />}
             </div>
-
-            {/* Clue */}
-            {clue && (
-              <p className="text-[11px] text-muted-foreground leading-snug mt-2 line-clamp-3">
-                {formatClueText(clue.text, suspect.name)}
-              </p>
+            
+            {/* Name */}
+            <p className="text-[10px] sm:text-xs font-bold text-foreground leading-tight mt-0.5 text-center">
+              {suspect.name.split(' ')[0]}
+            </p>
+            
+            {suspect.isVictim && (
+              <span className="text-[8px]">⚰️</span>
             )}
 
             {/* Placed indicator */}
             {isPlaced && (
               <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-lg">
-                <span className="text-lg font-bold text-primary">✓</span>
+                <span className="text-sm font-bold text-primary">✓</span>
               </div>
             )}
           </div>

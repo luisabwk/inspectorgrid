@@ -9,7 +9,8 @@ import { GameControls } from "@/components/game/GameControls";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ArrowLeft, Trophy, XCircle, Info } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ArrowLeft, Trophy, XCircle, Info, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Game = () => {
@@ -21,6 +22,7 @@ const Game = () => {
     success: false,
     message: '',
   });
+  const [suspectsOpen, setSuspectsOpen] = useState(true);
 
   const {
     placements,
@@ -94,17 +96,29 @@ const Game = () => {
 
       {/* Main Game Area */}
       <main className="flex-1 container mx-auto px-2 py-2 flex flex-col gap-2 overflow-hidden">
-        {/* Suspects Panel - above grid */}
-        <div className="flex-shrink-0">
-          <SuspectClueCards
-            suspects={testCase.suspects}
-            clues={testCase.clues}
-            placements={placements}
-            selectedSuspect={selectedSuspect}
-            onSuspectSelect={handleSuspectSelect}
-            onSuspectDragStart={handleDragStart}
-          />
-        </div>
+        {/* Collapsible Suspects Panel */}
+        <Collapsible open={suspectsOpen} onOpenChange={setSuspectsOpen} className="flex-shrink-0">
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="w-full flex items-center justify-between h-7 px-2 mb-1">
+              <div className="flex items-center gap-1.5">
+                <Users className="w-4 h-4" />
+                <span className="text-xs font-medium">Suspeitos</span>
+                <span className="text-xs text-muted-foreground">({placedCount}/{totalSuspects})</span>
+              </div>
+              {suspectsOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <SuspectClueCards
+              suspects={testCase.suspects}
+              clues={testCase.clues}
+              placements={placements}
+              selectedSuspect={selectedSuspect}
+              onSuspectSelect={handleSuspectSelect}
+              onSuspectDragStart={handleDragStart}
+            />
+          </CollapsibleContent>
+        </Collapsible>
 
         {/* Grid - fills remaining space */}
         <div className="flex-1 flex flex-col items-center justify-center gap-2 min-h-0">

@@ -4,45 +4,20 @@ interface AssetIconProps {
   className?: string;
 }
 
+// Top-down bed view with pillows at top
 export const BedIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="4" y="24" width="40" height="16" rx="2" fill="#8B7355" />
-    <rect x="6" y="16" width="14" height="10" rx="2" fill="#D4A574" />
-    <rect x="8" y="18" width="10" height="6" rx="1" fill="#E8D4BE" />
-    <rect x="22" y="20" width="22" height="6" rx="1" fill="#F5EDE3" />
-    <rect x="4" y="38" width="4" height="6" rx="1" fill="#5C4A3A" />
-    <rect x="40" y="38" width="4" height="6" rx="1" fill="#5C4A3A" />
-  </svg>
-);
-
-// Bed headboard (left side of bed, with pillows)
-export const BedHeadIcon = ({ className }: AssetIconProps) => (
-  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Headboard */}
-    <rect x="4" y="8" width="8" height="32" rx="2" fill="#6B5A48" />
     {/* Bed frame */}
-    <rect x="10" y="20" width="38" height="20" rx="2" fill="#8B7355" />
-    {/* Pillows */}
-    <rect x="14" y="12" width="14" height="10" rx="2" fill="#E8D4BE" />
-    <rect x="30" y="12" width="14" height="10" rx="2" fill="#E8D4BE" />
-    {/* Blanket */}
-    <rect x="14" y="24" width="30" height="12" rx="1" fill="#D4A574" />
-    {/* Leg */}
-    <rect x="4" y="38" width="4" height="6" rx="1" fill="#5C4A3A" />
-  </svg>
-);
-
-// Bed foot (right side of bed)
-export const BedFootIcon = ({ className }: AssetIconProps) => (
-  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Bed frame continues */}
-    <rect x="0" y="20" width="40" height="20" rx="2" fill="#8B7355" />
-    {/* Footboard */}
-    <rect x="36" y="14" width="8" height="26" rx="2" fill="#6B5A48" />
-    {/* Blanket continuation */}
-    <rect x="4" y="24" width="32" height="12" rx="1" fill="#D4A574" />
-    {/* Leg */}
-    <rect x="40" y="38" width="4" height="6" rx="1" fill="#5C4A3A" />
+    <rect x="4" y="4" width="40" height="40" rx="2" fill="#8B7355" />
+    {/* Mattress */}
+    <rect x="6" y="6" width="36" height="36" rx="1" fill="#F5EDE3" />
+    {/* Pillows at top */}
+    <rect x="8" y="8" width="14" height="8" rx="2" fill="#E8D4BE" />
+    <rect x="26" y="8" width="14" height="8" rx="2" fill="#E8D4BE" />
+    {/* Blanket/duvet covering bottom portion */}
+    <rect x="6" y="18" width="36" height="22" rx="1" fill="#D4A574" />
+    {/* Blanket fold line */}
+    <line x1="6" y1="22" x2="42" y2="22" stroke="#C4956A" strokeWidth="1" />
   </svg>
 );
 
@@ -160,8 +135,6 @@ export const EmptyIcon = ({ className }: AssetIconProps) => (
 export const AssetIconMap: Record<AssetType, React.FC<AssetIconProps>> = {
   empty: EmptyIcon,
   bed: BedIcon,
-  bed_head: BedHeadIcon,
-  bed_foot: BedFootIcon,
   sofa: SofaIcon,
   armchair: ArmchairIcon,
   rug: RugIcon,

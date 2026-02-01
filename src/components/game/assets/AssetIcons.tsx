@@ -4,68 +4,133 @@ interface AssetIconProps {
   className?: string;
 }
 
-// 60-degree perspective bed - more top surface visible with legs
-export const BedIcon = ({ className }: AssetIconProps) => (
-  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Back legs */}
-    <rect x="6" y="4" width="3" height="8" fill="#5A4030" />
-    <rect x="39" y="4" width="3" height="8" fill="#5A4030" />
-    {/* Front legs */}
-    <rect x="6" y="38" width="3" height="8" fill="#6B5040" />
-    <rect x="39" y="38" width="3" height="8" fill="#6B5040" />
-    
-    {/* Bed frame - top surface */}
-    <rect x="4" y="6" width="40" height="32" fill="#8B7355" />
-    
-    {/* Mattress - top surface */}
-    <rect x="6" y="8" width="36" height="28" fill="#F5EDE3" />
-    
-    {/* Pillows at head */}
-    <rect x="8" y="10" width="14" height="6" rx="1" fill="#E8D4BE" />
-    <rect x="26" y="10" width="14" height="6" rx="1" fill="#E8D4BE" />
-    
-    {/* Blanket/duvet - top surface */}
-    <rect x="6" y="18" width="36" height="18" fill="#D4A574" />
-    {/* Blanket fold line */}
-    <line x1="6" y1="22" x2="42" y2="22" stroke="#C4956A" strokeWidth="1" />
-    
-    {/* Bed frame - front face */}
-    <rect x="4" y="38" width="40" height="3" fill="#6B5A48" />
-  </svg>
-);
+// Connectable asset props
+interface ConnectableAssetProps {
+  className?: string;
+  connectedTop?: boolean;
+  connectedBottom?: boolean;
+  connectedLeft?: boolean;
+  connectedRight?: boolean;
+}
 
-// 60-degree perspective sofa - more top surface visible
-export const SofaIcon = ({ className }: AssetIconProps) => (
-  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Back legs */}
-    <rect x="6" y="6" width="3" height="8" fill="#3A2D4A" />
-    <rect x="39" y="6" width="3" height="8" fill="#3A2D4A" />
-    {/* Front legs */}
-    <rect x="6" y="36" width="3" height="8" fill="#4A3D5C" />
-    <rect x="39" y="36" width="3" height="8" fill="#4A3D5C" />
-    
-    {/* Backrest - top face */}
-    <rect x="4" y="8" width="40" height="8" fill="#9580B8" />
-    {/* Backrest - front face */}
-    <rect x="4" y="16" width="40" height="4" fill="#7B68A0" />
-    
-    {/* Seat cushion - top face */}
-    <rect x="4" y="20" width="40" height="14" fill="#A894C8" />
-    {/* Seat cushion divider */}
-    <line x1="24" y1="20" x2="24" y2="34" stroke="#9580B8" strokeWidth="1" />
-    {/* Seat cushion - front face */}
-    <rect x="4" y="34" width="40" height="3" fill="#7B68A0" />
-    
-    {/* Armrests - top face */}
-    <rect x="4" y="16" width="6" height="18" fill="#8B7AA8" />
-    <rect x="38" y="16" width="6" height="18" fill="#8B7AA8" />
-    {/* Armrests - front face */}
-    <rect x="4" y="34" width="6" height="3" fill="#6B5A8C" />
-    <rect x="38" y="34" width="6" height="3" fill="#6B5A8C" />
-  </svg>
-);
+// 60-degree perspective bed with connection support
+export const BedIcon = ({ 
+  className,
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableAssetProps) => {
+  const topY = connectedTop ? 4 : 6;
+  const bottomY = connectedBottom ? 40 : 38;
+  const leftX = connectedLeft ? 0 : 4;
+  const rightX = connectedRight ? 48 : 44;
+  
+  return (
+    <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Back legs */}
+      {!connectedTop && !connectedLeft && (
+        <rect x="6" y="4" width="3" height="8" fill="#5A4030" />
+      )}
+      {!connectedTop && !connectedRight && (
+        <rect x="39" y="4" width="3" height="8" fill="#5A4030" />
+      )}
+      {/* Front legs */}
+      {!connectedBottom && !connectedLeft && (
+        <rect x="6" y="38" width="3" height="8" fill="#6B5040" />
+      )}
+      {!connectedBottom && !connectedRight && (
+        <rect x="39" y="38" width="3" height="8" fill="#6B5040" />
+      )}
+      
+      {/* Bed frame - top surface */}
+      <rect x={leftX} y={topY} width={rightX - leftX} height={bottomY - topY} fill="#8B7355" />
+      
+      {/* Mattress - top surface */}
+      <rect x={leftX + 2} y={topY + 2} width={rightX - leftX - 4} height={bottomY - topY - 4} fill="#F5EDE3" />
+      
+      {/* Pillows at head (only if not connected top) */}
+      {!connectedTop && (
+        <>
+          <rect x={leftX + 4} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+          <rect x={rightX - 18} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+        </>
+      )}
+      
+      {/* Blanket/duvet - top surface */}
+      <rect x={leftX + 2} y={connectedTop ? topY + 2 : topY + 12} width={rightX - leftX - 4} height={connectedTop ? bottomY - topY - 4 : bottomY - topY - 14} fill="#D4A574" />
+      
+      {/* Bed frame - front face */}
+      {!connectedBottom && (
+        <rect x={leftX} y={bottomY} width={rightX - leftX} height="3" fill="#6B5A48" />
+      )}
+    </svg>
+  );
+};
 
-// 60-degree perspective armchair - more top surface visible
+// 60-degree perspective sofa with connection support
+export const SofaIcon = ({ 
+  className,
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableAssetProps) => {
+  const topY = connectedTop ? 6 : 8;
+  const bottomY = connectedBottom ? 38 : 36;
+  const leftX = connectedLeft ? 0 : 4;
+  const rightX = connectedRight ? 48 : 44;
+  
+  return (
+    <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Back legs */}
+      {!connectedTop && !connectedLeft && (
+        <rect x="6" y="6" width="3" height="8" fill="#3A2D4A" />
+      )}
+      {!connectedTop && !connectedRight && (
+        <rect x="39" y="6" width="3" height="8" fill="#3A2D4A" />
+      )}
+      {/* Front legs */}
+      {!connectedBottom && !connectedLeft && (
+        <rect x="6" y="36" width="3" height="8" fill="#4A3D5C" />
+      )}
+      {!connectedBottom && !connectedRight && (
+        <rect x="39" y="36" width="3" height="8" fill="#4A3D5C" />
+      )}
+      
+      {/* Backrest - top face (only if not connected top) */}
+      {!connectedTop && (
+        <>
+          <rect x={leftX} y={topY} width={rightX - leftX} height="8" fill="#9580B8" />
+          <rect x={leftX} y={topY + 8} width={rightX - leftX} height="4" fill="#7B68A0" />
+        </>
+      )}
+      
+      {/* Seat cushion - top face */}
+      <rect x={leftX} y={connectedTop ? topY : topY + 12} width={rightX - leftX} height={connectedTop ? bottomY - topY - 2 : bottomY - topY - 14} fill="#A894C8" />
+      
+      {/* Seat cushion - front face */}
+      {!connectedBottom && (
+        <rect x={leftX} y={bottomY - 2} width={rightX - leftX} height="3" fill="#7B68A0" />
+      )}
+      
+      {/* Armrests (only on non-connected sides) */}
+      {!connectedLeft && (
+        <>
+          <rect x={leftX} y={connectedTop ? topY : topY + 8} width="6" height={connectedTop ? bottomY - topY - 2 : bottomY - topY - 10} fill="#8B7AA8" />
+          {!connectedBottom && <rect x={leftX} y={bottomY - 2} width="6" height="3" fill="#6B5A8C" />}
+        </>
+      )}
+      {!connectedRight && (
+        <>
+          <rect x={rightX - 6} y={connectedTop ? topY : topY + 8} width="6" height={connectedTop ? bottomY - topY - 2 : bottomY - topY - 10} fill="#8B7AA8" />
+          {!connectedBottom && <rect x={rightX - 6} y={bottomY - 2} width="6" height="3" fill="#6B5A8C" />}
+        </>
+      )}
+    </svg>
+  );
+};
+
 export const ArmchairIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Back legs */}

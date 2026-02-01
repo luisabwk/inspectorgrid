@@ -93,47 +93,54 @@ export const TableIcon = ({
   connectedLeft = false, 
   connectedRight = false 
 }: TableIconProps) => {
-  // Calculate surface bounds based on connections
-  const surfaceTop = connectedTop ? 0 : 6;
-  const surfaceBottom = connectedBottom ? 48 : 42;
-  const surfaceLeft = connectedLeft ? 0 : 6;
-  const surfaceRight = connectedRight ? 48 : 42;
+  // 45-degree isometric perspective table
+  // Surface extends to edges on connected sides
+  const topY = connectedTop ? 8 : 12;
+  const bottomY = connectedBottom ? 28 : 24;
+  const leftX = connectedLeft ? 0 : 4;
+  const rightX = connectedRight ? 48 : 44;
   
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Legs (only show on non-connected sides) */}
-      {/* Top-left leg */}
-      {!connectedTop && !connectedLeft && (
-        <rect x="4" y="2" width="6" height="8" rx="1" fill="#5A4A3A" />
-      )}
-      {/* Top-right leg */}
-      {!connectedTop && !connectedRight && (
-        <rect x="38" y="2" width="6" height="8" rx="1" fill="#5A4A3A" />
-      )}
-      {/* Bottom-left leg */}
+      {/* Front legs (only show if not connected bottom) */}
       {!connectedBottom && !connectedLeft && (
-        <rect x="4" y="40" width="6" height="6" rx="1" fill="#4A3D30" />
+        <rect x="6" y="26" width="4" height="14" fill="#5A4A3A" />
       )}
-      {/* Bottom-right leg */}
       {!connectedBottom && !connectedRight && (
-        <rect x="38" y="40" width="6" height="6" rx="1" fill="#4A3D30" />
+        <rect x="38" y="26" width="4" height="14" fill="#5A4A3A" />
       )}
       
-      {/* Table surface frame */}
-      <rect 
-        x={surfaceLeft} 
-        y={surfaceTop} 
-        width={surfaceRight - surfaceLeft} 
-        height={surfaceBottom - surfaceTop} 
-        fill="#6B5A48" 
+      {/* Back legs with shadow (only show if not connected top) */}
+      {!connectedTop && !connectedLeft && (
+        <rect x="6" y="10" width="4" height="10" fill="#4A3D30" />
+      )}
+      {!connectedTop && !connectedRight && (
+        <rect x="38" y="10" width="4" height="10" fill="#4A3D30" />
+      )}
+      
+      {/* Table surface - top face (lighter) */}
+      <polygon 
+        points={`${leftX},${topY} ${rightX},${topY} ${rightX},${bottomY} ${leftX},${bottomY}`}
+        fill="#C4A574"
       />
-      {/* Table surface */}
+      
+      {/* Table surface edge - front face (darker for depth) */}
+      {!connectedBottom && (
+        <polygon 
+          points={`${leftX},${bottomY} ${rightX},${bottomY} ${rightX},${bottomY + 4} ${leftX},${bottomY + 4}`}
+          fill="#8B7355"
+        />
+      )}
+      
+      {/* Surface border */}
       <rect 
-        x={surfaceLeft + (connectedLeft ? 0 : 2)} 
-        y={surfaceTop + (connectedTop ? 0 : 2)} 
-        width={surfaceRight - surfaceLeft - (connectedLeft ? 0 : 2) - (connectedRight ? 0 : 2)} 
-        height={surfaceBottom - surfaceTop - (connectedTop ? 0 : 2) - (connectedBottom ? 0 : 2)} 
-        fill="#A68B5B" 
+        x={leftX} 
+        y={topY} 
+        width={rightX - leftX} 
+        height={bottomY - topY} 
+        fill="none"
+        stroke="#6B5A48"
+        strokeWidth="1"
       />
     </svg>
   );

@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LogOut, Search, FileText } from "lucide-react";
+import { LogOut, Search, FileText, Play } from "lucide-react";
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,18 +48,21 @@ const Index = () => {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="p-6 rounded-lg border border-border bg-card hover:border-primary/50 transition-colors cursor-pointer group">
-              <FileText className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
+            <div 
+              onClick={() => navigate('/game')}
+              className="p-6 rounded-lg border border-border bg-card hover:border-primary/50 transition-colors cursor-pointer group"
+            >
+              <Play className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
               <h3 className="font-semibold text-foreground mb-2">Novo Caso</h3>
               <p className="text-sm text-muted-foreground">
                 Inicie uma nova investigação e descubra o culpado.
               </p>
             </div>
-            <div className="p-6 rounded-lg border border-border bg-card hover:border-primary/50 transition-colors cursor-pointer group">
-              <Search className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
+            <div className="p-6 rounded-lg border border-border bg-card hover:border-primary/50 transition-colors cursor-pointer group opacity-50">
+              <FileText className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
               <h3 className="font-semibold text-foreground mb-2">Continuar</h3>
               <p className="text-sm text-muted-foreground">
-                Retome uma investigação em andamento.
+                Em breve: Retome uma investigação em andamento.
               </p>
             </div>
           </div>

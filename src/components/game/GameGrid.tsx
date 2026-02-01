@@ -129,7 +129,7 @@ export const GameGrid = ({
   const cellSizePercent = 100 / gridSize;
 
   return (
-    <div className="relative" style={{ maxWidth: '500px', width: '100%' }}>
+    <div className="relative w-full">
       {/* Main Grid */}
       <div 
         className="relative bg-card border-[3px] border-foreground/70 rounded-sm overflow-hidden shadow-lg"

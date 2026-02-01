@@ -63,99 +63,77 @@ const Game = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
+    <div className="min-h-[100dvh] bg-background flex flex-col">
+      {/* Header - compact */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/')}
-              className="gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Voltar
-            </Button>
+        <div className="container mx-auto px-2 py-1.5 flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/')}
+            className="h-7 px-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="text-center cursor-pointer flex items-center gap-1">
+                <span className="text-sm font-bold text-foreground">{testCase.title}</span>
+                <Info className="w-3 h-3 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" className="max-w-xs text-center">
+              <p className="text-sm">{testCase.description}</p>
+            </PopoverContent>
+          </Popover>
+          <div className="text-xs text-muted-foreground">
+            {placedCount}/{totalSuspects}
           </div>
-          <div className="text-center">
-            <Popover>
-              <PopoverTrigger asChild>
-                <h1 className="text-lg font-bold text-foreground cursor-pointer inline-flex items-center gap-1.5">
-                  {testCase.title}
-                  <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                </h1>
-              </PopoverTrigger>
-              <PopoverContent side="bottom" className="max-w-xs text-center">
-                <p className="text-sm">{testCase.description}</p>
-              </PopoverContent>
-            </Popover>
-            <p className="text-xs text-muted-foreground">
-              {placedCount}/{totalSuspects} suspeitos posicionados
-            </p>
-          </div>
-          <div className="w-20" /> {/* Spacer for centering */}
         </div>
       </header>
 
-      {/* Main Game Area */}
-      <main className="container mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-[1fr_350px] gap-6">
-          {/* Left Column - Grid and Controls */}
-          <div className="space-y-4">
-            {/* Game Grid */}
-            <div className="flex justify-center">
-              <GameGrid
-                cells={testCase.layoutConfig.cells}
-                suspects={testCase.suspects}
-                placements={placements}
-                pencilMarks={pencilMarks}
-                selectedCell={selectedCell}
-                isPencilMode={isPencilMode}
-                rooms={testCase.layoutConfig.rooms}
-                onCellClick={handleCellClick}
-                onCellDrop={handleCellDrop}
-                onDragOver={handleDragOver}
-              />
-            </div>
-
-            {/* Controls */}
-            <GameControls
+      {/* Main Game Area - flex to fill screen */}
+      <main className="flex-1 container mx-auto px-2 py-2 flex flex-col gap-2 overflow-hidden">
+        {/* Grid - constrained height */}
+        <div className="flex justify-center flex-shrink-0">
+          <div className="w-full max-w-[280px] sm:max-w-[350px] lg:max-w-[400px]">
+            <GameGrid
+              cells={testCase.layoutConfig.cells}
+              suspects={testCase.suspects}
+              placements={placements}
+              pencilMarks={pencilMarks}
+              selectedCell={selectedCell}
               isPencilMode={isPencilMode}
-              onTogglePencilMode={setIsPencilMode}
-              onClearCell={handleClearCell}
-              onResetGame={handleResetGame}
-              onCheckSolution={handleCheckSolution}
-              canCheck={canCheck}
+              rooms={testCase.layoutConfig.rooms}
+              onCellClick={handleCellClick}
+              onCellDrop={handleCellDrop}
+              onDragOver={handleDragOver}
             />
-
-            {/* Suspect Cards with Clues - Mobile */}
-            <div className="lg:hidden">
-              <SuspectClueCards
-                suspects={testCase.suspects}
-                clues={testCase.clues}
-                placements={placements}
-                selectedSuspect={selectedSuspect}
-                onSuspectSelect={handleSuspectSelect}
-                onSuspectDragStart={handleDragStart}
-              />
-            </div>
           </div>
+        </div>
 
-          {/* Right Column - Suspects with Clues */}
-          <div className="space-y-4">
-            {/* Suspect Cards with Clues - Desktop */}
-            <div className="hidden lg:block">
-              <SuspectClueCards
-                suspects={testCase.suspects}
-                clues={testCase.clues}
-                placements={placements}
-                selectedSuspect={selectedSuspect}
-                onSuspectSelect={handleSuspectSelect}
-                onSuspectDragStart={handleDragStart}
-              />
-            </div>
-          </div>
+        {/* Controls - inline compact */}
+        <div className="flex-shrink-0">
+          <GameControls
+            isPencilMode={isPencilMode}
+            onTogglePencilMode={setIsPencilMode}
+            onClearCell={handleClearCell}
+            onResetGame={handleResetGame}
+            onCheckSolution={handleCheckSolution}
+            canCheck={canCheck}
+          />
+        </div>
+
+        {/* Suspect Cards - fills remaining space */}
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <SuspectClueCards
+            suspects={testCase.suspects}
+            clues={testCase.clues}
+            placements={placements}
+            selectedSuspect={selectedSuspect}
+            onSuspectSelect={handleSuspectSelect}
+            onSuspectDragStart={handleDragStart}
+          />
         </div>
       </main>
 

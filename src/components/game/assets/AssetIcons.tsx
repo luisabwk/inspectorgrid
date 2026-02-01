@@ -93,41 +93,47 @@ export const TableIcon = ({
   connectedLeft = false, 
   connectedRight = false 
 }: TableIconProps) => {
-  // 45-degree isometric perspective table
-  // Surface extends to edges on connected sides
-  const topY = connectedTop ? 8 : 12;
-  const bottomY = connectedBottom ? 28 : 24;
+  // 60-degree perspective - more top surface visible
+  const topY = connectedTop ? 6 : 8;
+  const bottomY = connectedBottom ? 36 : 34;
   const leftX = connectedLeft ? 0 : 4;
   const rightX = connectedRight ? 48 : 44;
+  const legHeight = 10;
   
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Front legs (only show if not connected bottom) */}
-      {!connectedBottom && !connectedLeft && (
-        <rect x="6" y="26" width="4" height="14" fill="#5A4A3A" />
-      )}
-      {!connectedBottom && !connectedRight && (
-        <rect x="38" y="26" width="4" height="14" fill="#5A4A3A" />
-      )}
-      
-      {/* Back legs with shadow (only show if not connected top) */}
+      {/* Back legs (only show if not connected top) */}
       {!connectedTop && !connectedLeft && (
-        <rect x="6" y="10" width="4" height="10" fill="#4A3D30" />
+        <rect x="6" y="6" width="3" height={legHeight} fill="#4A3D30" />
       )}
       {!connectedTop && !connectedRight && (
-        <rect x="38" y="10" width="4" height="10" fill="#4A3D30" />
+        <rect x="39" y="6" width="3" height={legHeight} fill="#4A3D30" />
       )}
       
-      {/* Table surface - top face (lighter) */}
-      <polygon 
-        points={`${leftX},${topY} ${rightX},${topY} ${rightX},${bottomY} ${leftX},${bottomY}`}
+      {/* Front legs (only show if not connected bottom) */}
+      {!connectedBottom && !connectedLeft && (
+        <rect x="6" y="36" width="3" height={legHeight} fill="#5A4A3A" />
+      )}
+      {!connectedBottom && !connectedRight && (
+        <rect x="39" y="36" width="3" height={legHeight} fill="#5A4A3A" />
+      )}
+      
+      {/* Table surface - top face */}
+      <rect 
+        x={leftX} 
+        y={topY} 
+        width={rightX - leftX} 
+        height={bottomY - topY} 
         fill="#C4A574"
       />
       
-      {/* Table surface edge - front face (darker for depth) */}
+      {/* Table surface edge - front face (depth) */}
       {!connectedBottom && (
-        <polygon 
-          points={`${leftX},${bottomY} ${rightX},${bottomY} ${rightX},${bottomY + 4} ${leftX},${bottomY + 4}`}
+        <rect 
+          x={leftX} 
+          y={bottomY} 
+          width={rightX - leftX} 
+          height="3"
           fill="#8B7355"
         />
       )}

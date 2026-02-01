@@ -35,8 +35,8 @@ export interface Cell {
 export interface Suspect {
   id: string;
   name: string;
-  avatar: string; // emoji or image URL
-  color: string; // accent color for the suspect
+  portraitId: string; // portrait key (portrait1, portrait2, etc.)
+  color: string; // accent color for the suspect (HSL)
 }
 
 // Grid layout configuration

@@ -1,5 +1,7 @@
 import { Cell, Suspect, isCellOccupiable, getCellKey, AssetType } from "@/types/game";
 import { cn } from "@/lib/utils";
+import { AssetIconMap } from "./assets/AssetIcons";
+import { PortraitMap } from "./assets/SuspectPortraits";
 
 interface GameCellProps {
   cell: Cell;
@@ -8,26 +10,11 @@ interface GameCellProps {
   suspects: Suspect[];
   isSelected: boolean;
   isPencilMode: boolean;
+  roomColor?: string;
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
 }
-
-// Asset emoji mapping
-const ASSET_ICONS: Record<AssetType, string> = {
-  empty: '',
-  bed: '🛏️',
-  sofa: '🛋️',
-  armchair: '💺',
-  rug: '🟫',
-  window: '🪟',
-  plant: '🪴',
-  table: '🪑',
-  tv: '📺',
-  bookshelf: '📚',
-  rock: '🪨',
-  debris: '🧱',
-};
 
 export const GameCell = ({
   cell,
@@ -36,12 +23,13 @@ export const GameCell = ({
   suspects,
   isSelected,
   isPencilMode,
+  roomColor,
   onCellClick,
   onCellDrop,
   onDragOver,
 }: GameCellProps) => {
   const isOccupiable = isCellOccupiable(cell);
-  const hasWalls = cell.walls.length > 0;
+  const AssetIcon = AssetIconMap[cell.asset];
   
   const handleClick = () => {
     if (isOccupiable) {
@@ -61,19 +49,25 @@ export const GameCell = ({
     .map(id => suspects.find(s => s.id === id))
     .filter(Boolean) as Suspect[];
   
+  // Get portrait component for placed suspect
+  const SuspectPortrait = suspect ? PortraitMap[suspect.portraitId] : null;
+  
   return (
     <div
       className={cn(
         "relative aspect-square flex items-center justify-center transition-all duration-150",
-        "border border-border/30",
-        isOccupiable ? "cursor-pointer hover:bg-accent/30" : "cursor-not-allowed bg-muted/50",
+        "border border-border/50 rounded-sm",
+        isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
         isSelected && "ring-2 ring-primary ring-offset-1 ring-offset-background",
         // Wall styles
-        cell.walls.includes('top') && "border-t-2 border-t-foreground",
-        cell.walls.includes('right') && "border-r-2 border-r-foreground",
-        cell.walls.includes('bottom') && "border-b-2 border-b-foreground",
-        cell.walls.includes('left') && "border-l-2 border-l-foreground",
+        cell.walls.includes('top') && "border-t-2 border-t-foreground/70",
+        cell.walls.includes('right') && "border-r-2 border-r-foreground/70",
+        cell.walls.includes('bottom') && "border-b-2 border-b-foreground/70",
+        cell.walls.includes('left') && "border-l-2 border-l-foreground/70",
       )}
+      style={{
+        backgroundColor: roomColor || 'hsl(var(--muted))',
+      }}
       onClick={handleClick}
       onDrop={handleDrop}
       onDragOver={onDragOver}
@@ -81,26 +75,27 @@ export const GameCell = ({
       {/* Asset layer */}
       {cell.asset !== 'empty' && (
         <div className={cn(
-          "absolute inset-0 flex items-center justify-center text-2xl",
-          !isOccupiable && "opacity-60"
+          "absolute inset-1 flex items-center justify-center",
+          !isOccupiable && "opacity-80"
         )}>
-          {ASSET_ICONS[cell.asset]}
+          <AssetIcon className="w-full h-full" />
         </div>
       )}
       
       {/* Suspect layer (overlay) */}
-      {suspect && (
+      {suspect && SuspectPortrait && (
         <div 
-          className="absolute inset-0 flex items-center justify-center z-10"
+          className="absolute inset-0.5 flex items-center justify-center z-10 rounded-sm overflow-hidden"
           style={{ 
-            backgroundColor: `${suspect.color}20`,
+            backgroundColor: `${suspect.color.replace(')', ' / 0.15)').replace('hsl(', 'hsla(')}`,
           }}
         >
           <div 
-            className="text-3xl drop-shadow-lg"
+            className="w-4/5 h-4/5 drop-shadow-md"
             title={suspect.name}
+            style={{ color: suspect.color }}
           >
-            {suspect.avatar}
+            <SuspectPortrait className="w-full h-full" />
           </div>
         </div>
       )}
@@ -108,21 +103,25 @@ export const GameCell = ({
       {/* Pencil marks */}
       {!suspect && pencilSuspects.length > 0 && (
         <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 p-0.5 z-10">
-          {pencilSuspects.slice(0, 6).map((s) => (
-            <div 
-              key={s.id}
-              className="flex items-center justify-center text-xs opacity-60"
-              title={s.name}
-            >
-              {s.avatar}
-            </div>
-          ))}
+          {pencilSuspects.slice(0, 6).map((s) => {
+            const MiniPortrait = PortraitMap[s.portraitId];
+            return (
+              <div 
+                key={s.id}
+                className="flex items-center justify-center opacity-50"
+                title={s.name}
+                style={{ color: s.color }}
+              >
+                {MiniPortrait && <MiniPortrait className="w-full h-full" />}
+              </div>
+            );
+          })}
         </div>
       )}
       
       {/* Blocked indicator */}
       {!isOccupiable && (
-        <div className="absolute inset-0 bg-destructive/10 pointer-events-none" />
+        <div className="absolute inset-0 bg-foreground/5 pointer-events-none" />
       )}
     </div>
   );

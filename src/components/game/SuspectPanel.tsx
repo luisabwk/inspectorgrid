@@ -1,5 +1,6 @@
 import { Suspect, PlacementState, getCellKey } from "@/types/game";
 import { cn } from "@/lib/utils";
+import { PortraitMap } from "./assets/SuspectPortraits";
 
 interface SuspectPanelProps {
   suspects: Suspect[];
@@ -20,14 +21,15 @@ export const SuspectPanel = ({
   const placedSuspects = new Set(Object.values(placements).filter(Boolean));
   
   return (
-    <div className="bg-card border border-border rounded-lg p-4">
+    <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
       <h3 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">
         Suspeitos
       </h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {suspects.map((suspect) => {
           const isPlaced = placedSuspects.has(suspect.id);
           const isSelected = selectedSuspect === suspect.id;
+          const Portrait = PortraitMap[suspect.portraitId];
           
           return (
             <div
@@ -36,26 +38,32 @@ export const SuspectPanel = ({
               onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
               onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
               className={cn(
-                "flex items-center gap-2 p-2 rounded-md border transition-all cursor-pointer",
-                "hover:border-primary/50",
-                isPlaced && "opacity-40 cursor-not-allowed",
-                isSelected && "ring-2 ring-primary border-primary bg-primary/10",
-                !isPlaced && !isSelected && "border-border bg-card hover:bg-accent/20"
+                "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all cursor-pointer",
+                "hover:shadow-md",
+                isPlaced && "opacity-40 cursor-not-allowed grayscale",
+                isSelected && "ring-2 ring-offset-2 ring-offset-background",
+                !isPlaced && !isSelected && "border-border bg-card hover:border-primary/30"
               )}
               style={{
                 borderColor: isSelected ? suspect.color : undefined,
-              }}
+                '--tw-ring-color': isSelected ? suspect.color : undefined,
+              } as React.CSSProperties}
             >
-              <div className="text-2xl">{suspect.avatar}</div>
-              <div className="flex-1 min-w-0">
+              <div 
+                className="w-14 h-16 drop-shadow-sm"
+                style={{ color: suspect.color }}
+              >
+                {Portrait && <Portrait className="w-full h-full" />}
+              </div>
+              <div className="text-center">
                 <p className={cn(
-                  "text-xs font-medium truncate",
+                  "text-xs font-medium leading-tight",
                   isPlaced ? "text-muted-foreground" : "text-foreground"
                 )}>
                   {suspect.name}
                 </p>
                 {isPlaced && (
-                  <p className="text-xs text-muted-foreground">Posicionado</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Posicionado</p>
                 )}
               </div>
             </div>

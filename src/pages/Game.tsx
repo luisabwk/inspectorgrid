@@ -102,6 +102,7 @@ const Game = () => {
                 pencilMarks={pencilMarks}
                 selectedCell={selectedCell}
                 isPencilMode={isPencilMode}
+                rooms={testCase.layoutConfig.rooms}
                 onCellClick={handleCellClick}
                 onCellDrop={handleCellDrop}
                 onDragOver={handleDragOver}

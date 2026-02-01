@@ -153,20 +153,20 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      {/* Background crime scene tape pattern */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
-        <div className="absolute -rotate-12 -left-20 top-20 w-[150%] h-8 bg-warning" />
-        <div className="absolute rotate-6 -right-20 bottom-40 w-[150%] h-8 bg-warning" />
+      {/* Soft decorative shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-primary/5" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-accent/30" />
       </div>
 
-      <Card className="w-full max-w-md border-border/50 bg-card/95 backdrop-blur">
+      <Card className="w-full max-w-md border-border bg-card shadow-lg">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+          <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
             <Search className="w-8 h-8 text-primary" />
           </div>
           <div>
             <CardTitle className="text-3xl font-bold tracking-tight text-foreground">
-              MURDOKU
+              Murdoku
             </CardTitle>
             <CardDescription className="text-muted-foreground mt-2">
               {isLogin ? "Entre para continuar sua investigação" : "Registre-se para começar a investigar"}
@@ -187,7 +187,7 @@ const Auth = () => {
                   placeholder="Seu codinome"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="bg-input border-border focus:ring-primary"
+                  className="bg-background border-border focus:ring-primary"
                   disabled={isLoading}
                 />
                 {errors.displayName && (
@@ -206,7 +206,7 @@ const Auth = () => {
                 placeholder="detetive@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-input border-border focus:ring-primary"
+                className="bg-background border-border focus:ring-primary"
                 disabled={isLoading}
               />
               {errors.email && (
@@ -225,7 +225,7 @@ const Auth = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-input border-border focus:ring-primary pr-10"
+                  className="bg-background border-border focus:ring-primary pr-10"
                   disabled={isLoading}
                 />
                 <button
@@ -276,14 +276,6 @@ const Auth = () => {
           </div>
         </CardContent>
       </Card>
-
-      {/* Decorative elements */}
-      <div className="absolute bottom-4 left-4 text-muted-foreground/30 text-xs font-mono">
-        CASO #001 • CONFIDENCIAL
-      </div>
-      <div className="absolute top-4 right-4 text-muted-foreground/30 text-xs font-mono">
-        ARQUIVO CRIMINAL
-      </div>
     </div>
   );
 };

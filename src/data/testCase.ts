@@ -88,20 +88,20 @@ export const testCase: GameCase = {
   layoutConfig: {
     cells: generateTestGrid(),
     rooms: [
-      { id: 'living', name: 'Sala de Estar', color: '#8B4513' },
-      { id: 'bedroom', name: 'Quarto', color: '#4A5568' },
-      { id: 'kitchen', name: 'Cozinha', color: '#2D3748' },
-      { id: 'study', name: 'Escritório', color: '#1A365D' },
-      { id: 'main', name: 'Corredor', color: '#171717' },
+      { id: 'living', name: 'Sala de Estar', color: 'hsl(30 60% 85%)' },
+      { id: 'bedroom', name: 'Quarto', color: 'hsl(280 40% 90%)' },
+      { id: 'kitchen', name: 'Cozinha', color: 'hsl(45 60% 88%)' },
+      { id: 'study', name: 'Escritório', color: 'hsl(150 30% 88%)' },
+      { id: 'main', name: 'Corredor', color: 'hsl(30 30% 92%)' },
     ],
   },
   suspects: [
-    { id: 'suspect-1', name: 'Coronel Mostarda', avatar: '🎖️', color: '#EAB308' },
-    { id: 'suspect-2', name: 'Professora Violeta', avatar: '📚', color: '#8B5CF6' },
-    { id: 'suspect-3', name: 'Srta. Scarlet', avatar: '💃', color: '#EF4444' },
-    { id: 'suspect-4', name: 'Dr. Orchid', avatar: '🧪', color: '#10B981' },
-    { id: 'suspect-5', name: 'Chef White', avatar: '👨‍🍳', color: '#F5F5F5' },
-    { id: 'suspect-6', name: 'Mordomo Black', avatar: '🎩', color: '#374151' },
+    { id: 'suspect-1', name: 'Coronel Mostarda', portraitId: 'portrait6', color: 'hsl(45 90% 50%)' },
+    { id: 'suspect-2', name: 'Professora Violeta', portraitId: 'portrait2', color: 'hsl(280 60% 65%)' },
+    { id: 'suspect-3', name: 'Srta. Scarlet', portraitId: 'portrait7', color: 'hsl(0 85% 60%)' },
+    { id: 'suspect-4', name: 'Dr. Orchid', portraitId: 'portrait3', color: 'hsl(150 60% 45%)' },
+    { id: 'suspect-5', name: 'Chef White', portraitId: 'portrait8', color: 'hsl(0 0% 95%)' },
+    { id: 'suspect-6', name: 'Mordomo Black', portraitId: 'portrait4', color: 'hsl(220 15% 30%)' },
   ],
   solution: {
     'suspect-1': { row: 0, col: 0 }, // Coronel no sofá

@@ -1,4 +1,4 @@
-import { Cell, Suspect, PlacementState, PencilMarks, getCellKey } from "@/types/game";
+import { Cell, Suspect, PlacementState, PencilMarks, getCellKey, LayoutConfig } from "@/types/game";
 import { GameCell } from "./GameCell";
 
 interface GameGridProps {
@@ -8,6 +8,7 @@ interface GameGridProps {
   pencilMarks: PencilMarks;
   selectedCell: string | null;
   isPencilMode: boolean;
+  rooms?: LayoutConfig['rooms'];
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -20,27 +21,26 @@ export const GameGrid = ({
   pencilMarks,
   selectedCell,
   isPencilMode,
+  rooms = [],
   onCellClick,
   onCellDrop,
   onDragOver,
 }: GameGridProps) => {
   const gridSize = cells.length;
   
-  // Create reverse lookup: suspectId -> cellKey
-  const suspectPositions: Record<string, string> = {};
-  Object.entries(placements).forEach(([cellKey, suspectId]) => {
-    if (suspectId) {
-      suspectPositions[suspectId] = cellKey;
-    }
+  // Create room color lookup
+  const roomColors: Record<string, string> = {};
+  rooms.forEach((room) => {
+    roomColors[room.id] = room.color;
   });
   
   return (
     <div 
-      className="bg-card border border-border rounded-lg p-2 shadow-xl"
+      className="bg-card border-2 border-border rounded-xl p-3 shadow-lg"
       style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-        gap: '2px',
+        gap: '3px',
         aspectRatio: '1',
         maxWidth: '500px',
         width: '100%',
@@ -51,6 +51,7 @@ export const GameGrid = ({
         const suspectId = placements[cellKey];
         const suspect = suspectId ? suspects.find(s => s.id === suspectId) || null : null;
         const cellPencilMarks = pencilMarks[cellKey] || [];
+        const roomColor = cell.roomId ? roomColors[cell.roomId] : undefined;
         
         return (
           <GameCell
@@ -61,6 +62,7 @@ export const GameGrid = ({
             suspects={suspects}
             isSelected={selectedCell === cellKey}
             isPencilMode={isPencilMode}
+            roomColor={roomColor}
             onCellClick={onCellClick}
             onCellDrop={onCellDrop}
             onDragOver={onDragOver}

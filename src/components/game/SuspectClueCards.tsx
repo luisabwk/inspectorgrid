@@ -42,15 +42,11 @@ export const SuspectClueCards = ({
             onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
             onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
             className={cn(
-              "relative flex-shrink-0 flex flex-col items-center rounded-lg border-2 transition-all cursor-pointer bg-card p-1.5",
+              "relative w-14 flex-shrink-0 flex flex-col items-center rounded-lg border transition-all cursor-pointer bg-card p-1.5",
               "hover:shadow-md active:scale-[0.98]",
               isPlaced && "opacity-40 cursor-not-allowed",
-              isSelected && "ring-2 ring-offset-1 ring-offset-background shadow-lg scale-[1.05]",
+              isSelected ? "ring-2 ring-primary ring-offset-1 ring-offset-background shadow-lg border-primary" : "border-border",
             )}
-            style={{
-              borderColor: suspect.color,
-              '--tw-ring-color': suspect.color,
-            } as React.CSSProperties}
           >
             {/* Portrait */}
             <div 

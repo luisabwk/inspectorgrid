@@ -77,25 +77,13 @@ export const PlantIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
-// Top-down table view with subtle leg shadows in corners
+// Top-down table view - simple wooden surface with border frame
 export const TableIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Leg shadows (visible from top as small dark squares in corners) */}
-    <rect x="6" y="6" width="5" height="5" rx="1" fill="#5A4A3A" opacity="0.4" />
-    <rect x="37" y="6" width="5" height="5" rx="1" fill="#5A4A3A" opacity="0.4" />
-    <rect x="6" y="37" width="5" height="5" rx="1" fill="#5A4A3A" opacity="0.4" />
-    <rect x="37" y="37" width="5" height="5" rx="1" fill="#5A4A3A" opacity="0.4" />
-    {/* Table surface (slightly smaller to show legs peeking) */}
-    <rect x="4" y="4" width="40" height="40" rx="2" fill="#A68B5B" />
-    {/* Surface highlight for depth */}
-    <rect x="6" y="6" width="36" height="36" rx="1" fill="#B89D6B" />
-    {/* Wood grain lines */}
-    <line x1="8" y1="16" x2="40" y2="16" stroke="#9A7F4F" strokeWidth="0.8" opacity="0.4" />
-    <line x1="8" y1="24" x2="40" y2="24" stroke="#9A7F4F" strokeWidth="0.8" opacity="0.4" />
-    <line x1="8" y1="32" x2="40" y2="32" stroke="#9A7F4F" strokeWidth="0.8" opacity="0.4" />
-    {/* Subtle edge shadow for thickness */}
-    <path d="M4 42 L4 44 Q4 46 6 46 L42 46 Q44 46 44 44 L44 42" fill="#8B7355" opacity="0.5" />
-    <path d="M42 4 L44 4 Q46 4 46 6 L46 42 Q46 44 44 44 L42 44" fill="#8B7355" opacity="0.3" />
+    {/* Table frame/border */}
+    <rect x="4" y="4" width="40" height="40" rx="1" fill="#6B5A48" />
+    {/* Table surface */}
+    <rect x="6" y="6" width="36" height="36" rx="0.5" fill="#A68B5B" />
   </svg>
 );
 

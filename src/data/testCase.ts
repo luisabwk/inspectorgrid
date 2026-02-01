@@ -12,60 +12,57 @@ const generateTestGrid = (): Cell[][] => {
         col,
         asset: 'empty',
         walls: [],
-        roomId: 'corridor', // Default to corridor
+        roomId: 'corridor',
       };
     }
   }
   
-  // === SALA DE ESTAR (top-left 3x2) ===
-  grid[0][0].roomId = 'living';
-  grid[0][1].roomId = 'living';
-  grid[0][2].roomId = 'living';
-  grid[1][0].roomId = 'living';
-  grid[1][1].roomId = 'living';
-  grid[1][2].roomId = 'living';
-  // Furniture
+  // === SALA DE ESTAR (top-left 3x2 - rows 0-1, cols 0-2) ===
+  for (let r = 0; r <= 1; r++) {
+    for (let c = 0; c <= 2; c++) {
+      grid[r][c].roomId = 'living';
+    }
+  }
   grid[0][0].asset = 'sofa';
   grid[0][1].asset = 'tv';
   grid[1][0].asset = 'armchair';
   grid[1][2].asset = 'plant';
   
-  // === QUARTO (top-right 3x2) ===
-  grid[0][3].roomId = 'bedroom';
-  grid[0][4].roomId = 'bedroom';
-  grid[0][5].roomId = 'bedroom';
-  grid[1][3].roomId = 'bedroom';
-  grid[1][4].roomId = 'bedroom';
-  grid[1][5].roomId = 'bedroom';
-  // Beds spanning 2 cells each (head + foot)
+  // === QUARTO (top-right 3x2 - rows 0-1, cols 3-5) ===
+  for (let r = 0; r <= 1; r++) {
+    for (let c = 3; c <= 5; c++) {
+      grid[r][c].roomId = 'bedroom';
+    }
+  }
   grid[0][3].asset = 'bed_head';
   grid[0][4].asset = 'bed_foot';
   grid[1][3].asset = 'bed_head';
   grid[1][4].asset = 'bed_foot';
-  // Window marking on exterior wall
-  grid[1][5].asset = 'window';
+  grid[0][5].asset = 'window';
   
-  // === COZINHA (bottom-left 2x2) ===
-  grid[4][0].roomId = 'kitchen';
-  grid[4][1].roomId = 'kitchen';
-  grid[5][0].roomId = 'kitchen';
-  grid[5][1].roomId = 'kitchen';
-  // Furniture
-  grid[4][0].asset = 'table';
-  grid[4][1].asset = 'table';
-  grid[5][0].asset = 'debris';
-  
-  // === ESCRITÓRIO (bottom-right 2x2) ===
-  grid[4][4].roomId = 'study';
-  grid[4][5].roomId = 'study';
-  grid[5][4].roomId = 'study';
-  grid[5][5].roomId = 'study';
-  // Furniture
-  grid[4][4].asset = 'bookshelf';
-  grid[5][5].asset = 'rug';
-  
-  // === CORREDOR (remaining center cells) ===
+  // === CORREDOR (middle row 2 - full width) ===
   // Already set as default 'corridor'
+  
+  // === COZINHA (bottom-left 3x3 - rows 3-5, cols 0-2) ===
+  for (let r = 3; r <= 5; r++) {
+    for (let c = 0; c <= 2; c++) {
+      grid[r][c].roomId = 'kitchen';
+    }
+  }
+  grid[3][0].asset = 'table';
+  grid[3][1].asset = 'table';
+  grid[5][0].asset = 'debris';
+  grid[4][2].asset = 'plant';
+  
+  // === ESCRITÓRIO (bottom-right 3x3 - rows 3-5, cols 3-5) ===
+  for (let r = 3; r <= 5; r++) {
+    for (let c = 3; c <= 5; c++) {
+      grid[r][c].roomId = 'study';
+    }
+  }
+  grid[3][4].asset = 'bookshelf';
+  grid[5][5].asset = 'rug';
+  grid[4][3].asset = 'window';
   
   return grid;
 };

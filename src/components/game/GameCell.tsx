@@ -1,6 +1,6 @@
 import { Cell, Suspect, isCellOccupiable, getCellKey, AssetType } from "@/types/game";
 import { cn } from "@/lib/utils";
-import { AssetIconMap } from "./assets/AssetIcons";
+import { AssetIconMap, TableIcon } from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
 
 interface GameCellProps {
@@ -22,6 +22,11 @@ interface GameCellProps {
   hasWindowRight: boolean;
   hasWindowBottom: boolean;
   hasWindowLeft: boolean;
+  // Adjacent table connections
+  hasTableTop: boolean;
+  hasTableBottom: boolean;
+  hasTableLeft: boolean;
+  hasTableRight: boolean;
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -44,14 +49,19 @@ export const GameCell = ({
   hasWindowRight,
   hasWindowBottom,
   hasWindowLeft,
+  hasTableTop,
+  hasTableBottom,
+  hasTableLeft,
+  hasTableRight,
   onCellClick,
   onCellDrop,
   onDragOver,
 }: GameCellProps) => {
   // Window cells are occupiable but don't show an icon - they're wall markings
   const isWindowCell = cell.asset === 'window';
+  const isTableCell = cell.asset === 'table';
   const isOccupiable = isCellOccupiable(cell);
-  const AssetIcon = !isWindowCell ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
+  const AssetIcon = !isWindowCell && !isTableCell ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
   
   const handleClick = () => {
     if (isOccupiable) {
@@ -153,12 +163,25 @@ export const GameCell = ({
       )}
 
       {/* Asset layer */}
-      {cell.asset !== 'empty' && !isWindowCell && (
+      {cell.asset !== 'empty' && !isWindowCell && !isTableCell && (
         <div className={cn(
           "absolute inset-1 flex items-center justify-center",
           isOccupiable ? "opacity-70" : "opacity-80"
         )}>
           <AssetIcon className="w-full h-full" />
+        </div>
+      )}
+      
+      {/* Table asset with connection support */}
+      {isTableCell && (
+        <div className="absolute inset-0 flex items-center justify-center opacity-80">
+          <TableIcon 
+            className="w-full h-full" 
+            connectedTop={hasTableTop}
+            connectedBottom={hasTableBottom}
+            connectedLeft={hasTableLeft}
+            connectedRight={hasTableRight}
+          />
         </div>
       )}
       

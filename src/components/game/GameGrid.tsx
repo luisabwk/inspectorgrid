@@ -46,6 +46,10 @@ export const GameGrid = ({
 }: GameGridProps) => {
   const gridSize = cells.length;
   
+  // Parse selected cell to get row/col for highlighting
+  const selectedRow = selectedCell ? parseInt(selectedCell.split('-')[0]) : null;
+  const selectedCol = selectedCell ? parseInt(selectedCell.split('-')[1]) : null;
+  
   // Create room color lookup
   const roomColors: Record<string, string> = {};
   rooms.forEach((room) => {
@@ -164,6 +168,9 @@ export const GameGrid = ({
           const roomColor = cell.roomId ? roomColors[cell.roomId] : undefined;
           const wallInfo = getCellWallInfo(cell);
           
+          const isInSelectedRow = selectedRow !== null && cell.row === selectedRow;
+          const isInSelectedCol = selectedCol !== null && cell.col === selectedCol;
+          
           return (
             <GameCell
               key={cellKey}
@@ -172,6 +179,7 @@ export const GameGrid = ({
               pencilMarks={cellPencilMarks}
               suspects={suspects}
               isSelected={selectedCell === cellKey}
+              isHighlighted={isInSelectedRow || isInSelectedCol}
               isPencilMode={isPencilMode}
               roomColor={roomColor}
               hasWallTop={wallInfo.hasWallTop && cell.row !== 0}

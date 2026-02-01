@@ -20,17 +20,17 @@ export const GameControls = ({
   canCheck,
 }: GameControlsProps) => {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center gap-1.5">
       <Button
         variant={isPencilMode ? "default" : "outline"}
         size="sm"
         onClick={onTogglePencilMode}
         className={cn(
-          "gap-2",
+          "h-7 px-2 text-xs gap-1",
           isPencilMode && "bg-warning text-warning-foreground hover:bg-warning/90"
         )}
       >
-        <Pencil className="w-4 h-4" />
+        <Pencil className="w-3 h-3" />
         Notas
       </Button>
       
@@ -38,9 +38,9 @@ export const GameControls = ({
         variant="outline"
         size="sm"
         onClick={onClearCell}
-        className="gap-2"
+        className="h-7 px-2 text-xs gap-1"
       >
-        <Eraser className="w-4 h-4" />
+        <Eraser className="w-3 h-3" />
         Limpar
       </Button>
       
@@ -48,10 +48,9 @@ export const GameControls = ({
         variant="outline"
         size="sm"
         onClick={onResetGame}
-        className="gap-2 text-destructive hover:text-destructive"
+        className="h-7 px-2 text-xs gap-1 text-destructive hover:text-destructive"
       >
-        <RotateCcw className="w-4 h-4" />
-        Reiniciar
+        <RotateCcw className="w-3 h-3" />
       </Button>
       
       <Button
@@ -59,9 +58,9 @@ export const GameControls = ({
         size="sm"
         onClick={onCheckSolution}
         disabled={!canCheck}
-        className="gap-2 ml-auto"
+        className="h-7 px-2 text-xs gap-1 ml-auto"
       >
-        <Check className="w-4 h-4" />
+        <Check className="w-3 h-3" />
         Verificar
       </Button>
     </div>

@@ -2,6 +2,10 @@ import { Cell, Suspect, isCellOccupiable, getCellKey, AssetType } from "@/types/
 import { cn } from "@/lib/utils";
 import { AssetIconMap, TableIcon, BedIcon, SofaIcon } from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
+import { assetDictionary } from "@/data/assetDictionary";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useState } from "react";
+import { Check, X } from "lucide-react";
 
 interface GameCellProps {
   cell: Cell;
@@ -75,6 +79,8 @@ export const GameCell = ({
   onCellDrop,
   onDragOver,
 }: GameCellProps) => {
+  const [showInfo, setShowInfo] = useState(false);
+  
   // Window cells are occupiable but don't show an icon - they're wall markings
   const isWindowCell = cell.asset === 'window';
   const isTableCell = cell.asset === 'table';
@@ -91,10 +97,20 @@ export const GameCell = ({
   const AssetIcon = !isWindowCell && !isConnectableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
   const ArmchairAssetIcon = AssetIconMap['armchair'];
   
+  // Get asset info from dictionary - handle lonely sofa as armchair
+  const displayAsset = isLonelySofa ? 'armchair' : cell.asset;
+  const assetInfo = assetDictionary[displayAsset];
+  
   const handleClick = () => {
     if (isOccupiable) {
       onCellClick(cell.row, cell.col);
     }
+  };
+  
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowInfo(true);
   };
   
   const handleDrop = (e: React.DragEvent) => {
@@ -116,21 +132,24 @@ export const GameCell = ({
   const WALL_COLOR = 'hsl(var(--foreground) / 0.7)';
 
   return (
-    <div
-      className={cn(
-        "relative aspect-square flex items-center justify-center transition-all duration-150",
-        "border-r border-b border-foreground/10",
-        isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
-        isSelected && "ring-2 ring-primary ring-inset",
-        isHighlighted && !isSelected && "brightness-[0.92]",
-      )}
-      style={{
-        backgroundColor: roomColor || 'hsl(var(--muted))',
-      }}
-      onClick={handleClick}
-      onDrop={handleDrop}
-      onDragOver={onDragOver}
-    >
+    <Popover open={showInfo} onOpenChange={setShowInfo}>
+      <PopoverTrigger asChild>
+        <div
+          className={cn(
+            "relative aspect-square flex items-center justify-center transition-all duration-150",
+            "border-r border-b border-foreground/10",
+            isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
+            isSelected && "ring-2 ring-primary ring-inset",
+            isHighlighted && !isSelected && "brightness-[0.92]",
+          )}
+          style={{
+            backgroundColor: roomColor || 'hsl(var(--muted))',
+          }}
+          onClick={handleClick}
+          onDoubleClick={handleDoubleClick}
+          onDrop={handleDrop}
+          onDragOver={onDragOver}
+        >
       {/* Wall overlays - rendered as absolutely positioned elements */}
       {hasWallTop && (
         <div 
@@ -284,6 +303,29 @@ export const GameCell = ({
       {!isOccupiable && (
         <div className="absolute inset-0 bg-foreground/5 pointer-events-none" />
       )}
-    </div>
+        </div>
+      </PopoverTrigger>
+      
+      <PopoverContent side="top" className="w-64 p-3">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <h4 className="font-bold text-sm">{assetInfo.name}</h4>
+            {assetInfo.canOccupy ? (
+              <span className="flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
+                <Check className="w-3 h-3" />
+                Ocupável
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-xs text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
+                <X className="w-3 h-3" />
+                Bloqueado
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground">{assetInfo.description}</p>
+          <p className="text-xs text-foreground/80 italic">{assetInfo.occupyReason}</p>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };

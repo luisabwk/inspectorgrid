@@ -483,179 +483,233 @@ export const EmptyIcon = ({ className }: AssetIconProps) => (
 
 // === KITCHEN ASSETS ===
 
-// 60-degree perspective fridge with directional variants
+// 60-degree elevated perspective fridge with directional variants
 export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
-  // Fridge facing down (default) - front view
+  // Fridge facing down (default) - front view with doors and handles
   if (direction === 'down') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Shadow */}
-        <rect x="10" y="42" width="28" height="4" fill="#505050" opacity="0.2" />
+        {/* Shadow base */}
+        <ellipse cx="24" cy="45" rx="14" ry="2" fill="#505050" opacity="0.2" />
         {/* Main body */}
-        <rect x="10" y="4" width="28" height="38" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
-        {/* Top surface */}
-        <rect x="10" y="4" width="28" height="4" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
+        <rect x="10" y="6" width="28" height="38" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
+        {/* Top surface - 60deg perspective */}
+        <path d="M10 6 L14 2 L38 2 L38 6 Z" fill="#F5F5F5" stroke="#D0D0D0" strokeWidth="1" />
+        <rect x="10" y="6" width="28" height="3" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="0.5" />
         {/* Freezer door */}
-        <rect x="12" y="6" width="24" height="10" fill="#D8D8D8" stroke="#B0B0B0" strokeWidth="1" />
-        {/* Handle - freezer */}
-        <rect x="32" y="9" width="2" height="4" fill="#909090" stroke="#707070" strokeWidth="0.5" />
+        <rect x="12" y="10" width="24" height="10" fill="#DEDEDE" stroke="#B8B8B8" strokeWidth="1" />
+        {/* Freezer handle */}
+        <rect x="32" y="13" width="2" height="4" rx="0.5" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+        {/* Door gap line */}
+        <line x1="12" y1="21" x2="36" y2="21" stroke="#A0A0A0" strokeWidth="1" />
         {/* Fridge door */}
-        <rect x="12" y="18" width="24" height="22" fill="#E0E0E0" stroke="#B0B0B0" strokeWidth="1" />
-        {/* Handle - fridge */}
-        <rect x="32" y="24" width="2" height="8" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-        {/* Front edge */}
-        <rect x="10" y="40" width="28" height="2" fill="#B0B0B0" />
+        <rect x="12" y="22" width="24" height="20" fill="#E4E4E4" stroke="#B8B8B8" strokeWidth="1" />
+        {/* Fridge handle */}
+        <rect x="32" y="28" width="2" height="8" rx="0.5" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+        {/* Front base edge */}
+        <rect x="10" y="42" width="28" height="2" fill="#C0C0C0" />
+        {/* Side edge - right */}
+        <path d="M38 6 L38 44 L40 42 L40 4 Z" fill="#D8D8D8" stroke="#B0B0B0" strokeWidth="0.5" />
       </svg>
     );
   }
   
-  // Fridge facing up - back view (simpler, no handles visible)
+  // Fridge facing up - back view with vents and coils
   if (direction === 'up') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Main body - back */}
-        <rect x="10" y="6" width="28" height="38" fill="#D8D8D8" stroke="#B0B0B0" strokeWidth="1" />
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="14" ry="2" fill="#505050" opacity="0.2" />
+        {/* Main body - back panel */}
+        <rect x="10" y="6" width="28" height="38" fill="#C8C8C8" stroke="#A0A0A0" strokeWidth="1" />
         {/* Top surface */}
-        <rect x="10" y="4" width="28" height="4" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
-        {/* Back panel details */}
-        <rect x="14" y="10" width="20" height="30" fill="#C8C8C8" stroke="#A0A0A0" strokeWidth="1" />
-        {/* Vent lines */}
-        <line x1="16" y1="14" x2="32" y2="14" stroke="#A0A0A0" strokeWidth="1" />
-        <line x1="16" y1="18" x2="32" y2="18" stroke="#A0A0A0" strokeWidth="1" />
-        <line x1="16" y1="22" x2="32" y2="22" stroke="#A0A0A0" strokeWidth="1" />
-        {/* Front edge */}
-        <rect x="10" y="42" width="28" height="2" fill="#A0A0A0" />
+        <path d="M10 6 L14 2 L38 2 L38 6 Z" fill="#E0E0E0" stroke="#C0C0C0" strokeWidth="1" />
+        {/* Back panel recessed area */}
+        <rect x="14" y="10" width="20" height="30" fill="#B8B8B8" stroke="#909090" strokeWidth="1" />
+        {/* Condenser coils - visible at back */}
+        <path d="M16 14 Q18 16 20 14 Q22 12 24 14 Q26 16 28 14 Q30 12 32 14" stroke="#606060" strokeWidth="1.5" fill="none" />
+        <path d="M16 20 Q18 22 20 20 Q22 18 24 20 Q26 22 28 20 Q30 18 32 20" stroke="#606060" strokeWidth="1.5" fill="none" />
+        <path d="M16 26 Q18 28 20 26 Q22 24 24 26 Q26 28 28 26 Q30 24 32 26" stroke="#606060" strokeWidth="1.5" fill="none" />
+        {/* Vent slots */}
+        <rect x="18" y="32" width="12" height="1" fill="#707070" />
+        <rect x="18" y="35" width="12" height="1" fill="#707070" />
+        {/* Front base edge */}
+        <rect x="10" y="42" width="28" height="2" fill="#909090" />
       </svg>
     );
   }
   
-  // Fridge facing left - side view
+  // Fridge facing left - 60deg elevated profile view
   if (direction === 'left') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Side body */}
-        <rect x="10" y="4" width="28" height="38" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
-        {/* Top surface */}
-        <rect x="10" y="4" width="28" height="4" fill="#E0E0E0" stroke="#C0C0C0" strokeWidth="1" />
-        {/* Front edge visible on left */}
-        <rect x="8" y="4" width="4" height="40" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
-        {/* Handle on front edge */}
-        <rect x="9" y="10" width="2" height="4" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-        <rect x="9" y="26" width="2" height="8" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-        {/* Bottom edge */}
-        <rect x="10" y="42" width="28" height="2" fill="#A0A0A0" />
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="14" ry="2" fill="#505050" opacity="0.2" />
+        {/* Back side panel */}
+        <rect x="16" y="6" width="24" height="38" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
+        {/* Top surface - angled */}
+        <path d="M16 6 L20 2 L44 2 L40 6 Z" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
+        {/* Front panel (visible on left) */}
+        <rect x="8" y="6" width="10" height="38" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
+        {/* Freezer section - front */}
+        <rect x="9" y="10" width="8" height="10" fill="#DEDEDE" stroke="#B8B8B8" strokeWidth="0.5" />
+        {/* Freezer handle */}
+        <rect x="10" y="13" width="1.5" height="4" rx="0.5" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+        {/* Fridge section - front */}
+        <rect x="9" y="22" width="8" height="20" fill="#E4E4E4" stroke="#B8B8B8" strokeWidth="0.5" />
+        {/* Fridge handle */}
+        <rect x="10" y="28" width="1.5" height="8" rx="0.5" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+        {/* Front base edge */}
+        <rect x="8" y="42" width="10" height="2" fill="#C0C0C0" />
+        {/* Side base edge */}
+        <rect x="16" y="42" width="24" height="2" fill="#A8A8A8" />
       </svg>
     );
   }
   
-  // Fridge facing right - side view mirrored
+  // Fridge facing right - 60deg elevated profile view mirrored
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Side body */}
-      <rect x="10" y="4" width="28" height="38" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
-      {/* Top surface */}
-      <rect x="10" y="4" width="28" height="4" fill="#E0E0E0" stroke="#C0C0C0" strokeWidth="1" />
-      {/* Front edge visible on right */}
-      <rect x="36" y="4" width="4" height="40" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
-      {/* Handle on front edge */}
-      <rect x="37" y="10" width="2" height="4" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-      <rect x="37" y="26" width="2" height="8" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-      {/* Bottom edge */}
-      <rect x="10" y="42" width="28" height="2" fill="#A0A0A0" />
+      {/* Shadow */}
+      <ellipse cx="24" cy="45" rx="14" ry="2" fill="#505050" opacity="0.2" />
+      {/* Back side panel */}
+      <rect x="8" y="6" width="24" height="38" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
+      {/* Top surface - angled */}
+      <path d="M8 6 L4 2 L28 2 L32 6 Z" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
+      {/* Front panel (visible on right) */}
+      <rect x="30" y="6" width="10" height="38" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
+      {/* Freezer section - front */}
+      <rect x="31" y="10" width="8" height="10" fill="#DEDEDE" stroke="#B8B8B8" strokeWidth="0.5" />
+      {/* Freezer handle */}
+      <rect x="36.5" y="13" width="1.5" height="4" rx="0.5" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+      {/* Fridge section - front */}
+      <rect x="31" y="22" width="8" height="20" fill="#E4E4E4" stroke="#B8B8B8" strokeWidth="0.5" />
+      {/* Fridge handle */}
+      <rect x="36.5" y="28" width="1.5" height="8" rx="0.5" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+      {/* Front base edge */}
+      <rect x="30" y="42" width="10" height="2" fill="#C0C0C0" />
+      {/* Side base edge */}
+      <rect x="8" y="42" width="24" height="2" fill="#A8A8A8" />
     </svg>
   );
 };
 
-// 60-degree perspective stove with directional variants
+// 60-degree elevated perspective stove with directional variants
 export const StoveIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
-  // Stove facing down (default) - front view with burners and oven
+  // Stove facing down (default) - front view with burners and oven visible
   if (direction === 'down') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Legs */}
-        <rect x="10" y="40" width="3" height="6" fill="#2A2A2A" />
-        <rect x="35" y="40" width="3" height="6" fill="#2A2A2A" />
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="14" ry="2" fill="#303030" opacity="0.3" />
         {/* Main body */}
-        <rect x="8" y="8" width="32" height="32" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-        {/* Top surface with burners */}
-        <rect x="8" y="8" width="32" height="8" fill="#5A5A5A" stroke="#4A4A4A" strokeWidth="1" />
-        {/* Burners */}
-        <circle cx="18" cy="12" r="5" fill="#3A3A3A" stroke="#5A5A5A" strokeWidth="1" />
-        <circle cx="30" cy="12" r="5" fill="#3A3A3A" stroke="#5A5A5A" strokeWidth="1" />
-        <circle cx="18" cy="12" r="3" fill="none" stroke="#4A4A4A" strokeWidth="1" />
-        <circle cx="30" cy="12" r="3" fill="none" stroke="#4A4A4A" strokeWidth="1" />
+        <rect x="8" y="10" width="32" height="34" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+        {/* Top cooking surface - 60deg perspective */}
+        <path d="M8 10 L12 4 L40 4 L40 10 Z" fill="#5A5A5A" stroke="#4A4A4A" strokeWidth="1" />
+        <rect x="8" y="10" width="32" height="6" fill="#505050" stroke="#404040" strokeWidth="0.5" />
+        {/* Burners - slightly visible from above */}
+        <ellipse cx="17" cy="12" rx="4" ry="2.5" fill="#3A3A3A" stroke="#555555" strokeWidth="1" />
+        <ellipse cx="31" cy="12" rx="4" ry="2.5" fill="#3A3A3A" stroke="#555555" strokeWidth="1" />
+        <ellipse cx="17" cy="12" rx="2.5" ry="1.5" fill="none" stroke="#454545" strokeWidth="0.5" />
+        <ellipse cx="31" cy="12" rx="2.5" ry="1.5" fill="none" stroke="#454545" strokeWidth="0.5" />
         {/* Oven door */}
-        <rect x="10" y="18" width="28" height="18" fill="#404040" stroke="#505050" strokeWidth="1" />
-        <rect x="16" y="20" width="16" height="2" fill="#707070" stroke="#505050" strokeWidth="0.5" />
-        <rect x="14" y="24" width="20" height="8" fill="#2A2A2A" stroke="#3A3A3A" strokeWidth="1" />
-        {/* Control panel */}
-        <rect x="10" y="36" width="28" height="4" fill="#505050" />
-        <circle cx="16" cy="38" r="2" fill="#707070" stroke="#505050" strokeWidth="0.5" />
-        <circle cx="24" cy="38" r="2" fill="#707070" stroke="#505050" strokeWidth="0.5" />
-        <circle cx="32" cy="38" r="2" fill="#707070" stroke="#505050" strokeWidth="0.5" />
+        <rect x="10" y="18" width="28" height="20" fill="#404040" stroke="#505050" strokeWidth="1" />
+        {/* Oven window */}
+        <rect x="14" y="22" width="20" height="10" fill="#2A2A2A" stroke="#3A3A3A" strokeWidth="1" />
+        {/* Oven handle */}
+        <rect x="16" y="19" width="16" height="2" rx="0.5" fill="#707070" stroke="#505050" strokeWidth="0.5" />
+        {/* Control knobs */}
+        <rect x="8" y="38" width="32" height="6" fill="#555555" />
+        <circle cx="14" cy="41" r="2" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+        <circle cx="22" cy="41" r="2" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+        <circle cx="30" cy="41" r="2" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+        <circle cx="38" cy="41" r="2" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+        {/* Side edge */}
+        <path d="M40 10 L40 44 L42 42 L42 8 Z" fill="#3A3A3A" stroke="#2A2A2A" strokeWidth="0.5" />
       </svg>
     );
   }
   
-  // Stove facing up - back view (only burners visible from behind)
+  // Stove facing up - back view (burners and back panel)
   if (direction === 'up') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Legs */}
-        <rect x="10" y="40" width="3" height="6" fill="#2A2A2A" />
-        <rect x="35" y="40" width="3" height="6" fill="#2A2A2A" />
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="14" ry="2" fill="#303030" opacity="0.3" />
         {/* Main body - back */}
-        <rect x="8" y="8" width="32" height="32" fill="#404040" stroke="#3A3A3A" strokeWidth="1" />
-        {/* Back panel */}
-        <rect x="8" y="4" width="32" height="6" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-        {/* Burners visible from top */}
-        <circle cx="18" cy="28" r="5" fill="#3A3A3A" stroke="#4A4A4A" strokeWidth="1" />
-        <circle cx="30" cy="28" r="5" fill="#3A3A3A" stroke="#4A4A4A" strokeWidth="1" />
-        <circle cx="18" cy="28" r="3" fill="none" stroke="#4A4A4A" strokeWidth="1" />
-        <circle cx="30" cy="28" r="3" fill="none" stroke="#4A4A4A" strokeWidth="1" />
-        {/* Top edge */}
-        <rect x="8" y="38" width="32" height="2" fill="#303030" />
+        <rect x="8" y="10" width="32" height="34" fill="#404040" stroke="#3A3A3A" strokeWidth="1" />
+        {/* Back panel raised */}
+        <rect x="8" y="4" width="32" height="8" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+        {/* Burners - visible from top-back angle */}
+        <ellipse cx="17" cy="24" rx="5" ry="4" fill="#3A3A3A" stroke="#4A4A4A" strokeWidth="1" />
+        <ellipse cx="31" cy="24" rx="5" ry="4" fill="#3A3A3A" stroke="#4A4A4A" strokeWidth="1" />
+        <ellipse cx="17" cy="24" rx="3" ry="2.5" fill="none" stroke="#454545" strokeWidth="1" />
+        <ellipse cx="31" cy="24" rx="3" ry="2.5" fill="none" stroke="#454545" strokeWidth="1" />
+        {/* Back vent slots */}
+        <rect x="14" y="32" width="20" height="1" fill="#2A2A2A" />
+        <rect x="14" y="35" width="20" height="1" fill="#2A2A2A" />
+        <rect x="14" y="38" width="20" height="1" fill="#2A2A2A" />
+        {/* Base edge */}
+        <rect x="8" y="42" width="32" height="2" fill="#303030" />
       </svg>
     );
   }
   
-  // Stove facing left - side view
+  // Stove facing left - 60deg elevated profile view
   if (direction === 'left') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Legs */}
-        <rect x="10" y="40" width="3" height="6" fill="#2A2A2A" />
-        <rect x="35" y="40" width="3" height="6" fill="#2A2A2A" />
-        {/* Side body */}
-        <rect x="10" y="8" width="28" height="32" fill="#454545" stroke="#3A3A3A" strokeWidth="1" />
-        {/* Top surface */}
-        <rect x="10" y="8" width="28" height="6" fill="#5A5A5A" stroke="#4A4A4A" strokeWidth="1" />
-        {/* Front edge with oven visible */}
-        <rect x="8" y="8" width="4" height="34" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-        {/* Oven window hint */}
-        <rect x="9" y="20" width="2" height="10" fill="#2A2A2A" stroke="#3A3A3A" strokeWidth="0.5" />
-        {/* Knob */}
-        <circle cx="10" cy="36" r="2" fill="#707070" stroke="#505050" strokeWidth="0.5" />
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="14" ry="2" fill="#303030" opacity="0.3" />
+        {/* Back side panel */}
+        <rect x="16" y="10" width="24" height="34" fill="#454545" stroke="#3A3A3A" strokeWidth="1" />
+        {/* Top surface - angled */}
+        <path d="M16 10 L20 4 L44 4 L40 10 Z" fill="#505050" stroke="#404040" strokeWidth="1" />
+        {/* Front panel (visible on left) */}
+        <rect x="8" y="10" width="10" height="34" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+        {/* Oven door on front - profile */}
+        <rect x="9" y="18" width="8" height="20" fill="#404040" stroke="#505050" strokeWidth="0.5" />
+        {/* Oven window - narrow */}
+        <rect x="10" y="22" width="6" height="10" fill="#2A2A2A" stroke="#3A3A3A" strokeWidth="0.5" />
+        {/* Oven handle */}
+        <rect x="10" y="19" width="6" height="1.5" rx="0.5" fill="#707070" />
+        {/* Control knobs on front */}
+        <circle cx="12" cy="40" r="1.5" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+        <circle cx="15" cy="40" r="1.5" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+        {/* Burner hint on top */}
+        <ellipse cx="28" cy="8" rx="4" ry="2" fill="#3A3A3A" stroke="#505050" strokeWidth="0.5" />
+        {/* Base edges */}
+        <rect x="8" y="42" width="10" height="2" fill="#303030" />
+        <rect x="16" y="42" width="24" height="2" fill="#2A2A2A" />
       </svg>
     );
   }
   
-  // Stove facing right - side view mirrored
+  // Stove facing right - 60deg elevated profile view mirrored
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Legs */}
-      <rect x="10" y="40" width="3" height="6" fill="#2A2A2A" />
-      <rect x="35" y="40" width="3" height="6" fill="#2A2A2A" />
-      {/* Side body */}
-      <rect x="10" y="8" width="28" height="32" fill="#454545" stroke="#3A3A3A" strokeWidth="1" />
-      {/* Top surface */}
-      <rect x="10" y="8" width="28" height="6" fill="#5A5A5A" stroke="#4A4A4A" strokeWidth="1" />
-      {/* Front edge with oven visible */}
-      <rect x="36" y="8" width="4" height="34" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-      {/* Oven window hint */}
-      <rect x="37" y="20" width="2" height="10" fill="#2A2A2A" stroke="#3A3A3A" strokeWidth="0.5" />
-      {/* Knob */}
-      <circle cx="38" cy="36" r="2" fill="#707070" stroke="#505050" strokeWidth="0.5" />
+      {/* Shadow */}
+      <ellipse cx="24" cy="45" rx="14" ry="2" fill="#303030" opacity="0.3" />
+      {/* Back side panel */}
+      <rect x="8" y="10" width="24" height="34" fill="#454545" stroke="#3A3A3A" strokeWidth="1" />
+      {/* Top surface - angled */}
+      <path d="M8 10 L4 4 L28 4 L32 10 Z" fill="#505050" stroke="#404040" strokeWidth="1" />
+      {/* Front panel (visible on right) */}
+      <rect x="30" y="10" width="10" height="34" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+      {/* Oven door on front - profile */}
+      <rect x="31" y="18" width="8" height="20" fill="#404040" stroke="#505050" strokeWidth="0.5" />
+      {/* Oven window - narrow */}
+      <rect x="32" y="22" width="6" height="10" fill="#2A2A2A" stroke="#3A3A3A" strokeWidth="0.5" />
+      {/* Oven handle */}
+      <rect x="32" y="19" width="6" height="1.5" rx="0.5" fill="#707070" />
+      {/* Control knobs on front */}
+      <circle cx="33" cy="40" r="1.5" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+      <circle cx="36" cy="40" r="1.5" fill="#606060" stroke="#505050" strokeWidth="0.5" />
+      {/* Burner hint on top */}
+      <ellipse cx="20" cy="8" rx="4" ry="2" fill="#3A3A3A" stroke="#505050" strokeWidth="0.5" />
+      {/* Base edges */}
+      <rect x="30" y="42" width="10" height="2" fill="#303030" />
+      <rect x="8" y="42" width="24" height="2" fill="#2A2A2A" />
     </svg>
   );
 };
@@ -749,153 +803,222 @@ export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetPro
   );
 };
 
-// 60-degree perspective sink with directional variants
+// 60-degree elevated perspective sink with directional variants
 export const SinkIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
   // Sink facing down (default) - front view with cabinet and faucet
   if (direction === 'down') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Cabinet */}
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="16" ry="2" fill="#505050" opacity="0.2" />
+        {/* Cabinet body */}
         <rect x="6" y="20" width="36" height="24" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
-        <rect x="6" y="44" width="36" height="2" fill="#8B7355" />
+        {/* Cabinet top edge - 60deg perspective */}
+        <path d="M6 20 L10 16 L42 16 L42 20 Z" fill="#D4B584" stroke="#A08050" strokeWidth="0.5" />
         {/* Cabinet doors */}
         <rect x="8" y="24" width="14" height="18" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
         <rect x="26" y="24" width="14" height="18" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
         {/* Door handles */}
-        <rect x="19" y="31" width="2" height="4" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-        <rect x="27" y="31" width="2" height="4" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-        {/* Counter top */}
-        <rect x="4" y="16" width="40" height="6" fill="#E8E0D8" stroke="#C0B0A0" strokeWidth="1" />
-        {/* Sink basin */}
-        <ellipse cx="24" cy="18" rx="10" ry="4" fill="#D8D8D8" stroke="#B0B0B0" strokeWidth="1" />
-        <ellipse cx="24" cy="18" rx="8" ry="3" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="1" />
-        {/* Faucet */}
-        <rect x="22" y="8" width="4" height="8" fill="#A8A8A8" stroke="#888888" strokeWidth="1" />
-        <rect x="20" y="6" width="8" height="3" rx="1" fill="#B8B8B8" stroke="#909090" strokeWidth="1" />
-        <path d="M24 9 L24 12 L28 14" stroke="#808080" strokeWidth="2" fill="none" />
+        <rect x="19" y="31" width="2" height="4" rx="0.5" fill="#909090" stroke="#707070" strokeWidth="0.5" />
+        <rect x="27" y="31" width="2" height="4" rx="0.5" fill="#909090" stroke="#707070" strokeWidth="0.5" />
+        {/* Counter top surface */}
+        <rect x="4" y="14" width="40" height="8" fill="#E8E0D8" stroke="#C0B0A0" strokeWidth="1" />
+        {/* Counter top perspective top */}
+        <path d="M4 14 L8 10 L44 10 L44 14 Z" fill="#F0E8E0" stroke="#D0C0B0" strokeWidth="0.5" />
+        {/* Sink basin - recessed */}
+        <ellipse cx="24" cy="16" rx="10" ry="4" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
+        <ellipse cx="24" cy="17" rx="8" ry="3" fill="#A8A8A8" stroke="#909090" strokeWidth="1" />
+        {/* Drain */}
+        <circle cx="24" cy="17" r="1.5" fill="#606060" />
+        {/* Faucet base */}
+        <rect x="22" y="6" width="4" height="6" fill="#B0B0B0" stroke="#909090" strokeWidth="1" />
+        {/* Faucet spout - curved */}
+        <path d="M24 6 C24 2 30 2 30 6 L30 10" stroke="#A0A0A0" strokeWidth="3" fill="none" strokeLinecap="round" />
+        {/* Faucet handles */}
+        <circle cx="20" cy="8" r="2" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="0.5" />
+        <circle cx="28" cy="8" r="2" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="0.5" />
+        {/* Cabinet base edge */}
+        <rect x="6" y="42" width="36" height="2" fill="#8B7355" />
+        {/* Side edge */}
+        <path d="M42 20 L42 44 L44 42 L44 18 Z" fill="#B09060" stroke="#8B7355" strokeWidth="0.5" />
       </svg>
     );
   }
   
-  // Sink facing up - back view
+  // Sink facing up - back view with pipes visible
   if (direction === 'up') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="16" ry="2" fill="#505050" opacity="0.2" />
         {/* Cabinet back */}
-        <rect x="6" y="20" width="36" height="24" fill="#B09060" stroke="#8B7355" strokeWidth="1" />
-        {/* Counter top */}
-        <rect x="4" y="16" width="40" height="6" fill="#D8D0C8" stroke="#B0A090" strokeWidth="1" />
-        {/* Sink basin - visible from above */}
-        <ellipse cx="24" cy="26" rx="10" ry="4" fill="#D8D8D8" stroke="#B0B0B0" strokeWidth="1" />
-        <ellipse cx="24" cy="26" rx="8" ry="3" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="1" />
-        {/* Pipes visible at back */}
-        <rect x="22" y="34" width="4" height="10" fill="#808080" stroke="#606060" strokeWidth="1" />
-        {/* Cabinet bottom edge */}
+        <rect x="6" y="20" width="36" height="24" fill="#A08050" stroke="#8B7355" strokeWidth="1" />
+        {/* Back panel */}
+        <rect x="8" y="22" width="32" height="18" fill="#907040" stroke="#8B7355" strokeWidth="0.5" />
+        {/* Counter top - back edge visible */}
+        <rect x="4" y="14" width="40" height="8" fill="#D8D0C8" stroke="#B0A090" strokeWidth="1" />
+        {/* Counter perspective */}
+        <path d="M4 14 L8 10 L44 10 L44 14 Z" fill="#E8E0D8" stroke="#C0B0A0" strokeWidth="0.5" />
+        {/* Sink basin visible from above */}
+        <ellipse cx="24" cy="16" rx="10" ry="4" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
+        {/* Pipes at back */}
+        <rect x="18" y="28" width="3" height="14" fill="#707070" stroke="#505050" strokeWidth="1" />
+        <rect x="27" y="28" width="3" height="14" fill="#707070" stroke="#505050" strokeWidth="1" />
+        {/* P-trap */}
+        <path d="M19.5 36 Q19.5 40 24 40 Q28.5 40 28.5 36" stroke="#606060" strokeWidth="2" fill="none" />
+        {/* Cabinet base edge */}
         <rect x="6" y="42" width="36" height="2" fill="#8B7355" />
       </svg>
     );
   }
   
-  // Sink facing left - side view
+  // Sink facing left - 60deg elevated profile view
   if (direction === 'left') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Cabinet side */}
-        <rect x="10" y="20" width="28" height="24" fill="#C0956A" stroke="#8B7355" strokeWidth="1" />
-        {/* Front edge with door */}
-        <rect x="8" y="20" width="6" height="24" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
+        {/* Shadow */}
+        <ellipse cx="24" cy="45" rx="14" ry="2" fill="#505050" opacity="0.2" />
+        {/* Cabinet side/back */}
+        <rect x="16" y="20" width="24" height="24" fill="#B09060" stroke="#8B7355" strokeWidth="1" />
+        {/* Cabinet front panel (visible on left) */}
+        <rect x="8" y="20" width="10" height="24" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
+        {/* Door on front */}
+        <rect x="9" y="24" width="8" height="18" fill="#D4B584" stroke="#A08050" strokeWidth="0.5" />
         {/* Door handle */}
-        <rect x="9" y="31" width="2" height="4" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-        {/* Counter top */}
-        <rect x="6" y="16" width="36" height="6" fill="#E8E0D8" stroke="#C0B0A0" strokeWidth="1" />
-        {/* Sink basin - side view */}
-        <ellipse cx="24" cy="18" rx="8" ry="3" fill="#D8D8D8" stroke="#B0B0B0" strokeWidth="1" />
-        {/* Faucet - side view */}
-        <rect x="12" y="8" width="4" height="10" fill="#A8A8A8" stroke="#888888" strokeWidth="1" />
-        <rect x="14" y="10" width="6" height="2" fill="#B8B8B8" stroke="#909090" strokeWidth="1" />
-        {/* Cabinet bottom */}
-        <rect x="10" y="42" width="28" height="2" fill="#8B7355" />
+        <rect x="10" y="31" width="1.5" height="4" rx="0.5" fill="#909090" stroke="#707070" strokeWidth="0.5" />
+        {/* Counter top - side profile */}
+        <path d="M6 14 L6 22 L40 22 L40 14 L44 10 L10 10 Z" fill="#E8E0D8" stroke="#C0B0A0" strokeWidth="1" />
+        {/* Counter top surface */}
+        <path d="M6 14 L10 10 L44 10 L40 14 Z" fill="#F0E8E0" stroke="#D0C0B0" strokeWidth="0.5" />
+        {/* Sink basin - profile */}
+        <ellipse cx="26" cy="15" rx="8" ry="3" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
+        {/* Faucet - side profile */}
+        <rect x="14" y="6" width="3" height="8" fill="#B0B0B0" stroke="#909090" strokeWidth="1" />
+        <path d="M15.5 6 C15.5 2 22 2 22 8" stroke="#A0A0A0" strokeWidth="2" fill="none" strokeLinecap="round" />
+        {/* Cabinet base edges */}
+        <rect x="8" y="42" width="10" height="2" fill="#8B7355" />
+        <rect x="16" y="42" width="24" height="2" fill="#907040" />
       </svg>
     );
   }
   
-  // Sink facing right - side view mirrored
+  // Sink facing right - 60deg elevated profile view mirrored
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Cabinet side */}
-      <rect x="10" y="20" width="28" height="24" fill="#C0956A" stroke="#8B7355" strokeWidth="1" />
-      {/* Front edge with door */}
-      <rect x="34" y="20" width="6" height="24" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
+      {/* Shadow */}
+      <ellipse cx="24" cy="45" rx="14" ry="2" fill="#505050" opacity="0.2" />
+      {/* Cabinet side/back */}
+      <rect x="8" y="20" width="24" height="24" fill="#B09060" stroke="#8B7355" strokeWidth="1" />
+      {/* Cabinet front panel (visible on right) */}
+      <rect x="30" y="20" width="10" height="24" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
+      {/* Door on front */}
+      <rect x="31" y="24" width="8" height="18" fill="#D4B584" stroke="#A08050" strokeWidth="0.5" />
       {/* Door handle */}
-      <rect x="37" y="31" width="2" height="4" fill="#909090" stroke="#707070" strokeWidth="0.5" />
-      {/* Counter top */}
-      <rect x="6" y="16" width="36" height="6" fill="#E8E0D8" stroke="#C0B0A0" strokeWidth="1" />
-      {/* Sink basin - side view */}
-      <ellipse cx="24" cy="18" rx="8" ry="3" fill="#D8D8D8" stroke="#B0B0B0" strokeWidth="1" />
-      {/* Faucet - side view */}
-      <rect x="32" y="8" width="4" height="10" fill="#A8A8A8" stroke="#888888" strokeWidth="1" />
-      <rect x="28" y="10" width="6" height="2" fill="#B8B8B8" stroke="#909090" strokeWidth="1" />
-      {/* Cabinet bottom */}
-      <rect x="10" y="42" width="28" height="2" fill="#8B7355" />
+      <rect x="36.5" y="31" width="1.5" height="4" rx="0.5" fill="#909090" stroke="#707070" strokeWidth="0.5" />
+      {/* Counter top - side profile */}
+      <path d="M4 14 L4 22 L38 22 L42 22 L42 14 L38 10 L8 10 Z" fill="#E8E0D8" stroke="#C0B0A0" strokeWidth="1" />
+      {/* Counter top surface */}
+      <path d="M4 14 L8 10 L42 10 L38 14 Z" fill="#F0E8E0" stroke="#D0C0B0" strokeWidth="0.5" />
+      {/* Sink basin - profile */}
+      <ellipse cx="22" cy="15" rx="8" ry="3" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
+      {/* Faucet - side profile */}
+      <rect x="32" y="6" width="3" height="8" fill="#B0B0B0" stroke="#909090" strokeWidth="1" />
+      <path d="M33.5 6 C33.5 2 26 2 26 8" stroke="#A0A0A0" strokeWidth="2" fill="none" strokeLinecap="round" />
+      {/* Cabinet base edges */}
+      <rect x="30" y="42" width="10" height="2" fill="#8B7355" />
+      <rect x="8" y="42" width="24" height="2" fill="#907040" />
     </svg>
   );
 };
 
 // === BATHROOM ASSETS ===
 
-// Side-view toilet (easier to distinguish)
+// 60-degree elevated perspective toilet
 export const ToiletIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Shadow */}
-    <ellipse cx="26" cy="44" rx="14" ry="2" fill="#505050" opacity="0.2" />
-    {/* Tank - back left */}
-    <rect x="4" y="10" width="10" height="22" rx="2" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
-    {/* Tank lid */}
-    <rect x="3" y="6" width="12" height="5" rx="1" fill="#FAFAFA" stroke="#E0E0E0" strokeWidth="1" />
-    {/* Flush lever */}
-    <rect x="12" y="14" width="4" height="2" rx="1" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="0.5" />
-    {/* Bowl base - side view curved */}
-    <path d="M12 32 L12 24 Q12 18 18 18 L32 18 Q40 18 40 26 L40 32 Q40 42 30 42 L20 42 Q12 42 12 32 Z" fill="#F5F5F5" stroke="#D0D0D0" strokeWidth="1" />
-    {/* Seat - side view */}
-    <path d="M14 20 L36 20 Q42 20 42 26 L42 28 Q42 32 36 32 L14 32 Q10 32 10 26 L10 24 Q10 20 14 20 Z" fill="#FAFAFA" stroke="#C0C0C0" strokeWidth="1" />
-    {/* Seat opening hint */}
-    <ellipse cx="28" cy="26" rx="8" ry="4" fill="#E0E0E0" stroke="#C0C0C0" strokeWidth="1" />
-    {/* Bowl front depth */}
-    <path d="M14 32 L36 32 Q40 32 40 36 L40 38 Q40 42 34 42 L18 42 Q14 42 14 38 L14 32 Z" fill="#E8E8E8" stroke="#D0D0D0" strokeWidth="1" />
+    <ellipse cx="24" cy="45" rx="14" ry="2" fill="#505050" opacity="0.2" />
+    
+    {/* Tank - back, elevated view */}
+    <rect x="14" y="4" width="20" height="14" rx="2" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
+    {/* Tank top - 60deg perspective */}
+    <path d="M14 4 L16 2 L36 2 L34 4 Z" fill="#FAFAFA" stroke="#E0E0E0" strokeWidth="0.5" />
+    {/* Tank lid raised edge */}
+    <rect x="15" y="4" width="18" height="3" fill="#FAFAFA" stroke="#E8E8E8" strokeWidth="0.5" />
+    {/* Flush button */}
+    <ellipse cx="24" cy="6" rx="3" ry="1" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="0.5" />
+    
+    {/* Bowl - top view with seat */}
+    <ellipse cx="24" cy="30" rx="14" ry="10" fill="#F5F5F5" stroke="#D0D0D0" strokeWidth="1" />
+    {/* Seat - slightly raised */}
+    <ellipse cx="24" cy="29" rx="12" ry="8" fill="#FAFAFA" stroke="#E0E0E0" strokeWidth="1" />
+    {/* Seat opening */}
+    <ellipse cx="24" cy="30" rx="8" ry="5" fill="#E0E0E0" stroke="#C0C0C0" strokeWidth="1" />
+    {/* Inner bowl depth */}
+    <ellipse cx="24" cy="31" rx="6" ry="3.5" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="0.5" />
+    
+    {/* Connection between tank and bowl */}
+    <rect x="20" y="16" width="8" height="6" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="0.5" />
+    
+    {/* Front rim edge - depth */}
+    <path d="M10 32 Q10 42 24 42 Q38 42 38 32" fill="#E8E8E8" stroke="#D0D0D0" strokeWidth="1" />
+    
+    {/* Seat hinge hints */}
+    <circle cx="16" cy="22" r="1" fill="#B0B0B0" />
+    <circle cx="32" cy="22" r="1" fill="#B0B0B0" />
   </svg>
 );
 
-// Side-view shower (easier to distinguish)
+// 60-degree elevated perspective shower
 export const ShowerIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Base/tray - side view */}
-    <rect x="6" y="40" width="36" height="6" fill="#E8E8E8" stroke="#D0D0D0" strokeWidth="1" />
-    <rect x="6" y="40" width="36" height="2" fill="#F0F0F0" />
-    {/* Back wall - side perspective */}
-    <path d="M6 8 L6 40 L14 40 L14 8 Z" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
-    {/* Tiles on back wall */}
-    <line x1="6" y1="18" x2="14" y2="18" stroke="#C0C0C0" strokeWidth="1" />
-    <line x1="6" y1="28" x2="14" y2="28" stroke="#C0C0C0" strokeWidth="1" />
-    {/* Shower pipe on wall */}
-    <rect x="8" y="8" width="3" height="20" fill="#A0A0A0" stroke="#808080" strokeWidth="1" />
-    {/* Shower head - angled outward */}
-    <ellipse cx="18" cy="12" rx="6" ry="3" fill="#A8A8A8" stroke="#888888" strokeWidth="1" />
-    <ellipse cx="18" cy="13" rx="5" ry="2" fill="#989898" stroke="#787878" strokeWidth="1" />
-    {/* Arm connecting head to pipe */}
-    <rect x="11" y="10" width="8" height="3" fill="#909090" stroke="#808080" strokeWidth="1" />
-    {/* Water drops - cascading */}
-    <circle cx="14" cy="20" r="1.5" fill="#88C8E8" opacity="0.7" />
-    <circle cx="18" cy="24" r="1.5" fill="#88C8E8" opacity="0.6" />
-    <circle cx="22" cy="22" r="1" fill="#88C8E8" opacity="0.7" />
-    <circle cx="16" cy="30" r="1" fill="#88C8E8" opacity="0.5" />
-    <circle cx="20" cy="32" r="1.5" fill="#88C8E8" opacity="0.5" />
-    <circle cx="14" cy="36" r="1" fill="#88C8E8" opacity="0.4" />
-    {/* Glass door/panel - side view */}
-    <rect x="36" y="8" width="6" height="32" fill="#A8C8E0" opacity="0.4" stroke="#90B0C8" strokeWidth="1" />
-    {/* Glass door frame */}
-    <rect x="36" y="8" width="2" height="32" fill="#90B0C8" opacity="0.6" />
-    {/* Door handle */}
-    <rect x="38" y="22" width="2" height="6" rx="1" fill="#B0B0B0" stroke="#909090" strokeWidth="0.5" />
+    {/* Shadow */}
+    <ellipse cx="24" cy="46" rx="16" ry="2" fill="#505050" opacity="0.2" />
+    
+    {/* Shower tray/base - 60deg elevated view */}
+    <rect x="6" y="38" width="36" height="8" fill="#E8E8E8" stroke="#D0D0D0" strokeWidth="1" />
+    {/* Tray top surface */}
+    <path d="M6 38 L10 34 L46 34 L42 38 Z" fill="#F5F5F5" stroke="#E0E0E0" strokeWidth="0.5" />
+    {/* Drain */}
+    <ellipse cx="24" cy="42" rx="3" ry="1.5" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+    <circle cx="24" cy="42" r="1" fill="#606060" />
+    
+    {/* Back wall panel - glass/tile */}
+    <rect x="6" y="6" width="36" height="30" fill="#E0F0F8" opacity="0.5" stroke="#C0D8E8" strokeWidth="1" />
+    {/* Tile pattern */}
+    <line x1="6" y1="14" x2="42" y2="14" stroke="#B0C8D8" strokeWidth="0.5" />
+    <line x1="6" y1="22" x2="42" y2="22" stroke="#B0C8D8" strokeWidth="0.5" />
+    <line x1="6" y1="30" x2="42" y2="30" stroke="#B0C8D8" strokeWidth="0.5" />
+    <line x1="18" y1="6" x2="18" y2="36" stroke="#B0C8D8" strokeWidth="0.5" />
+    <line x1="30" y1="6" x2="30" y2="36" stroke="#B0C8D8" strokeWidth="0.5" />
+    
+    {/* Shower pole/pipe - vertical */}
+    <rect x="34" y="8" width="3" height="24" fill="#B0B0B0" stroke="#909090" strokeWidth="1" />
+    
+    {/* Shower head - rain style from above */}
+    <ellipse cx="28" cy="10" rx="8" ry="4" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="1" />
+    <ellipse cx="28" cy="11" rx="6" ry="3" fill="#B0B0B0" stroke="#909090" strokeWidth="0.5" />
+    {/* Shower head holes */}
+    <circle cx="25" cy="11" r="0.5" fill="#808080" />
+    <circle cx="28" cy="11" r="0.5" fill="#808080" />
+    <circle cx="31" cy="11" r="0.5" fill="#808080" />
+    <circle cx="26.5" cy="13" r="0.5" fill="#808080" />
+    <circle cx="29.5" cy="13" r="0.5" fill="#808080" />
+    
+    {/* Water drops */}
+    <circle cx="26" cy="18" r="1" fill="#88C8E8" opacity="0.7" />
+    <circle cx="30" cy="20" r="1" fill="#88C8E8" opacity="0.6" />
+    <circle cx="24" cy="24" r="1.5" fill="#88C8E8" opacity="0.5" />
+    <circle cx="28" cy="26" r="1" fill="#88C8E8" opacity="0.6" />
+    <circle cx="32" cy="28" r="1" fill="#88C8E8" opacity="0.4" />
+    <circle cx="26" cy="30" r="1.5" fill="#88C8E8" opacity="0.4" />
+    
+    {/* Mixer/controls */}
+    <rect x="35" y="20" width="4" height="6" rx="1" fill="#A0A0A0" stroke="#808080" strokeWidth="0.5" />
+    <circle cx="37" cy="23" r="1.5" fill="#C0C0C0" stroke="#909090" strokeWidth="0.5" />
+    
+    {/* Glass door edge hint */}
+    <rect x="4" y="6" width="3" height="32" fill="#A8D0E8" opacity="0.4" stroke="#90B8D0" strokeWidth="0.5" />
   </svg>
 );
 

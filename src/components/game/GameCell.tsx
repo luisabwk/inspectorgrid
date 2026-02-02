@@ -133,6 +133,7 @@ export const GameCell = ({
   const isSofaCell = cell.asset === 'sofa';
   const isDeskCell = cell.asset === 'desk';
   const isChairCell = cell.asset === 'chair';
+  const isComputerCell = cell.asset === 'computer';
   const isApplianceCell = cell.asset === 'sink' || cell.asset === 'stove' || cell.asset === 'fridge';
   const isLonelySofa =
     isSofaCell &&
@@ -144,7 +145,9 @@ export const GameCell = ({
   const isRotatableAsset = isChairCell || isApplianceCell;
   const isWallMarking = isWindowCell || isDoorCell;
   const isOccupiable = isCellOccupiable(cell);
-  const AssetIcon = !isWallMarking && !isConnectableAsset && !isRotatableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
+  // Computer is handled separately - it overlays on desk/table
+  const AssetIcon = !isWallMarking && !isConnectableAsset && !isRotatableAsset && !isComputerCell ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
+  const ComputerIcon = AssetIconMap['computer'];
   const ArmchairAssetIcon = AssetIconMap['armchair'];
   
   // Get asset info from dictionary - handle lonely sofa as armchair
@@ -381,6 +384,26 @@ export const GameCell = ({
             connectedRight={hasDeskRight}
           />
         </div>
+      )}
+      
+      {/* Computer overlay - always renders on top of desk/table in the same cell */}
+      {isComputerCell && (
+        <>
+          {/* Base surface - desk by default */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-80">
+            <DeskIcon 
+              className="w-full h-full" 
+              connectedTop={hasDeskTop}
+              connectedBottom={hasDeskBottom}
+              connectedLeft={hasDeskLeft}
+              connectedRight={hasDeskRight}
+            />
+          </div>
+          {/* Computer on top */}
+          <div className="absolute inset-2 flex items-center justify-center opacity-90 z-[5]">
+            <ComputerIcon className="w-full h-full" />
+          </div>
+        </>
       )}
       
       {/* Suspect layer (overlay) */}

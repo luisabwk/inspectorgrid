@@ -57,6 +57,64 @@ const hasDeskAsset = (cell: Cell | undefined): boolean => {
   return cell?.asset === 'desk';
 };
 
+// Helper to check if cell has chair asset
+const hasChairAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'chair';
+};
+
+// Helper to check if cell has wall-oriented appliance (sink, stove, fridge)
+const isWallAppliance = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'sink' || cell?.asset === 'stove' || cell?.asset === 'fridge';
+};
+
+// Calculate rotation for chair based on nearest table/desk
+const getChairRotation = (
+  cell: Cell,
+  getCell: (row: number, col: number) => Cell | undefined
+): number => {
+  if (cell.asset !== 'chair') return 0;
+  
+  const { row, col } = cell;
+  const topCell = getCell(row - 1, col);
+  const bottomCell = getCell(row + 1, col);
+  const leftCell = getCell(row, col - 1);
+  const rightCell = getCell(row, col + 1);
+  
+  // Check adjacent cells for table or desk
+  const hasTableOrDeskTop = hasTableAsset(topCell) || hasDeskAsset(topCell);
+  const hasTableOrDeskBottom = hasTableAsset(bottomCell) || hasDeskAsset(bottomCell);
+  const hasTableOrDeskLeft = hasTableAsset(leftCell) || hasDeskAsset(leftCell);
+  const hasTableOrDeskRight = hasTableAsset(rightCell) || hasDeskAsset(rightCell);
+  
+  // Return rotation to face the table (0 = facing down, 90 = facing left, 180 = facing up, 270 = facing right)
+  if (hasTableOrDeskTop) return 180;    // Face up towards table
+  if (hasTableOrDeskBottom) return 0;   // Face down (default)
+  if (hasTableOrDeskLeft) return 90;    // Face left
+  if (hasTableOrDeskRight) return 270;  // Face right (or -90)
+  
+  return 0; // Default facing down
+};
+
+// Calculate rotation for wall appliances (sink, stove, fridge) based on walls
+const getApplianceRotation = (
+  cell: Cell,
+  hasWallTop: boolean,
+  hasWallBottom: boolean,
+  hasWallLeft: boolean,
+  hasWallRight: boolean
+): number => {
+  if (!isWallAppliance(cell)) return 0;
+  
+  // Appliance should face AWAY from the wall (front faces room)
+  // Priority: back against wall
+  if (hasWallTop) return 0;      // Wall at top, face down (default)
+  if (hasWallBottom) return 180; // Wall at bottom, face up
+  if (hasWallLeft) return 270;   // Wall at left, face right
+  if (hasWallRight) return 90;   // Wall at right, face left
+  
+  return 0; // Default facing down
+};
+
 export const GameGrid = ({
   cells,
   suspects,
@@ -153,6 +211,18 @@ export const GameGrid = ({
     const hasDeskLeft = hasDeskAsset(cell) && hasDeskAsset(leftCell) && !hasWallLeft;
     const hasDeskRight = hasDeskAsset(cell) && hasDeskAsset(rightCell) && !hasWallRight;
 
+    // Chair rotation based on adjacent tables/desks
+    const chairRotation = getChairRotation(cell, getCell);
+    
+    // Appliance rotation based on walls
+    const applianceRotation = getApplianceRotation(
+      cell,
+      hasWallTop || row === 0,
+      hasWallBottom || row === gridSize - 1,
+      hasWallLeft || col === 0,
+      hasWallRight || col === gridSize - 1
+    );
+
     return {
       hasWallTop,
       hasWallBottom,
@@ -182,6 +252,8 @@ export const GameGrid = ({
       hasDeskBottom,
       hasDeskLeft,
       hasDeskRight,
+      chairRotation,
+      applianceRotation,
     };
   };
 
@@ -301,6 +373,8 @@ export const GameGrid = ({
               hasDeskBottom={wallInfo.hasDeskBottom}
               hasDeskLeft={wallInfo.hasDeskLeft}
               hasDeskRight={wallInfo.hasDeskRight}
+              chairRotation={wallInfo.chairRotation}
+              applianceRotation={wallInfo.applianceRotation}
               onCellClick={onCellClick}
               onCellDrop={onCellDrop}
               onDragOver={onDragOver}

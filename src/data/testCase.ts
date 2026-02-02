@@ -93,7 +93,7 @@ export const testCase: GameCase = {
     rooms: [
       { id: 'living', name: 'Sala de Estar', color: 'hsl(30 50% 82%)' },
       { id: 'bedroom', name: 'Quarto', color: 'hsl(280 35% 88%)' },
-      { id: 'bathroom', name: 'Banheiro', color: 'hsl(200 45% 85%)' },
+      { id: 'bathroom', name: 'Banheiro', color: 'hsl(195 50% 70%)' },
       { id: 'kitchen', name: 'Cozinha', color: 'hsl(45 50% 85%)' },
       { id: 'study', name: 'Escritório', color: 'hsl(150 30% 85%)' },
       { id: 'corridor', name: 'Corredor', color: 'hsl(30 20% 90%)' },

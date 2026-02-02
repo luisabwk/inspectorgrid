@@ -53,8 +53,11 @@ export const useGame = (gameCase: GameCase | null) => {
         });
       }
     } else {
-      // Normal mode - place suspect
+      // Normal mode - place or reposition suspect
+      const cellSuspectId = placements[cellKey];
+      
       if (selectedSuspect) {
+        // A suspect is selected - place them here
         // Check if suspect is already placed elsewhere
         const existingCell = Object.entries(placements).find(
           ([_, id]) => id === selectedSuspect
@@ -81,6 +84,11 @@ export const useGame = (gameCase: GameCase | null) => {
         }));
         
         setSelectedSuspect(null);
+        setSelectedCell(null);
+      } else if (cellSuspectId) {
+        // No suspect selected, but cell has a suspect - select them for repositioning
+        setSelectedSuspect(cellSuspectId);
+        setSelectedCell(null);
       } else {
         // Select/deselect cell
         setSelectedCell(prev => prev === cellKey ? null : cellKey);

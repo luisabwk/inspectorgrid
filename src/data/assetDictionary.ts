@@ -80,4 +80,55 @@ export const assetDictionary: Record<AssetType, AssetInfo> = {
     canOccupy: false,
     occupyReason: "O entulho torna o local perigoso e inacessível.",
   },
+  // Kitchen
+  fridge: {
+    name: "Geladeira",
+    description: "Um eletrodoméstico alto para armazenar alimentos refrigerados.",
+    canOccupy: false,
+    occupyReason: "A geladeira é um eletrodoméstico grande que bloqueia o espaço.",
+  },
+  stove: {
+    name: "Fogão",
+    description: "Um eletrodoméstico com bocas de fogo para cozinhar alimentos.",
+    canOccupy: false,
+    occupyReason: "O fogão é perigoso e bloqueia a ocupação do espaço.",
+  },
+  chair: {
+    name: "Cadeira",
+    description: "Um assento individual simples, geralmente de madeira ou plástico.",
+    canOccupy: true,
+    occupyReason: "Uma pessoa pode estar sentada na cadeira.",
+  },
+  // Bathroom
+  toilet: {
+    name: "Vaso Sanitário",
+    description: "Equipamento sanitário para necessidades fisiológicas.",
+    canOccupy: false,
+    occupyReason: "O vaso sanitário bloqueia o espaço de ocupação.",
+  },
+  sink: {
+    name: "Pia",
+    description: "Uma cuba com torneira para lavar as mãos ou louça.",
+    canOccupy: false,
+    occupyReason: "A pia e seu gabinete bloqueiam o espaço.",
+  },
+  shower: {
+    name: "Chuveiro",
+    description: "Área de banho com chuveiro e box de vidro.",
+    canOccupy: false,
+    occupyReason: "O box do chuveiro bloqueia o espaço.",
+  },
+  // Office
+  desk: {
+    name: "Escrivaninha",
+    description: "Uma mesa de trabalho com espaço para computador e documentos.",
+    canOccupy: false,
+    occupyReason: "A escrivaninha é um móvel que bloqueia a ocupação.",
+  },
+  computer: {
+    name: "Computador",
+    description: "Um equipamento eletrônico com monitor, teclado e CPU.",
+    canOccupy: false,
+    occupyReason: "O computador e seu mobiliário bloqueiam o espaço.",
+  },
 };

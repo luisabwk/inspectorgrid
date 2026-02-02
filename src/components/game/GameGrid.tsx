@@ -47,6 +47,11 @@ const hasSofaAsset = (cell: Cell | undefined): boolean => {
   return cell?.asset === 'sofa';
 };
 
+// Helper to check if cell has desk asset
+const hasDeskAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'desk';
+};
+
 export const GameGrid = ({
   cells,
   suspects,
@@ -131,6 +136,12 @@ export const GameGrid = ({
     const hasSofaLeft = hasSofaAsset(cell) && hasSofaAsset(leftCell) && !hasWallLeft;
     const hasSofaRight = hasSofaAsset(cell) && hasSofaAsset(rightCell) && !hasWallRight;
 
+    // Desk connections - check if adjacent cells also have desks
+    const hasDeskTop = hasDeskAsset(cell) && hasDeskAsset(topCell) && !hasWallTop;
+    const hasDeskBottom = hasDeskAsset(cell) && hasDeskAsset(bottomCell) && !hasWallBottom;
+    const hasDeskLeft = hasDeskAsset(cell) && hasDeskAsset(leftCell) && !hasWallLeft;
+    const hasDeskRight = hasDeskAsset(cell) && hasDeskAsset(rightCell) && !hasWallRight;
+
     return {
       hasWallTop,
       hasWallBottom,
@@ -152,6 +163,10 @@ export const GameGrid = ({
       hasSofaBottom,
       hasSofaLeft,
       hasSofaRight,
+      hasDeskTop,
+      hasDeskBottom,
+      hasDeskLeft,
+      hasDeskRight,
     };
   };
 
@@ -263,6 +278,10 @@ export const GameGrid = ({
               hasSofaBottom={wallInfo.hasSofaBottom}
               hasSofaLeft={wallInfo.hasSofaLeft}
               hasSofaRight={wallInfo.hasSofaRight}
+              hasDeskTop={wallInfo.hasDeskTop}
+              hasDeskBottom={wallInfo.hasDeskBottom}
+              hasDeskLeft={wallInfo.hasDeskLeft}
+              hasDeskRight={wallInfo.hasDeskRight}
               onCellClick={onCellClick}
               onCellDrop={onCellDrop}
               onDragOver={onDragOver}

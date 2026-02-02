@@ -484,6 +484,265 @@ export const EmptyIcon = ({ className }: AssetIconProps) => (
   <div className={className} />
 );
 
+// === KITCHEN ASSETS ===
+
+// 60-degree perspective fridge
+export const FridgeIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Shadow/base */}
+    <rect x="10" y="42" width="28" height="4" fill="#505050" opacity="0.2" />
+    {/* Main body - back */}
+    <rect x="10" y="4" width="28" height="38" fill="#E8E8E8" />
+    {/* Top surface */}
+    <rect x="10" y="4" width="28" height="4" fill="#F5F5F5" />
+    {/* Freezer door */}
+    <rect x="12" y="6" width="24" height="10" fill="#D0D0D0" stroke="#B0B0B0" strokeWidth="1" />
+    {/* Handle - freezer */}
+    <rect x="32" y="9" width="2" height="4" fill="#808080" />
+    {/* Fridge door */}
+    <rect x="12" y="18" width="24" height="22" fill="#E0E0E0" stroke="#B0B0B0" strokeWidth="1" />
+    {/* Handle - fridge */}
+    <rect x="32" y="24" width="2" height="8" fill="#808080" />
+    {/* Front face - depth */}
+    <rect x="10" y="40" width="28" height="2" fill="#C0C0C0" />
+  </svg>
+);
+
+// 60-degree perspective stove
+export const StoveIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Legs */}
+    <rect x="10" y="40" width="3" height="6" fill="#303030" />
+    <rect x="35" y="40" width="3" height="6" fill="#303030" />
+    {/* Main body */}
+    <rect x="8" y="8" width="32" height="32" fill="#404040" />
+    {/* Top surface */}
+    <rect x="8" y="8" width="32" height="8" fill="#505050" />
+    {/* Burners - top view */}
+    <circle cx="18" cy="12" r="5" fill="#303030" stroke="#606060" strokeWidth="1" />
+    <circle cx="30" cy="12" r="5" fill="#303030" stroke="#606060" strokeWidth="1" />
+    {/* Burner grates */}
+    <circle cx="18" cy="12" r="3" fill="none" stroke="#505050" strokeWidth="1" />
+    <circle cx="30" cy="12" r="3" fill="none" stroke="#505050" strokeWidth="1" />
+    {/* Oven door */}
+    <rect x="10" y="18" width="28" height="18" fill="#353535" stroke="#505050" strokeWidth="1" />
+    {/* Oven handle */}
+    <rect x="16" y="20" width="16" height="2" fill="#606060" />
+    {/* Oven window */}
+    <rect x="14" y="24" width="20" height="8" fill="#1A1A1A" />
+    {/* Control panel */}
+    <rect x="10" y="36" width="28" height="4" fill="#454545" />
+    {/* Knobs */}
+    <circle cx="16" cy="38" r="2" fill="#606060" />
+    <circle cx="24" cy="38" r="2" fill="#606060" />
+    <circle cx="32" cy="38" r="2" fill="#606060" />
+  </svg>
+);
+
+// 60-degree perspective chair
+export const ChairIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Back legs */}
+    <rect x="12" y="6" width="3" height="10" fill="#6B5040" />
+    <rect x="33" y="6" width="3" height="10" fill="#6B5040" />
+    {/* Front legs */}
+    <rect x="12" y="32" width="3" height="14" fill="#7A5D4C" />
+    <rect x="33" y="32" width="3" height="14" fill="#7A5D4C" />
+    {/* Backrest */}
+    <rect x="10" y="8" width="28" height="8" fill="#A08060" />
+    <rect x="10" y="16" width="28" height="2" fill="#8B7050" />
+    {/* Seat */}
+    <rect x="10" y="18" width="28" height="14" fill="#B89070" />
+    {/* Seat front edge */}
+    <rect x="10" y="32" width="28" height="2" fill="#8B7050" />
+  </svg>
+);
+
+// === BATHROOM ASSETS ===
+
+// 60-degree perspective toilet
+export const ToiletIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Base/shadow */}
+    <ellipse cx="24" cy="42" rx="12" ry="3" fill="#505050" opacity="0.2" />
+    {/* Tank - back */}
+    <rect x="14" y="6" width="20" height="12" rx="2" fill="#F0F0F0" />
+    <rect x="14" y="18" width="20" height="2" fill="#E0E0E0" />
+    {/* Tank lid */}
+    <rect x="12" y="4" width="24" height="4" rx="1" fill="#FAFAFA" />
+    {/* Flush button */}
+    <rect x="22" y="6" width="4" height="2" rx="1" fill="#C0C0C0" />
+    {/* Bowl - top view (oval) */}
+    <ellipse cx="24" cy="30" rx="12" ry="10" fill="#F5F5F5" />
+    <ellipse cx="24" cy="30" rx="9" ry="7" fill="#E8E8E8" />
+    {/* Seat */}
+    <ellipse cx="24" cy="30" rx="11" ry="9" fill="none" stroke="#D0D0D0" strokeWidth="2" />
+    {/* Bowl front depth */}
+    <path d="M12 30 Q12 42 24 42 Q36 42 36 30" fill="#E0E0E0" />
+  </svg>
+);
+
+// 60-degree perspective sink
+export const SinkIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Cabinet */}
+    <rect x="6" y="20" width="36" height="24" fill="#C4A574" />
+    <rect x="6" y="44" width="36" height="2" fill="#A08050" />
+    {/* Cabinet doors */}
+    <rect x="8" y="24" width="14" height="18" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
+    <rect x="26" y="24" width="14" height="18" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
+    {/* Door handles */}
+    <rect x="19" y="31" width="2" height="4" fill="#808080" />
+    <rect x="27" y="31" width="2" height="4" fill="#808080" />
+    {/* Counter top */}
+    <rect x="4" y="16" width="40" height="6" fill="#E8E0D8" />
+    {/* Sink basin - top view */}
+    <ellipse cx="24" cy="18" rx="10" ry="4" fill="#D0D0D0" />
+    <ellipse cx="24" cy="18" rx="8" ry="3" fill="#B0B0B0" />
+    {/* Faucet */}
+    <rect x="22" y="8" width="4" height="8" fill="#A0A0A0" />
+    <rect x="20" y="6" width="8" height="3" rx="1" fill="#B0B0B0" />
+    {/* Faucet spout */}
+    <path d="M24 9 L24 12 L28 14" stroke="#909090" strokeWidth="2" fill="none" />
+  </svg>
+);
+
+// 60-degree perspective shower
+export const ShowerIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Base/tray */}
+    <rect x="4" y="38" width="40" height="8" fill="#E8E8E8" />
+    <rect x="4" y="38" width="40" height="2" fill="#F5F5F5" />
+    {/* Back wall */}
+    <rect x="4" y="4" width="40" height="34" fill="#F0F0F0" />
+    {/* Tiles pattern */}
+    <line x1="4" y1="14" x2="44" y2="14" stroke="#D0D0D0" strokeWidth="1" />
+    <line x1="4" y1="24" x2="44" y2="24" stroke="#D0D0D0" strokeWidth="1" />
+    <line x1="4" y1="34" x2="44" y2="34" stroke="#D0D0D0" strokeWidth="1" />
+    <line x1="14" y1="4" x2="14" y2="38" stroke="#D0D0D0" strokeWidth="1" />
+    <line x1="24" y1="4" x2="24" y2="38" stroke="#D0D0D0" strokeWidth="1" />
+    <line x1="34" y1="4" x2="34" y2="38" stroke="#D0D0D0" strokeWidth="1" />
+    {/* Shower head */}
+    <rect x="20" y="6" width="8" height="3" rx="1" fill="#A0A0A0" />
+    <ellipse cx="24" cy="11" rx="5" ry="2" fill="#909090" />
+    {/* Shower arm */}
+    <rect x="23" y="4" width="2" height="4" fill="#808080" />
+    {/* Water drops */}
+    <circle cx="20" cy="16" r="1" fill="#87CEEB" opacity="0.6" />
+    <circle cx="24" cy="18" r="1" fill="#87CEEB" opacity="0.6" />
+    <circle cx="28" cy="16" r="1" fill="#87CEEB" opacity="0.6" />
+    <circle cx="22" cy="22" r="1" fill="#87CEEB" opacity="0.5" />
+    <circle cx="26" cy="24" r="1" fill="#87CEEB" opacity="0.5" />
+    {/* Glass door - translucent */}
+    <rect x="40" y="4" width="4" height="34" fill="#B8D4E8" opacity="0.4" />
+    <rect x="40" y="4" width="1" height="34" fill="#A0C0D0" />
+  </svg>
+);
+
+// === OFFICE ASSETS ===
+
+// 60-degree perspective desk (connectable like table)
+export const DeskIcon = ({ 
+  className,
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableAssetProps) => {
+  const topY = connectedTop ? 6 : 8;
+  const bottomY = connectedBottom ? 36 : 34;
+  const leftX = connectedLeft ? 0 : 4;
+  const rightX = connectedRight ? 48 : 44;
+  const legHeight = 10;
+  
+  return (
+    <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Back legs */}
+      {!connectedTop && !connectedLeft && (
+        <rect x="6" y="6" width="3" height={legHeight} fill="#4A4A4A" />
+      )}
+      {!connectedTop && !connectedRight && (
+        <rect x="39" y="6" width="3" height={legHeight} fill="#4A4A4A" />
+      )}
+      
+      {/* Front legs */}
+      {!connectedBottom && !connectedLeft && (
+        <rect x="6" y="36" width="3" height={legHeight} fill="#5A5A5A" />
+      )}
+      {!connectedBottom && !connectedRight && (
+        <rect x="39" y="36" width="3" height={legHeight} fill="#5A5A5A" />
+      )}
+      
+      {/* Desktop surface */}
+      <rect 
+        x={leftX} 
+        y={topY} 
+        width={rightX - leftX} 
+        height={bottomY - topY} 
+        fill="#8B7355"
+      />
+      
+      {/* Keyboard tray hint */}
+      <rect 
+        x={leftX + 4} 
+        y={bottomY - 8} 
+        width={rightX - leftX - 8} 
+        height="4"
+        fill="#6B5A48"
+        opacity="0.5"
+      />
+      
+      {/* Desktop edge - front */}
+      {!connectedBottom && (
+        <rect 
+          x={leftX} 
+          y={bottomY} 
+          width={rightX - leftX} 
+          height="3"
+          fill="#6B5A48"
+        />
+      )}
+      
+      {/* Surface border */}
+      <rect 
+        x={leftX} 
+        y={topY} 
+        width={rightX - leftX} 
+        height={bottomY - topY} 
+        fill="none"
+        stroke="#5A4A3A"
+        strokeWidth="1"
+      />
+    </svg>
+  );
+};
+
+// 60-degree perspective computer
+export const ComputerIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Desk surface hint */}
+    <rect x="4" y="32" width="40" height="14" fill="#8B7355" />
+    <rect x="4" y="46" width="40" height="2" fill="#6B5A48" />
+    {/* Monitor stand */}
+    <rect x="20" y="28" width="8" height="6" fill="#303030" />
+    <rect x="16" y="32" width="16" height="2" fill="#404040" />
+    {/* Monitor */}
+    <rect x="6" y="6" width="36" height="24" rx="1" fill="#2A2A2A" />
+    {/* Screen */}
+    <rect x="8" y="8" width="32" height="18" fill="#3A5A7A" />
+    {/* Screen reflection */}
+    <rect x="8" y="8" width="32" height="6" fill="#4A7A9A" opacity="0.4" />
+    {/* Monitor bezel bottom */}
+    <rect x="6" y="26" width="36" height="2" fill="#353535" />
+    {/* Keyboard */}
+    <rect x="10" y="36" width="22" height="6" rx="1" fill="#404040" />
+    <rect x="12" y="38" width="18" height="2" fill="#505050" />
+    {/* Mouse */}
+    <ellipse cx="38" cy="39" rx="4" ry="3" fill="#404040" />
+    <rect x="37" y="37" width="2" height="2" fill="#505050" />
+  </svg>
+);
+
 // Map asset types to their icon components
 export const AssetIconMap: Record<AssetType, React.FC<AssetIconProps>> = {
   empty: EmptyIcon,
@@ -498,4 +757,15 @@ export const AssetIconMap: Record<AssetType, React.FC<AssetIconProps>> = {
   bookshelf: BookshelfIcon,
   rock: RockIcon,
   debris: DebrisIcon,
+  // Kitchen
+  fridge: FridgeIcon,
+  stove: StoveIcon,
+  chair: ChairIcon,
+  // Bathroom
+  toilet: ToiletIcon,
+  sink: SinkIcon,
+  shower: ShowerIcon,
+  // Office
+  desk: DeskIcon,
+  computer: ComputerIcon,
 };

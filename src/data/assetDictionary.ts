@@ -44,6 +44,12 @@ export const assetDictionary: Record<AssetType, AssetInfo> = {
     canOccupy: true,
     occupyReason: "Uma pessoa pode estar próxima à janela, olhando para fora.",
   },
+  door: {
+    name: "Porta",
+    description: "Uma passagem entre cômodos que permite circulação de pessoas.",
+    canOccupy: true,
+    occupyReason: "Uma pessoa pode estar parada na porta ou passando por ela.",
+  },
   plant: {
     name: "Planta",
     description: "Um vaso decorativo com vegetação que ocupa espaço no chão.",

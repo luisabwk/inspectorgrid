@@ -26,6 +26,11 @@ interface GameCellProps {
   hasWindowRight: boolean;
   hasWindowBottom: boolean;
   hasWindowLeft: boolean;
+  // Door positions
+  hasDoorTop: boolean;
+  hasDoorRight: boolean;
+  hasDoorBottom: boolean;
+  hasDoorLeft: boolean;
   // Adjacent table connections
   hasTableTop: boolean;
   hasTableBottom: boolean;
@@ -68,6 +73,10 @@ export const GameCell = ({
   hasWindowRight,
   hasWindowBottom,
   hasWindowLeft,
+  hasDoorTop,
+  hasDoorRight,
+  hasDoorBottom,
+  hasDoorLeft,
   hasTableTop,
   hasTableBottom,
   hasTableLeft,
@@ -90,8 +99,9 @@ export const GameCell = ({
 }: GameCellProps) => {
   const [showInfo, setShowInfo] = useState(false);
   
-  // Window cells are occupiable but don't show an icon - they're wall markings
+  // Window and door cells are occupiable but don't show an icon - they're wall markings
   const isWindowCell = cell.asset === 'window';
+  const isDoorCell = cell.asset === 'door';
   const isTableCell = cell.asset === 'table';
   const isBedCell = cell.asset === 'bed';
   const isSofaCell = cell.asset === 'sofa';
@@ -103,8 +113,9 @@ export const GameCell = ({
     !hasSofaLeft &&
     !hasSofaRight;
   const isConnectableAsset = isTableCell || isBedCell || isSofaCell || isDeskCell;
+  const isWallMarking = isWindowCell || isDoorCell;
   const isOccupiable = isCellOccupiable(cell);
-  const AssetIcon = !isWindowCell && !isConnectableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
+  const AssetIcon = !isWallMarking && !isConnectableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
   const ArmchairAssetIcon = AssetIconMap['armchair'];
   
   // Get asset info from dictionary - handle lonely sofa as armchair
@@ -174,6 +185,12 @@ export const GameCell = ({
               <div className="w-1 h-full bg-blue-300" />
             </div>
           )}
+          {/* Door marking in wall */}
+          {hasDoorTop && (
+            <div className="absolute inset-x-1/4 inset-y-0 flex justify-center items-center">
+              <div className="w-[40%] h-full bg-amber-700" />
+            </div>
+          )}
         </div>
       )}
       {hasWallBottom && (
@@ -186,6 +203,12 @@ export const GameCell = ({
               <div className="w-1 h-full bg-blue-300" />
               <div className="w-1 h-full bg-blue-200" />
               <div className="w-1 h-full bg-blue-300" />
+            </div>
+          )}
+          {/* Door marking in wall */}
+          {hasDoorBottom && (
+            <div className="absolute inset-x-1/4 inset-y-0 flex justify-center items-center">
+              <div className="w-[40%] h-full bg-amber-700" />
             </div>
           )}
         </div>
@@ -202,6 +225,12 @@ export const GameCell = ({
               <div className="h-1 w-full bg-blue-300" />
             </div>
           )}
+          {/* Door marking in wall */}
+          {hasDoorLeft && (
+            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col justify-center items-center">
+              <div className="h-[40%] w-full bg-amber-700" />
+            </div>
+          )}
         </div>
       )}
       {hasWallRight && (
@@ -216,11 +245,17 @@ export const GameCell = ({
               <div className="h-1 w-full bg-blue-300" />
             </div>
           )}
+          {/* Door marking in wall */}
+          {hasDoorRight && (
+            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col justify-center items-center">
+              <div className="h-[40%] w-full bg-amber-700" />
+            </div>
+          )}
         </div>
       )}
 
       {/* Asset layer - non-connectable assets */}
-      {cell.asset !== 'empty' && !isWindowCell && !isConnectableAsset && (
+      {cell.asset !== 'empty' && !isWallMarking && !isConnectableAsset && (
         <div className={cn(
           "absolute inset-1 flex items-center justify-center",
           isOccupiable ? "opacity-70" : "opacity-80"

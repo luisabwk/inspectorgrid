@@ -751,6 +751,7 @@ export const AssetIconMap: Record<AssetType, React.FC<AssetIconProps>> = {
   armchair: ArmchairIcon,
   rug: RugIcon,
   window: WindowIcon,
+  door: EmptyIcon, // Door is a wall marking, not a cell icon
   plant: PlantIcon,
   table: TableIcon,
   tv: TvIcon,

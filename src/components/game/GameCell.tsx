@@ -1,11 +1,32 @@
 import { Cell, Suspect, isCellOccupiable, getCellKey, AssetType } from "@/types/game";
 import { cn } from "@/lib/utils";
-import { AssetIconMap, TableIcon, BedIcon, SofaIcon, DeskIcon } from "./assets/AssetIcons";
+import { 
+  AssetIconMap, 
+  TableIcon, 
+  BedIcon, 
+  SofaIcon, 
+  DeskIcon, 
+  ChairIcon, 
+  FridgeIcon, 
+  StoveIcon, 
+  SinkIcon,
+  AssetDirection 
+} from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
 import { assetDictionary } from "@/data/assetDictionary";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useState } from "react";
 import { Check, X } from "lucide-react";
+
+// Helper to convert rotation degrees to direction
+const rotationToDirection = (rotation: number): AssetDirection => {
+  const normalizedRotation = ((rotation % 360) + 360) % 360;
+  if (normalizedRotation === 0) return 'down';
+  if (normalizedRotation === 90) return 'left';
+  if (normalizedRotation === 180) return 'up';
+  if (normalizedRotation === 270) return 'right';
+  return 'down'; // default
+};
 
 interface GameCellProps {
   cell: Cell;
@@ -272,27 +293,38 @@ export const GameCell = ({
         </div>
       )}
       
-      {/* Rotatable assets - Chair */}
+      {/* Directional assets - Chair */}
       {isChairCell && (
-        <div 
-          className="absolute inset-1 flex items-center justify-center opacity-70"
-          style={{ transform: `rotate(${chairRotation}deg)` }}
-        >
-          <AssetIconMap.chair className="w-full h-full" />
+        <div className="absolute inset-1 flex items-center justify-center opacity-70">
+          <ChairIcon className="w-full h-full" direction={rotationToDirection(chairRotation)} />
         </div>
       )}
       
-      {/* Rotatable assets - Wall appliances (sink, stove, fridge) */}
+      {/* Directional assets - Wall appliances (sink, stove, fridge) */}
       {isApplianceCell && (() => {
-        const ApplianceIcon = AssetIconMap[cell.asset];
-        return (
-          <div 
-            className="absolute inset-1 flex items-center justify-center opacity-80"
-            style={{ transform: `rotate(${applianceRotation}deg)` }}
-          >
-            <ApplianceIcon className="w-full h-full" />
-          </div>
-        );
+        const direction = rotationToDirection(applianceRotation);
+        if (cell.asset === 'fridge') {
+          return (
+            <div className="absolute inset-1 flex items-center justify-center opacity-80">
+              <FridgeIcon className="w-full h-full" direction={direction} />
+            </div>
+          );
+        }
+        if (cell.asset === 'stove') {
+          return (
+            <div className="absolute inset-1 flex items-center justify-center opacity-80">
+              <StoveIcon className="w-full h-full" direction={direction} />
+            </div>
+          );
+        }
+        if (cell.asset === 'sink') {
+          return (
+            <div className="absolute inset-1 flex items-center justify-center opacity-80">
+              <SinkIcon className="w-full h-full" direction={direction} />
+            </div>
+          );
+        }
+        return null;
       })()}
       
       {/* Table asset with connection support */}

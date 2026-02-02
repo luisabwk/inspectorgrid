@@ -34,10 +34,9 @@ const generateTestGrid = (): Cell[][] => {
       grid[r][c].roomId = 'bedroom';
     }
   }
+  // Cama dupla horizontal (2 células conectadas) - nunca duas camas separadas lado a lado
   grid[0][3].asset = 'bed';
   grid[0][4].asset = 'bed';
-  grid[1][3].asset = 'bed';
-  grid[1][4].asset = 'bed';
   grid[0][5].asset = 'window';
   
   // === CORREDOR (middle row 2 - full width) ===

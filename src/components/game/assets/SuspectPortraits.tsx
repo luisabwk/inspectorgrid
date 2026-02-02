@@ -56,11 +56,11 @@ export const Portrait2 = ({ className }: PortraitProps) => (
     {/* Background - creme */}
     <rect width="32" height="40" fill="#F5ECD7" />
     
-    {/* Long hair behind - blonde (linha 4 style) */}
+    {/* Long hair behind - clean geometric shape */}
     <path 
-      d="M5 12 Q4 28 10 40 L22 40 Q28 28 27 12 Q26 8 16 6 Q6 8 5 12 Z" 
-      fill="#A08050" 
-      stroke="#6B5030" 
+      d="M6 14 C6 14 5 24 8 32 L8 40 L24 40 L24 32 C27 24 26 14 26 14 C26 10 22 6 16 6 C10 6 6 10 6 14 Z" 
+      fill="#B8944A" 
+      stroke="#8B6B35" 
       strokeWidth="0.8" 
     />
     
@@ -73,16 +73,16 @@ export const Portrait2 = ({ className }: PortraitProps) => (
     {/* Head oval - pele clara */}
     <ellipse cx="16" cy="18" rx="8" ry="9.5" fill="#FADCBC" />
     
-    {/* Hair front - fringe/bangs */}
+    {/* Hair front - smooth top */}
     <path 
-      d="M8 14 Q8 8 16 6 Q24 8 24 14 L23 12 Q22 9 16 8 Q10 9 9 12 Z" 
-      fill="#A08050" 
-      stroke="#6B5030" 
+      d="M8 15 C8 10 11 6 16 6 C21 6 24 10 24 15 L24 13 C24 9 21 7 16 7 C11 7 8 9 8 13 Z" 
+      fill="#B8944A" 
+      stroke="#8B6B35" 
       strokeWidth="0.8" 
     />
-    {/* Side strands */}
-    <path d="M8 14 L7 24 Q9 25 10 22 L9 14 Z" fill="#A08050" stroke="#6B5030" strokeWidth="0.5" />
-    <path d="M24 14 L25 24 Q23 25 22 22 L23 14 Z" fill="#A08050" stroke="#6B5030" strokeWidth="0.5" />
+    {/* Side hair falling down */}
+    <path d="M8 14 L7 26 C7 28 9 28 9 26 L9 15 Z" fill="#B8944A" stroke="#8B6B35" strokeWidth="0.5" />
+    <path d="M24 14 L25 26 C25 28 23 28 23 26 L23 15 Z" fill="#B8944A" stroke="#8B6B35" strokeWidth="0.5" />
     
     {/* Eyes */}
     <ellipse cx="12" cy="18" rx="1.8" ry="2" fill="white" />
@@ -93,8 +93,8 @@ export const Portrait2 = ({ className }: PortraitProps) => (
     <circle cx="20" cy="18.3" r="0.5" fill="#1A1A1A" />
     
     {/* Eyebrows - thin feminine */}
-    <path d="M10 15.5 Q12 14.8 14 15.5" stroke="#6B5030" strokeWidth="0.6" fill="none" />
-    <path d="M18 15.5 Q20 14.8 22 15.5" stroke="#6B5030" strokeWidth="0.6" fill="none" />
+    <path d="M10 15.5 Q12 14.8 14 15.5" stroke="#8B6B35" strokeWidth="0.6" fill="none" />
+    <path d="M18 15.5 Q20 14.8 22 15.5" stroke="#8B6B35" strokeWidth="0.6" fill="none" />
     
     {/* Nose */}
     <path d="M16 19 L16 21.5 L17 21.5" stroke="#E8C4A0" strokeWidth="0.5" fill="none" strokeLinecap="round" />
@@ -193,16 +193,21 @@ export const Portrait4 = ({ className }: PortraitProps) => (
   </svg>
 );
 
-// Portrait 5 - Eduardo: Cabelo com rabo de cavalo, pele média, camisa amarela
+// Portrait 5 - Eduardo: Cabelo curto puxado para trás com rabo, pele média, camisa amarela
 export const Portrait5 = ({ className }: PortraitProps) => (
   <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Background - amarelo claro */}
     <rect width="32" height="40" fill="#F5F0C8" />
     
-    {/* Ponytail behind */}
-    <ellipse cx="28" cy="16" rx="4" ry="8" fill="#5C4033" stroke="#3C2818" strokeWidth="0.6" />
+    {/* Ponytail behind - clean oval */}
+    <path 
+      d="M25 10 C28 10 30 14 30 20 C30 26 28 28 26 28 C24 28 24 24 24 20 C24 14 24 10 25 10 Z" 
+      fill="#5C4033" 
+      stroke="#3C2818" 
+      strokeWidth="0.6" 
+    />
     {/* Hair tie */}
-    <ellipse cx="26" cy="10" rx="1.5" ry="1" fill="#2C2C2C" />
+    <rect x="24" y="9" width="3" height="2" rx="0.5" fill="#2C2C2C" />
     
     {/* Neck */}
     <rect x="12" y="27" width="8" height="6" fill="#E8C4A0" />
@@ -213,18 +218,15 @@ export const Portrait5 = ({ className }: PortraitProps) => (
     {/* Head oval */}
     <ellipse cx="16" cy="18" rx="8.5" ry="10" fill="#E8C4A0" />
     
-    {/* Hair - slicked back to ponytail (linha 6 style) */}
+    {/* Hair - slicked back, clean geometric */}
     <path 
-      d="M8 14 Q8 8 16 6 Q24 8 24 14 L24 12 Q23 8 16 7 Q9 8 8 12 Z" 
+      d="M8 14 C8 9 11 6 16 6 C21 6 24 9 24 14 L24 11 C24 8 21 7 16 7 C11 7 8 8 8 11 Z" 
       fill="#5C4033" 
       stroke="#3C2818" 
       strokeWidth="0.8" 
     />
-    {/* Slicked lines */}
-    <path d="M10 11 Q16 8 22 11" stroke="#3C2818" strokeWidth="0.4" fill="none" />
-    <path d="M9 13 Q16 10 23 13" stroke="#3C2818" strokeWidth="0.4" fill="none" />
-    {/* Connection to ponytail */}
-    <path d="M24 11 L26 10" stroke="#3C2818" strokeWidth="2" />
+    {/* Hair connects to ponytail */}
+    <path d="M24 10 L25 10" stroke="#5C4033" strokeWidth="3" />
     
     {/* Eyes */}
     <ellipse cx="12" cy="18" rx="2" ry="2.2" fill="white" />

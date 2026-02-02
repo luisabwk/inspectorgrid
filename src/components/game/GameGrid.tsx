@@ -334,6 +334,29 @@ export const GameGrid = ({
           const isInSelectedRow = selectedRow !== null && cell.row === selectedRow;
           const isInSelectedCol = selectedCol !== null && cell.col === selectedCol;
           
+          // Calculate if this cell is blocked by another placement in same row/col
+          const blockingPlacements = Object.entries(placements).filter(([key, sId]) => {
+            if (!sId) return false;
+            const [r, c] = key.split('-').map(Number);
+            // Same row or same column, but not this cell
+            return (r === cell.row || c === cell.col) && key !== cellKey;
+          });
+          const isBlockedByPlacement = blockingPlacements.length > 0;
+          
+          // Check if this cell has a conflict (suspect placed where another suspect blocks)
+          let hasConflict = false;
+          if (suspectId) {
+            // Check if any other cell in same row/col has a placement
+            for (const [key, sId] of Object.entries(placements)) {
+              if (!sId || key === cellKey) continue;
+              const [r, c] = key.split('-').map(Number);
+              if (r === cell.row || c === cell.col) {
+                hasConflict = true;
+                break;
+              }
+            }
+          }
+          
           return (
             <GameCell
               key={cellKey}
@@ -345,6 +368,8 @@ export const GameGrid = ({
               isHighlighted={isInSelectedRow || isInSelectedCol}
               isPencilMode={isPencilMode}
               roomColor={roomColor}
+              isBlockedByPlacement={isBlockedByPlacement}
+              hasConflict={hasConflict}
               hasWallTop={wallInfo.hasWallTop && cell.row !== 0}
               hasWallBottom={wallInfo.hasWallBottom && cell.row !== gridSize - 1}
               hasWallLeft={wallInfo.hasWallLeft && cell.col !== 0}

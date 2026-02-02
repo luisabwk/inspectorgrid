@@ -24,7 +24,8 @@ const generateTestGrid = (): Cell[][] => {
     }
   }
   grid[0][0].asset = 'sofa';
-  grid[0][1].asset = 'tv';
+  grid[0][1].asset = 'sofa';
+  grid[0][2].asset = 'tv';
   grid[1][0].asset = 'armchair';
   grid[1][2].asset = 'plant';
   

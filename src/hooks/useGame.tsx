@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { GameCase, GameState, PlacementState, PencilMarks, getCellKey, isCellOccupiable } from "@/types/game";
 
-export const useGame = (gameCase: GameCase) => {
+export const useGame = (gameCase: GameCase | null) => {
   const [placements, setPlacements] = useState<PlacementState>({});
   const [pencilMarks, setPencilMarks] = useState<PencilMarks>({});
   const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null);
@@ -9,10 +9,19 @@ export const useGame = (gameCase: GameCase) => {
   const [isPencilMode, setIsPencilMode] = useState(false);
   const [draggedSuspect, setDraggedSuspect] = useState<string | null>(null);
 
+  // Reset state when gameCase changes
+  useEffect(() => {
+    setPlacements({});
+    setPencilMarks({});
+    setSelectedSuspect(null);
+    setSelectedCell(null);
+    setIsPencilMode(false);
+  }, [gameCase?.id]);
+
   // Count placed suspects
   const placedCount = Object.values(placements).filter(Boolean).length;
-  const totalSuspects = gameCase.suspects.length;
-  const canCheck = placedCount === totalSuspects;
+  const totalSuspects = gameCase?.suspects.length || 0;
+  const canCheck = placedCount === totalSuspects && totalSuspects > 0;
 
   // Handle suspect selection
   const handleSuspectSelect = useCallback((suspectId: string) => {
@@ -22,6 +31,8 @@ export const useGame = (gameCase: GameCase) => {
 
   // Handle cell click
   const handleCellClick = useCallback((row: number, col: number) => {
+    if (!gameCase) return;
+    
     const cell = gameCase.layoutConfig.cells[row][col];
     if (!isCellOccupiable(cell)) return;
 
@@ -91,7 +102,7 @@ export const useGame = (gameCase: GameCase) => {
 
   // Handle cell drop
   const handleCellDrop = useCallback((row: number, col: number) => {
-    if (!draggedSuspect) return;
+    if (!draggedSuspect || !gameCase) return;
     
     const cell = gameCase.layoutConfig.cells[row][col];
     if (!isCellOccupiable(cell)) {
@@ -154,6 +165,8 @@ export const useGame = (gameCase: GameCase) => {
 
   // Check solution
   const checkSolution = useCallback(() => {
+    if (!gameCase) return { valid: false, message: 'Caso não carregado' };
+    
     // Validate Latin Square rules (one suspect per row/column)
     const gridSize = gameCase.gridSize;
     

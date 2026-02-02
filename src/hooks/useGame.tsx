@@ -86,7 +86,7 @@ export const useGame = (gameCase: GameCase | null) => {
         setSelectedCell(prev => prev === cellKey ? null : cellKey);
       }
     }
-  }, [gameCase.layoutConfig.cells, isPencilMode, selectedSuspect, placements]);
+  }, [gameCase, isPencilMode, selectedSuspect, placements]);
 
   // Handle drag start
   const handleDragStart = useCallback((e: React.DragEvent, suspectId: string) => {
@@ -138,7 +138,7 @@ export const useGame = (gameCase: GameCase | null) => {
     }));
     
     setDraggedSuspect(null);
-  }, [draggedSuspect, gameCase.layoutConfig.cells, placements]);
+  }, [draggedSuspect, gameCase, placements]);
 
   // Clear selected cell
   const handleClearCell = useCallback(() => {
@@ -215,7 +215,7 @@ export const useGame = (gameCase: GameCase | null) => {
     } else {
       return { valid: false, message: 'Algo está errado. Continue investigando!' };
     }
-  }, [placements, gameCase.gridSize, gameCase.solution]);
+  }, [placements, gameCase]);
 
   return {
     placements,

@@ -1,143 +1,57 @@
 
-# Plano: Refazer Todos os Avatares Usando a Cartela
+# Plano: Casos Dinâmicos e Sistema de Progressão
 
-## Objetivo
-Recriar completamente os 8 retratos de suspeitos seguindo fielmente o estilo visual da cartela de referência.
+## Status: ✅ Implementado
 
-## Analise da Cartela
+## O que foi feito
 
-A cartela define um sistema modular com elementos especificos:
+### 1. Inserir caso de teste no banco ✅
+- Caso "O Mistério da Mansão Blackwood" inserido na tabela `cases`
+- UUID gerado automaticamente: `62508631-51b6-4150-91c7-1ec4a553a217`
+- Todos os dados convertidos para formato JSONB
 
-### Elementos Visuais Extraidos
+### 2. Hook useCases ✅
+- `useCases()` - Lista todos os casos ordenados por dificuldade
+- `useCase(caseId)` - Carrega um caso específico
+- `useNextCase(playerLevel)` - Carrega próximo caso baseado no nível do jogador
+- Transformação automática de DB → GameCase
 
-| Categoria | Elementos |
-|-----------|-----------|
-| **Cabeca** | Forma oval simples, sem contorno, 6 tons de pele |
-| **Cabelos** | Silhuetas solidas com contorno escuro, formas geometricas limpas |
-| **Olhos** | Base branca oval, iris marrom grande, pupila preta pequena |
-| **Sobrancelhas** | Arcos finos ou grossos, cor do cabelo |
-| **Nariz** | Forma simples de "L" ou triangular |
-| **Acessorios** | Oculos retangulares ou redondos com ponte |
-| **Fundos** | Cores pasteis solidas |
+### 3. Hook useProgress ✅
+- `saveProgress(caseId, difficulty, time)` - Salva progresso do jogador
+- `getPlayerStats()` - Retorna nível, pontuação total, casos completados
+- **Cálculo de Score**:
+  - Base: 100 pontos
+  - Bônus de tempo: até +100 pontos (decresce após 60s)
+  - Multiplicador: × dificuldade
 
-### Paleta de Cores
+### 4. Game.tsx atualizado ✅
+- Carrega caso dinamicamente do banco via `useNextCase`
+- Loading state durante carregamento
+- Error state se não encontrar caso
+- Modal de vitória com:
+  - Pontuação conquistada
+  - Indicador de level up
+  - Botões "Menu" e "Próximo Caso"
 
-```text
-Tons de Pele:
-- Claro:   #FADCBC, #F5D0B0
-- Medio:   #E8C4A0, #D4A574  
-- Escuro:  #A07850, #8B6B4A
+### 5. useGame adaptado ✅
+- Aceita `GameCase | null`
+- Reset automático ao trocar de caso
 
-Cores de Cabelo:
-- Preto/Cinza: #4A4A4A (contorno #2C2C2C)
-- Castanho:    #5C4033 (contorno #3C2818)
-- Loiro:       #A08050 (contorno #6B5030)
-- Grisalho:    #808080 (contorno #606060)
+## Lógica de Progressão
 
-Fundos Pasteis:
-- Cinza:       #D4D4D4
-- Creme:       #F5ECD7
-- Bege:        #E8DCC8
-- Azul:        #C8DDE8
-- Verde agua:  #C8E8E0
-- Menta:       #D0E8D4
-- Amarelo:     #F5F0C8
-- Rosa:        #F0D4D4
+```
+Nível do jogador = (casos completados ÷ 3) + 1
+Dificuldade do caso = ceil(nível ÷ 3)
 ```
 
-## Mudancas por Avatar
+Exemplo:
+- Casos 1-3 → Nível 1-2 → Dificuldade 1
+- Casos 4-6 → Nível 2-3 → Dificuldade 1
+- Casos 7-9 → Nível 3-4 → Dificuldade 2
 
-### Portrait 1 - Alberto
-- Cabelo curto escuro "bagunçado" (estilo linha 2 da cartela)
-- Pele media
-- Camisa verde
-- Fundo verde agua
+## Próximos Passos (Opcional)
 
-### Portrait 2 - Beatriz
-- Cabelo longo liso (estilo linha 4 da cartela)
-- Cor loira/castanha clara
-- Pele clara
-- Blusa roxa
-- Fundo creme
-
-### Portrait 3 - Carlos
-- Cabelo medio masculino (estilo linha 2 da cartela)
-- Oculos retangulares (como na cartela)
-- Camisa vermelha
-- Fundo bege
-
-### Portrait 4 - Diana
-- Cabelo afro/curly volumoso (estilo linha 5 da cartela)
-- Pele escura
-- Brincos dourados
-- Blusa azul
-- Fundo azul claro
-
-### Portrait 5 - Eduardo
-- Cabelo com coque/rabo (estilo linha 6 da cartela)
-- Pele media
-- Camisa amarela
-- Fundo amarelo claro
-
-### Portrait 6 - Vitoria (Vitima)
-- Cabelo medio ondulado (variacao linha 4)
-- Colar e brincos dourados
-- Blusa rosa
-- Fundo rosa
-
-### Portrait 7 - Senhor Idoso
-- Cabelo grisalho/calvo (estilo linha 1 cartela)
-- Bigode cheio (como na cartela)
-- Camisa ciano
-- Fundo cinza
-
-### Portrait 8 - Homem Careca
-- Careca com brilho
-- Oculos redondos (como na cartela)
-- Camisa laranja
-- Fundo bege
-
-## Estrutura Tecnica do SVG
-
-Cada avatar seguira esta estrutura padronizada:
-
-```text
-viewBox="0 0 32 40"
-
-Camadas (ordem de renderizacao):
-1. Retangulo de fundo (cor pastel solida)
-2. Cabelo traseiro (se cabelo longo)
-3. Pescoco
-4. Camisa/roupa
-5. Acessorios traseiros (brincos)
-6. Cabeca oval
-7. Cabelo frontal (silhueta com stroke)
-8. Olhos (branco + iris marrom + pupila preta)
-9. Sobrancelhas
-10. Nariz (opcional, sutil)
-11. Acessorios frontais (oculos, bigode)
-```
-
-### Proporcoes Padronizadas
-
-```text
-- Cabeca: ellipse cx=16, cy=18, rx=8-9, ry=9-10
-- Olhos: posicao y=18, distancia x=12 e x=20
-- Iris: raio ~1.5-2
-- Pupila: raio ~0.8-1
-- Sobrancelhas: y=15-16
-- Pescoco: x=12, y=27, width=8, height=6
-```
-
-## Arquivo a Modificar
-
-- `src/components/game/assets/SuspectPortraits.tsx`
-
-## Resultado Esperado
-
-Avatares com visual limpo e consistente, seguindo fielmente:
-- Silhuetas de cabelo geometricas com contorno escuro
-- Olhos expressivos (branco + iris + pupila)
-- Proporcoes da cartela
-- Cores pasteis de fundo
-- Acessorios fieis ao estilo (oculos, bigodes, joias)
+- [ ] Adicionar mais casos no banco com diferentes dificuldades
+- [ ] Tela de seleção de casos para jogadores avançados
+- [ ] Leaderboard com ranking de pontuação
+- [ ] Histórico de casos completados

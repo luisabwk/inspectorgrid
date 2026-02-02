@@ -50,7 +50,7 @@ export const SuspectPanel = ({
               } as React.CSSProperties}
             >
               <div 
-                className="w-14 h-16 drop-shadow-sm"
+                className="w-16 h-20 drop-shadow-sm rounded overflow-hidden"
                 style={{ color: suspect.color }}
               >
                 {Portrait && <Portrait className="w-full h-full" />}

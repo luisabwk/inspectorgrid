@@ -35,13 +35,22 @@ const generateTestGrid = (): Cell[][] => {
       grid[r][c].roomId = 'bedroom';
     }
   }
-  // Cama dupla horizontal (2 células conectadas) - nunca duas camas separadas lado a lado
+  // Cama dupla horizontal (2 células conectadas)
   grid[0][3].asset = 'bed';
   grid[0][4].asset = 'bed';
   grid[0][5].asset = 'window';
   
-  // === CORREDOR (middle row 2 - full width) ===
-  // Already set as default 'corridor'
+  // === BANHEIRO (middle row 2, cols 4-5) ===
+  for (let c = 4; c <= 5; c++) {
+    grid[2][c].roomId = 'bathroom';
+  }
+  grid[2][4].asset = 'toilet';
+  grid[2][5].asset = 'shower';
+  
+  // === CORREDOR (middle row 2, cols 0-3) ===
+  // cols 0-3 remain as corridor (default)
+  grid[2][0].asset = 'door'; // porta para cozinha
+  grid[2][3].asset = 'door'; // porta para escritório
   
   // === COZINHA (bottom-left 3x3 - rows 3-5, cols 0-2) ===
   for (let r = 3; r <= 5; r++) {
@@ -49,10 +58,13 @@ const generateTestGrid = (): Cell[][] => {
       grid[r][c].roomId = 'kitchen';
     }
   }
-  grid[3][0].asset = 'table';
+  grid[3][0].asset = 'fridge';
   grid[3][1].asset = 'table';
-  grid[5][0].asset = 'debris';
-  grid[4][2].asset = 'plant';
+  grid[3][2].asset = 'table';
+  grid[4][0].asset = 'stove';
+  grid[4][2].asset = 'chair';
+  grid[5][0].asset = 'sink';
+  grid[5][2].asset = 'debris';
   
   // === ESCRITÓRIO (bottom-right 3x3 - rows 3-5, cols 3-5) ===
   for (let r = 3; r <= 5; r++) {
@@ -60,9 +72,12 @@ const generateTestGrid = (): Cell[][] => {
       grid[r][c].roomId = 'study';
     }
   }
-  grid[3][4].asset = 'bookshelf';
-  grid[5][5].asset = 'rug';
+  grid[3][3].asset = 'desk';
+  grid[3][4].asset = 'desk';
+  grid[3][5].asset = 'computer';
   grid[4][3].asset = 'window';
+  grid[4][5].asset = 'bookshelf';
+  grid[5][5].asset = 'rug';
   
   return grid;
 };
@@ -78,6 +93,7 @@ export const testCase: GameCase = {
     rooms: [
       { id: 'living', name: 'Sala de Estar', color: 'hsl(30 50% 82%)' },
       { id: 'bedroom', name: 'Quarto', color: 'hsl(280 35% 88%)' },
+      { id: 'bathroom', name: 'Banheiro', color: 'hsl(200 45% 85%)' },
       { id: 'kitchen', name: 'Cozinha', color: 'hsl(45 50% 85%)' },
       { id: 'study', name: 'Escritório', color: 'hsl(150 30% 85%)' },
       { id: 'corridor', name: 'Corredor', color: 'hsl(30 20% 90%)' },

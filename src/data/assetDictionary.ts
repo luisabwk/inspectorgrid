@@ -109,8 +109,8 @@ export const assetDictionary: Record<AssetType, AssetInfo> = {
   toilet: {
     name: "Vaso Sanitário",
     description: "Equipamento sanitário para necessidades fisiológicas.",
-    canOccupy: false,
-    occupyReason: "O vaso sanitário bloqueia o espaço de ocupação.",
+    canOccupy: true,
+    occupyReason: "Uma pessoa pode estar sentada no vaso sanitário.",
   },
   sink: {
     name: "Pia",
@@ -121,8 +121,8 @@ export const assetDictionary: Record<AssetType, AssetInfo> = {
   shower: {
     name: "Chuveiro",
     description: "Área de banho com chuveiro e box de vidro.",
-    canOccupy: false,
-    occupyReason: "O box do chuveiro bloqueia o espaço.",
+    canOccupy: true,
+    occupyReason: "Uma pessoa pode estar tomando banho ou dentro do box.",
   },
   // Office
   desk: {

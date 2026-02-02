@@ -190,6 +190,9 @@ export const GameCell = ({
   };
   
   const handleDoubleClick = (e: React.MouseEvent) => {
+    // Don't show popover if there's a suspect in the cell
+    if (suspect) return;
+    
     e.preventDefault();
     e.stopPropagation();
     setShowInfo(true);

@@ -56,7 +56,7 @@ export const SuspectClueCards = ({
   return (
     <div 
       ref={containerRef}
-      className="flex gap-1 overflow-x-auto pb-1 scrollbar-thin items-stretch"
+      className="flex gap-1 overflow-x-auto pb-1 scrollbar-thin items-stretch justify-center"
     >
       {suspects.map((suspect) => {
         const isPlaced = placedSuspects.has(suspect.id);

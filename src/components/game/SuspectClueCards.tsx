@@ -63,6 +63,7 @@ export const SuspectClueCards = ({
         const isSelected = selectedSuspect === suspect.id;
         const Portrait = PortraitMap[suspect.portraitId];
         const clue = findClueForSuspect(suspect, clues);
+        const isVictim = suspect.isVictim;
 
         return (
           <div
@@ -76,9 +77,12 @@ export const SuspectClueCards = ({
               "hover:shadow-md active:scale-[0.98]",
               isPlaced && "opacity-40 cursor-not-allowed",
               isSelected 
-                ? "ring-2 ring-primary ring-offset-1 ring-offset-background shadow-lg border-primary" 
+                ? "ring-2 ring-offset-1 ring-offset-background shadow-lg" 
                 : "border-border",
-              isSelected ? "w-auto max-w-[280px]" : "w-14",
+              isSelected && isVictim && "ring-red-500 border-red-400",
+              isSelected && !isVictim && "ring-primary border-primary",
+              !isSelected && isVictim && "border-red-300 bg-red-50/50",
+              isSelected ? "w-auto max-w-[280px]" : "w-16",
             )}
           >
             {/* Portrait section */}
@@ -87,19 +91,20 @@ export const SuspectClueCards = ({
               isSelected && "border-r border-border/50"
             )}>
               <div 
-                className="w-8 h-10 sm:w-10 sm:h-12"
-                style={{ color: suspect.color }}
+                className={cn(
+                  "w-10 h-12 sm:w-12 sm:h-14 rounded overflow-hidden border",
+                  isVictim ? "border-red-500" : "border-transparent"
+                )}
               >
                 {Portrait && <Portrait className="w-full h-full" />}
               </div>
               
-              <p className="text-[10px] sm:text-xs font-bold text-foreground leading-tight mt-0.5 text-center whitespace-nowrap">
+              <p className={cn(
+                "text-[10px] sm:text-xs font-bold leading-tight mt-0.5 text-center whitespace-nowrap",
+                isVictim ? "text-red-700" : "text-foreground"
+              )}>
                 {suspect.name.split(' ')[0]}
               </p>
-              
-              {suspect.isVictim && (
-                <span className="text-[8px]">⚰️</span>
-              )}
             </div>
 
             {/* Clue section - only visible when selected */}

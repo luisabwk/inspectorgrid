@@ -56,7 +56,7 @@ export const SuspectClueCards = ({
   return (
     <div 
       ref={containerRef}
-      className="flex gap-1 overflow-x-auto pb-1 scrollbar-thin items-stretch justify-center"
+      className="flex gap-1.5 overflow-x-auto pb-2 pt-1 px-1 scrollbar-thin items-stretch justify-center"
     >
       {suspects.map((suspect) => {
         const isPlaced = placedSuspects.has(suspect.id);
@@ -73,14 +73,13 @@ export const SuspectClueCards = ({
             onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
             onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
             className={cn(
-              "relative flex-shrink-0 flex items-center rounded-lg border transition-all duration-300 ease-out cursor-pointer bg-card overflow-hidden",
+              "relative flex-shrink-0 flex items-center rounded-lg border transition-all duration-300 ease-out cursor-pointer bg-card",
               "hover:shadow-md active:scale-[0.98]",
               isPlaced && "opacity-40 cursor-not-allowed",
-              isSelected 
-                ? "ring-2 ring-offset-1 ring-offset-background shadow-lg" 
-                : "border-border",
-              isSelected && isVictim && "ring-red-500 border-red-400",
-              isSelected && !isVictim && "ring-primary border-primary",
+              isSelected && "shadow-[0_4px_20px_-2px_rgba(0,0,0,0.15)]",
+              isSelected && isVictim && "border-red-400 shadow-[0_4px_20px_-2px_rgba(239,68,68,0.3)]",
+              isSelected && !isVictim && "border-primary/60 shadow-[0_4px_20px_-2px_rgba(139,92,246,0.3)]",
+              !isSelected && "border-border",
               !isSelected && isVictim && "border-red-300 bg-red-50/50",
             )}
           >

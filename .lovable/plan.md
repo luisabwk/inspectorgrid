@@ -1,78 +1,143 @@
 
+# Plano: Refazer Todos os Avatares Usando a Cartela
 
-# Murdoku - Plano de Desenvolvimento
+## Objetivo
+Recriar completamente os 8 retratos de suspeitos seguindo fielmente o estilo visual da cartela de referência.
 
-## Visão Geral
-Um WebApp de investigação lógica baseado em Quadrados Latinos ambientado em cenas de crime. Jogadores posicionam suspeitos em uma grade respeitando pistas narrativas e propriedades físicas do cenário.
+## Analise da Cartela
 
----
+A cartela define um sistema modular com elementos especificos:
 
-## Fase 1: Fundação e Autenticação
+### Elementos Visuais Extraidos
 
-### Sistema de Autenticação
-- Tela de login/cadastro com tema noir (preto, branco, cinza e detalhes em vermelho)
-- Login obrigatório para acessar o jogo
-- Proteção de rotas para usuários não autenticados
+| Categoria | Elementos |
+|-----------|-----------|
+| **Cabeca** | Forma oval simples, sem contorno, 6 tons de pele |
+| **Cabelos** | Silhuetas solidas com contorno escuro, formas geometricas limpas |
+| **Olhos** | Base branca oval, iris marrom grande, pupila preta pequena |
+| **Sobrancelhas** | Arcos finos ou grossos, cor do cabelo |
+| **Nariz** | Forma simples de "L" ou triangular |
+| **Acessorios** | Oculos retangulares ou redondos com ponte |
+| **Fundos** | Cores pasteis solidas |
 
-### Estrutura do Banco de Dados
-- **Usuários e Perfis**: Dados do jogador e preferências
-- **Casos**: Informações dos puzzles (título, dificuldade, configuração da grade)
-- **Progresso**: Casos completados, pontuação e nível atual do jogador
-- **Sistema de Roles**: Controle de acesso seguro (admin, jogador)
+### Paleta de Cores
 
----
+```text
+Tons de Pele:
+- Claro:   #FADCBC, #F5D0B0
+- Medio:   #E8C4A0, #D4A574  
+- Escuro:  #A07850, #8B6B4A
 
-## Fase 2: Motor do Jogo
+Cores de Cabelo:
+- Preto/Cinza: #4A4A4A (contorno #2C2C2C)
+- Castanho:    #5C4033 (contorno #3C2818)
+- Loiro:       #A08050 (contorno #6B5030)
+- Grisalho:    #808080 (contorno #606060)
 
-### Grade Dinâmica
-- Renderização de cenas baseada em configuração JSON
-- Sistema de salas (rooms) e paredes (walls) que afetam adjacência
-- Assets visuais: camas, sofás, mesas, plantas, TVs, etc.
+Fundos Pasteis:
+- Cinza:       #D4D4D4
+- Creme:       #F5ECD7
+- Bege:        #E8DCC8
+- Azul:        #C8DDE8
+- Verde agua:  #C8E8E0
+- Menta:       #D0E8D4
+- Amarelo:     #F5F0C8
+- Rosa:        #F0D4D4
+```
 
-### Lógica de Ocupação
-- **Células Permitidas**: Vazias, camas, sofás, poltronas, tapetes, janelas
-- **Células Bloqueadas**: Plantas, mesas, TVs, estantes, pedras, entulho
-- Validação de adjacência respeitando paredes
+## Mudancas por Avatar
 
-### Sistema de Suspeitos
-- Avatares ilustrados para cada personagem
-- Visualização em camada sobreposta (avatar semi-transparente sobre o asset)
-- Drag & Drop para posicionamento
+### Portrait 1 - Alberto
+- Cabelo curto escuro "bagunçado" (estilo linha 2 da cartela)
+- Pele media
+- Camisa verde
+- Fundo verde agua
 
----
+### Portrait 2 - Beatriz
+- Cabelo longo liso (estilo linha 4 da cartela)
+- Cor loira/castanha clara
+- Pele clara
+- Blusa roxa
+- Fundo creme
 
-## Fase 3: Mecânicas de Gameplay
+### Portrait 3 - Carlos
+- Cabelo medio masculino (estilo linha 2 da cartela)
+- Oculos retangulares (como na cartela)
+- Camisa vermelha
+- Fundo bege
 
-### Notas de Lápis
-- Marcar múltiplos suspeitos potenciais em uma célula
-- Interface intuitiva para adicionar/remover marcações
+### Portrait 4 - Diana
+- Cabelo afro/curly volumoso (estilo linha 5 da cartela)
+- Pele escura
+- Brincos dourados
+- Blusa azul
+- Fundo azul claro
 
-### Sistema de Pistas
-- Painel lateral com cards de pistas narrativas
-- Pistas descrevem relações entre suspeitos e posições
+### Portrait 5 - Eduardo
+- Cabelo com coque/rabo (estilo linha 6 da cartela)
+- Pele media
+- Camisa amarela
+- Fundo amarelo claro
 
-### Validação e Veredito
-- Validação automática ao preencher última célula válida
-- Regra de Quadrado Latino: 1 suspeito por linha/coluna
-- Modal de veredito para apontar o culpado
+### Portrait 6 - Vitoria (Vitima)
+- Cabelo medio ondulado (variacao linha 4)
+- Colar e brincos dourados
+- Blusa rosa
+- Fundo rosa
 
----
+### Portrait 7 - Senhor Idoso
+- Cabelo grisalho/calvo (estilo linha 1 cartela)
+- Bigode cheio (como na cartela)
+- Camisa ciano
+- Fundo cinza
 
-## Fase 4: Progressão e Dificuldade
+### Portrait 8 - Homem Careca
+- Careca com brilho
+- Oculos redondos (como na cartela)
+- Camisa laranja
+- Fundo bege
 
-### Sistema de Níveis
-- Grade inicial: 6x6 com 6 suspeitos
-- Aumento de dificuldade a cada 3 puzzles completados
-- Grids maiores e cenários mais complexos conforme progresso
+## Estrutura Tecnica do SVG
 
-### Salvamento de Progresso
-- Casos completados e pontuação salvos no Supabase
-- Continuar de onde parou ao retornar ao jogo
+Cada avatar seguira esta estrutura padronizada:
 
----
+```text
+viewBox="0 0 32 40"
 
-## Estética Visual
-- **Tema Crime Noir**: Paleta de preto, branco, cinza com acentos em vermelho
-- Tipografia estilizada evocando investigações policiais
-- Atmosfera misteriosa e imersiva
+Camadas (ordem de renderizacao):
+1. Retangulo de fundo (cor pastel solida)
+2. Cabelo traseiro (se cabelo longo)
+3. Pescoco
+4. Camisa/roupa
+5. Acessorios traseiros (brincos)
+6. Cabeca oval
+7. Cabelo frontal (silhueta com stroke)
+8. Olhos (branco + iris marrom + pupila preta)
+9. Sobrancelhas
+10. Nariz (opcional, sutil)
+11. Acessorios frontais (oculos, bigode)
+```
 
+### Proporcoes Padronizadas
+
+```text
+- Cabeca: ellipse cx=16, cy=18, rx=8-9, ry=9-10
+- Olhos: posicao y=18, distancia x=12 e x=20
+- Iris: raio ~1.5-2
+- Pupila: raio ~0.8-1
+- Sobrancelhas: y=15-16
+- Pescoco: x=12, y=27, width=8, height=6
+```
+
+## Arquivo a Modificar
+
+- `src/components/game/assets/SuspectPortraits.tsx`
+
+## Resultado Esperado
+
+Avatares com visual limpo e consistente, seguindo fielmente:
+- Silhuetas de cabelo geometricas com contorno escuro
+- Olhos expressivos (branco + iris + pupila)
+- Proporcoes da cartela
+- Cores pasteis de fundo
+- Acessorios fieis ao estilo (oculos, bigodes, joias)

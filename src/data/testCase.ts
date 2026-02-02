@@ -100,12 +100,12 @@ export const testCase: GameCase = {
     ],
   },
   suspects: [
-    { id: 'suspect-1', name: 'Alberto', portraitId: 'portrait6', color: 'hsl(45 90% 50%)' },
-    { id: 'suspect-2', name: 'Beatriz', portraitId: 'portrait2', color: 'hsl(280 60% 65%)' },
-    { id: 'suspect-3', name: 'Carlos', portraitId: 'portrait3', color: 'hsl(150 60% 45%)' },
-    { id: 'suspect-4', name: 'Diana', portraitId: 'portrait7', color: 'hsl(0 85% 60%)' },
-    { id: 'suspect-5', name: 'Eduardo', portraitId: 'portrait8', color: 'hsl(200 70% 50%)' },
-    { id: 'suspect-6', name: 'Vitória', portraitId: 'portrait4', color: 'hsl(0 0% 25%)', isVictim: true },
+    { id: 'suspect-1', name: 'Alberto', portraitId: 'portrait1', color: 'hsl(150 60% 35%)' },
+    { id: 'suspect-2', name: 'Beatriz', portraitId: 'portrait2', color: 'hsl(280 60% 55%)' },
+    { id: 'suspect-3', name: 'Carlos', portraitId: 'portrait3', color: 'hsl(0 65% 55%)' },
+    { id: 'suspect-4', name: 'Diana', portraitId: 'portrait4', color: 'hsl(210 60% 55%)' },
+    { id: 'suspect-5', name: 'Eduardo', portraitId: 'portrait5', color: 'hsl(45 70% 50%)' },
+    { id: 'suspect-6', name: 'Vitória', portraitId: 'portrait6', color: 'hsl(340 60% 55%)', isVictim: true },
   ],
   solution: {
     'suspect-1': { row: 0, col: 0 }, // Coronel no sofá

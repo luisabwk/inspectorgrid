@@ -56,7 +56,7 @@ export const SuspectClueCards = ({
   return (
     <div 
       ref={containerRef}
-      className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin items-stretch"
+      className="flex gap-1 overflow-x-auto pb-1 scrollbar-thin items-stretch"
     >
       {suspects.map((suspect) => {
         const isPlaced = placedSuspects.has(suspect.id);
@@ -82,17 +82,16 @@ export const SuspectClueCards = ({
               isSelected && isVictim && "ring-red-500 border-red-400",
               isSelected && !isVictim && "ring-primary border-primary",
               !isSelected && isVictim && "border-red-300 bg-red-50/50",
-              isSelected ? "w-auto max-w-[280px]" : "w-16",
             )}
           >
             {/* Portrait section */}
             <div className={cn(
-              "flex flex-col items-center p-1.5 flex-shrink-0",
-              isSelected && "border-r border-border/50"
+              "flex flex-col items-center p-1 flex-shrink-0",
+              isSelected && clue && "border-r border-border/50"
             )}>
               <div 
                 className={cn(
-                  "w-10 h-12 sm:w-12 sm:h-14 rounded overflow-hidden border",
+                  "w-9 h-11 sm:w-10 sm:h-12 rounded overflow-hidden border",
                   isVictim ? "border-red-500" : "border-transparent"
                 )}
               >
@@ -100,7 +99,7 @@ export const SuspectClueCards = ({
               </div>
               
               <p className={cn(
-                "text-[10px] sm:text-xs font-bold leading-tight mt-0.5 text-center whitespace-nowrap",
+                "text-[9px] sm:text-[10px] font-bold leading-tight mt-0.5 text-center whitespace-nowrap",
                 isVictim ? "text-red-700" : "text-foreground"
               )}>
                 {suspect.name.split(' ')[0]}
@@ -109,8 +108,8 @@ export const SuspectClueCards = ({
 
             {/* Clue section - only visible when selected */}
             {isSelected && clue && (
-              <div className="px-3 py-2 animate-fade-in min-w-0">
-                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+              <div className="px-2 py-1.5 animate-fade-in max-w-[180px]">
+                <p className="text-[10px] sm:text-[11px] text-muted-foreground leading-snug">
                   {formatClueText(clue.text, suspect.name)}
                 </p>
               </div>

@@ -193,21 +193,11 @@ export const Portrait4 = ({ className }: PortraitProps) => (
   </svg>
 );
 
-// Portrait 5 - Eduardo: Cabelo curto puxado para trás com rabo, pele média, camisa amarela
+// Portrait 5 - Eduardo: Cabelo curto ondulado/cacheado, pele média, camisa amarela
 export const Portrait5 = ({ className }: PortraitProps) => (
   <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Background - amarelo claro */}
     <rect width="32" height="40" fill="#F5F0C8" />
-    
-    {/* Ponytail behind - clean oval */}
-    <path 
-      d="M25 10 C28 10 30 14 30 20 C30 26 28 28 26 28 C24 28 24 24 24 20 C24 14 24 10 25 10 Z" 
-      fill="#5C4033" 
-      stroke="#3C2818" 
-      strokeWidth="0.6" 
-    />
-    {/* Hair tie */}
-    <rect x="24" y="9" width="3" height="2" rx="0.5" fill="#2C2C2C" />
     
     {/* Neck */}
     <rect x="12" y="27" width="8" height="6" fill="#E8C4A0" />
@@ -218,15 +208,19 @@ export const Portrait5 = ({ className }: PortraitProps) => (
     {/* Head oval */}
     <ellipse cx="16" cy="18" rx="8.5" ry="10" fill="#E8C4A0" />
     
-    {/* Hair - slicked back, clean geometric */}
+    {/* Hair - short wavy/curly masculine style */}
     <path 
-      d="M8 14 C8 9 11 6 16 6 C21 6 24 9 24 14 L24 11 C24 8 21 7 16 7 C11 7 8 8 8 11 Z" 
+      d="M7 15 C7 10 10 5 16 5 C22 5 25 10 25 15 L25 12 C25 8 22 6 16 6 C10 6 7 8 7 12 Z" 
       fill="#5C4033" 
       stroke="#3C2818" 
       strokeWidth="0.8" 
     />
-    {/* Hair connects to ponytail */}
-    <path d="M24 10 L25 10" stroke="#5C4033" strokeWidth="3" />
+    {/* Wavy texture on top */}
+    <path d="M9 10 C10 8 12 9 13 8 C14 7 15 8 16 7 C17 8 18 7 19 8 C20 9 22 8 23 10" 
+      fill="#5C4033" stroke="#3C2818" strokeWidth="0.6" />
+    {/* Side volume */}
+    <path d="M7 14 L6 17 C7 18 8 17 8 15 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.4" />
+    <path d="M25 14 L26 17 C25 18 24 17 24 15 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.4" />
     
     {/* Eyes */}
     <ellipse cx="12" cy="18" rx="2" ry="2.2" fill="white" />

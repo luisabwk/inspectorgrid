@@ -51,6 +51,9 @@ interface GameCellProps {
   hasDeskBottom: boolean;
   hasDeskLeft: boolean;
   hasDeskRight: boolean;
+  // Rotation for dynamic assets
+  chairRotation: number;
+  applianceRotation: number;
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -93,6 +96,8 @@ export const GameCell = ({
   hasDeskBottom,
   hasDeskLeft,
   hasDeskRight,
+  chairRotation,
+  applianceRotation,
   onCellClick,
   onCellDrop,
   onDragOver,
@@ -106,6 +111,8 @@ export const GameCell = ({
   const isBedCell = cell.asset === 'bed';
   const isSofaCell = cell.asset === 'sofa';
   const isDeskCell = cell.asset === 'desk';
+  const isChairCell = cell.asset === 'chair';
+  const isApplianceCell = cell.asset === 'sink' || cell.asset === 'stove' || cell.asset === 'fridge';
   const isLonelySofa =
     isSofaCell &&
     !hasSofaTop &&
@@ -113,9 +120,10 @@ export const GameCell = ({
     !hasSofaLeft &&
     !hasSofaRight;
   const isConnectableAsset = isTableCell || isBedCell || isSofaCell || isDeskCell;
+  const isRotatableAsset = isChairCell || isApplianceCell;
   const isWallMarking = isWindowCell || isDoorCell;
   const isOccupiable = isCellOccupiable(cell);
-  const AssetIcon = !isWallMarking && !isConnectableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
+  const AssetIcon = !isWallMarking && !isConnectableAsset && !isRotatableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
   const ArmchairAssetIcon = AssetIconMap['armchair'];
   
   // Get asset info from dictionary - handle lonely sofa as armchair
@@ -254,8 +262,8 @@ export const GameCell = ({
         </div>
       )}
 
-      {/* Asset layer - non-connectable assets */}
-      {cell.asset !== 'empty' && !isWallMarking && !isConnectableAsset && (
+      {/* Asset layer - non-connectable, non-rotatable assets */}
+      {cell.asset !== 'empty' && !isWallMarking && !isConnectableAsset && !isRotatableAsset && (
         <div className={cn(
           "absolute inset-1 flex items-center justify-center",
           isOccupiable ? "opacity-70" : "opacity-80"
@@ -263,6 +271,29 @@ export const GameCell = ({
           <AssetIcon className="w-full h-full" />
         </div>
       )}
+      
+      {/* Rotatable assets - Chair */}
+      {isChairCell && (
+        <div 
+          className="absolute inset-1 flex items-center justify-center opacity-70"
+          style={{ transform: `rotate(${chairRotation}deg)` }}
+        >
+          <AssetIconMap.chair className="w-full h-full" />
+        </div>
+      )}
+      
+      {/* Rotatable assets - Wall appliances (sink, stove, fridge) */}
+      {isApplianceCell && (() => {
+        const ApplianceIcon = AssetIconMap[cell.asset];
+        return (
+          <div 
+            className="absolute inset-1 flex items-center justify-center opacity-80"
+            style={{ transform: `rotate(${applianceRotation}deg)` }}
+          >
+            <ApplianceIcon className="w-full h-full" />
+          </div>
+        );
+      })()}
       
       {/* Table asset with connection support */}
       {isTableCell && (

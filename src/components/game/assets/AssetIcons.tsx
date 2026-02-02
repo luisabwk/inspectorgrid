@@ -60,19 +60,30 @@ export const BedIcon = ({
   
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Back legs - only on head cell or single */}
-      {(isHead || isSingle) && !connectedTop && !connectedLeft && (
+      {/* 
+        Leg positioning logic:
+        - For VERTICAL beds: head is TOP, foot is BOTTOM → back legs at top, front legs at bottom
+        - For HORIZONTAL beds: head is LEFT, foot is RIGHT → left legs on head cell, right legs on foot cell
+        - For SINGLE beds: all 4 legs visible
+      */}
+      
+      {/* Top-left leg */}
+      {(isSingle || (isVerticalBed && isHead) || (isHorizontalBed && isHead)) && !connectedTop && !connectedLeft && (
         <rect x="6" y="4" width="3" height="8" fill="#5A4030" />
       )}
-      {(isHead || isSingle) && !connectedTop && !connectedRight && !isHeadHorizontal && (
+      
+      {/* Top-right leg */}
+      {(isSingle || (isVerticalBed && isHead) || (isHorizontalBed && isFoot)) && !connectedTop && !connectedRight && (
         <rect x="39" y="4" width="3" height="8" fill="#5A4030" />
       )}
       
-      {/* Front legs - only on foot cell or single */}
-      {(isFoot || isSingle) && !connectedBottom && !connectedLeft && !isFootHorizontal && (
+      {/* Bottom-left leg */}
+      {(isSingle || (isVerticalBed && isFoot) || (isHorizontalBed && isHead)) && !connectedBottom && !connectedLeft && (
         <rect x="6" y="38" width="3" height="8" fill="#6B5040" />
       )}
-      {(isFoot || isSingle) && !connectedBottom && !connectedRight && (
+      
+      {/* Bottom-right leg */}
+      {(isSingle || (isVerticalBed && isFoot) || (isHorizontalBed && isFoot)) && !connectedBottom && !connectedRight && (
         <rect x="39" y="38" width="3" height="8" fill="#6B5040" />
       )}
       

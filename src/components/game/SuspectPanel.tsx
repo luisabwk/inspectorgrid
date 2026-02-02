@@ -30,6 +30,7 @@ export const SuspectPanel = ({
           const isPlaced = placedSuspects.has(suspect.id);
           const isSelected = selectedSuspect === suspect.id;
           const Portrait = PortraitMap[suspect.portraitId];
+          const isVictim = suspect.isVictim;
           
           return (
             <div
@@ -42,23 +43,27 @@ export const SuspectPanel = ({
                 "hover:shadow-md",
                 isPlaced && "opacity-40 cursor-not-allowed grayscale",
                 isSelected && "ring-2 ring-offset-2 ring-offset-background",
-                !isPlaced && !isSelected && "border-border bg-card hover:border-primary/30"
+                !isPlaced && !isSelected && !isVictim && "border-border bg-card hover:border-primary/30",
+                isVictim && !isSelected && "border-red-400 bg-red-50 hover:border-red-500"
               )}
               style={{
-                borderColor: isSelected ? suspect.color : undefined,
-                '--tw-ring-color': isSelected ? suspect.color : undefined,
+                borderColor: isSelected ? (isVictim ? '#ef4444' : suspect.color) : undefined,
+                '--tw-ring-color': isSelected ? (isVictim ? '#ef4444' : suspect.color) : undefined,
               } as React.CSSProperties}
             >
               <div 
-                className="w-16 h-20 drop-shadow-sm rounded overflow-hidden"
-                style={{ color: suspect.color }}
+                className={cn(
+                  "w-20 h-24 drop-shadow-sm rounded-md overflow-hidden border-2",
+                  isVictim ? "border-red-500" : "border-transparent"
+                )}
               >
                 {Portrait && <Portrait className="w-full h-full" />}
               </div>
               <div className="text-center">
                 <p className={cn(
                   "text-xs font-medium leading-tight",
-                  isPlaced ? "text-muted-foreground" : "text-foreground"
+                  isPlaced ? "text-muted-foreground" : "text-foreground",
+                  isVictim && "text-red-700 font-semibold"
                 )}>
                   {suspect.name}
                 </p>

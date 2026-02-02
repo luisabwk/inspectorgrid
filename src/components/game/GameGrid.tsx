@@ -32,6 +32,11 @@ const hasWindowAsset = (cell: Cell | undefined): boolean => {
   return cell?.asset === 'window';
 };
 
+// Helper to check if cell has door asset
+const hasDoorAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'door';
+};
+
 // Helper to check if cell has table asset
 const hasTableAsset = (cell: Cell | undefined): boolean => {
   return cell?.asset === 'table';
@@ -118,6 +123,12 @@ export const GameGrid = ({
     const hasWindowLeft = hasWallLeft && (hasWindowAsset(cell) || hasWindowAsset(leftCell));
     const hasWindowRight = hasWallRight && (hasWindowAsset(cell) || hasWindowAsset(rightCell));
 
+    // Doors on walls - check if this cell or neighbor has door asset at the wall boundary
+    const hasDoorTop = hasWallTop && (hasDoorAsset(cell) || hasDoorAsset(topCell));
+    const hasDoorBottom = hasWallBottom && (hasDoorAsset(cell) || hasDoorAsset(bottomCell));
+    const hasDoorLeft = hasWallLeft && (hasDoorAsset(cell) || hasDoorAsset(leftCell));
+    const hasDoorRight = hasWallRight && (hasDoorAsset(cell) || hasDoorAsset(rightCell));
+
     // Table connections - check if adjacent cells also have tables
     const hasTableTop = hasTableAsset(cell) && hasTableAsset(topCell) && !hasWallTop;
     const hasTableBottom = hasTableAsset(cell) && hasTableAsset(bottomCell) && !hasWallBottom;
@@ -151,6 +162,10 @@ export const GameGrid = ({
       hasWindowBottom,
       hasWindowLeft,
       hasWindowRight,
+      hasDoorTop,
+      hasDoorBottom,
+      hasDoorLeft,
+      hasDoorRight,
       hasTableTop,
       hasTableBottom,
       hasTableLeft,
@@ -266,6 +281,10 @@ export const GameGrid = ({
               hasWindowBottom={wallInfo.hasWindowBottom}
               hasWindowLeft={wallInfo.hasWindowLeft}
               hasWindowRight={wallInfo.hasWindowRight}
+              hasDoorTop={wallInfo.hasDoorTop}
+              hasDoorBottom={wallInfo.hasDoorBottom}
+              hasDoorLeft={wallInfo.hasDoorLeft}
+              hasDoorRight={wallInfo.hasDoorRight}
               hasTableTop={wallInfo.hasTableTop}
               hasTableBottom={wallInfo.hasTableBottom}
               hasTableLeft={wallInfo.hasTableLeft}

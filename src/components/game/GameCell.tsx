@@ -423,34 +423,22 @@ export const GameCell = ({
         </div>
       )}
       
-      {/* Computer overlay - always renders on top of desk/table in the same cell */}
+      {/* Computer overlay - always renders on top of desk in the same cell */}
       {isComputerCell && (
         <>
-          {/* Base surface - use table if adjacent to tables, otherwise desk */}
-          {(hasTableTop || hasTableBottom || hasTableLeft || hasTableRight) ? (
-            <div className="absolute inset-0 flex items-center justify-center opacity-80">
-              <TableIcon 
-                className="w-full h-full" 
-                connectedTop={hasTableTop}
-                connectedBottom={hasTableBottom}
-                connectedLeft={hasTableLeft}
-                connectedRight={hasTableRight}
-              />
-            </div>
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center opacity-80">
-              <DeskIcon 
-                className="w-full h-full" 
-                connectedTop={hasDeskTop}
-                connectedBottom={hasDeskBottom}
-                connectedLeft={hasDeskLeft}
-                connectedRight={hasDeskRight}
-              />
-            </div>
-          )}
-          {/* Computer on top */}
-          <div className="absolute inset-2 flex items-center justify-center opacity-90 z-[5]">
-            <ComputerIcon className="w-full h-full" />
+          {/* Base surface - always use desk */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-80">
+            <DeskIcon 
+              className="w-full h-full" 
+              connectedTop={hasDeskTop}
+              connectedBottom={hasDeskBottom}
+              connectedLeft={hasDeskLeft}
+              connectedRight={hasDeskRight}
+            />
+          </div>
+          {/* Laptop on top - smaller and centered */}
+          <div className="absolute inset-0 flex items-center justify-center z-[5]" style={{ padding: '20%' }}>
+            <ComputerIcon className="w-full h-full opacity-95" />
           </div>
         </>
       )}

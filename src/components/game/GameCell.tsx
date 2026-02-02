@@ -76,6 +76,16 @@ interface GameCellProps {
   hasDeskBottom: boolean;
   hasDeskLeft: boolean;
   hasDeskRight: boolean;
+  // Adjacent stove connections
+  hasStoveTop: boolean;
+  hasStoveBottom: boolean;
+  hasStoveLeft: boolean;
+  hasStoveRight: boolean;
+  // Adjacent sink connections
+  hasSinkTop: boolean;
+  hasSinkBottom: boolean;
+  hasSinkLeft: boolean;
+  hasSinkRight: boolean;
   // Rotation for dynamic assets
   chairRotation: number;
   applianceRotation: number;
@@ -123,6 +133,14 @@ export const GameCell = ({
   hasDeskBottom,
   hasDeskLeft,
   hasDeskRight,
+  hasStoveTop,
+  hasStoveBottom,
+  hasStoveLeft,
+  hasStoveRight,
+  hasSinkTop,
+  hasSinkBottom,
+  hasSinkLeft,
+  hasSinkRight,
   chairRotation,
   applianceRotation,
   onCellClick,
@@ -140,15 +158,20 @@ export const GameCell = ({
   const isDeskCell = cell.asset === 'desk';
   const isChairCell = cell.asset === 'chair';
   const isComputerCell = cell.asset === 'computer';
-  const isApplianceCell = cell.asset === 'sink' || cell.asset === 'stove' || cell.asset === 'fridge';
+  const isFridgeCell = cell.asset === 'fridge';
+  const isStoveCell = cell.asset === 'stove';
+  const isSinkCell = cell.asset === 'sink';
+  const isApplianceCell = isSinkCell || isStoveCell || isFridgeCell;
   const isLonelySofa =
     isSofaCell &&
     !hasSofaTop &&
     !hasSofaBottom &&
     !hasSofaLeft &&
     !hasSofaRight;
-  const isConnectableAsset = isTableCell || isBedCell || isSofaCell || isDeskCell;
-  const isRotatableAsset = isChairCell || isApplianceCell;
+  // Stove and sink are now connectable like table/bed
+  const isConnectableCounter = isStoveCell || isSinkCell;
+  const isConnectableAsset = isTableCell || isBedCell || isSofaCell || isDeskCell || isConnectableCounter;
+  const isRotatableAsset = isChairCell || isFridgeCell; // Only fridge is purely rotatable now
   const isWallMarking = isWindowCell || isDoorCell;
   const isOccupiable = isCellOccupiable(cell);
   // Computer is handled separately - it overlays on desk/table
@@ -309,32 +332,40 @@ export const GameCell = ({
         </div>
       )}
       
-      {/* Directional assets - Wall appliances (sink, stove, fridge) */}
-      {isApplianceCell && (() => {
-        const direction = rotationToDirection(applianceRotation);
-        if (cell.asset === 'fridge') {
-          return (
-            <div className="absolute inset-1 flex items-center justify-center opacity-80">
-              <FridgeIcon className="w-full h-full" direction={direction} />
-            </div>
-          );
-        }
-        if (cell.asset === 'stove') {
-          return (
-            <div className="absolute inset-1 flex items-center justify-center opacity-80">
-              <StoveIcon className="w-full h-full" direction={direction} />
-            </div>
-          );
-        }
-        if (cell.asset === 'sink') {
-          return (
-            <div className="absolute inset-1 flex items-center justify-center opacity-80">
-              <SinkIcon className="w-full h-full" direction={direction} />
-            </div>
-          );
-        }
-        return null;
-      })()}
+      {/* Directional assets - Fridge only (stove/sink are connectable now) */}
+      {isFridgeCell && (
+        <div className="absolute inset-1 flex items-center justify-center opacity-80">
+          <FridgeIcon className="w-full h-full" direction={rotationToDirection(applianceRotation)} />
+        </div>
+      )}
+      
+      {/* Stove with connection support */}
+      {isStoveCell && (
+        <div className="absolute inset-0 flex items-center justify-center opacity-80">
+          <StoveIcon 
+            className="w-full h-full" 
+            direction={rotationToDirection(applianceRotation)}
+            connectedTop={hasStoveTop}
+            connectedBottom={hasStoveBottom}
+            connectedLeft={hasStoveLeft}
+            connectedRight={hasStoveRight}
+          />
+        </div>
+      )}
+      
+      {/* Sink with connection support */}
+      {isSinkCell && (
+        <div className="absolute inset-0 flex items-center justify-center opacity-80">
+          <SinkIcon 
+            className="w-full h-full" 
+            direction={rotationToDirection(applianceRotation)}
+            connectedTop={hasSinkTop}
+            connectedBottom={hasSinkBottom}
+            connectedLeft={hasSinkLeft}
+            connectedRight={hasSinkRight}
+          />
+        </div>
+      )}
       
       {/* Table asset with connection support */}
       {isTableCell && (

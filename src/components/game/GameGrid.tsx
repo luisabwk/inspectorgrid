@@ -67,6 +67,21 @@ const isWallAppliance = (cell: Cell | undefined): boolean => {
   return cell?.asset === 'sink' || cell?.asset === 'stove' || cell?.asset === 'fridge';
 };
 
+// Helper to check if cell has stove asset
+const hasStoveAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'stove';
+};
+
+// Helper to check if cell has sink asset
+const hasSinkAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'sink';
+};
+
+// Check if two cells are connectable counter assets (stove or sink)
+const isCounterAsset = (cell: Cell | undefined): boolean => {
+  return cell?.asset === 'stove' || cell?.asset === 'sink';
+};
+
 // Calculate rotation for chair based on nearest table/desk
 const getChairRotation = (
   cell: Cell,
@@ -211,6 +226,18 @@ export const GameGrid = ({
     const hasDeskLeft = hasDeskAsset(cell) && hasDeskAsset(leftCell) && !hasWallLeft;
     const hasDeskRight = hasDeskAsset(cell) && hasDeskAsset(rightCell) && !hasWallRight;
 
+    // Stove connections - stove can connect to other stoves or sinks
+    const hasStoveTop = hasStoveAsset(cell) && isCounterAsset(topCell) && !hasWallTop;
+    const hasStoveBottom = hasStoveAsset(cell) && isCounterAsset(bottomCell) && !hasWallBottom;
+    const hasStoveLeft = hasStoveAsset(cell) && isCounterAsset(leftCell) && !hasWallLeft;
+    const hasStoveRight = hasStoveAsset(cell) && isCounterAsset(rightCell) && !hasWallRight;
+
+    // Sink connections - sink can connect to other sinks or stoves
+    const hasSinkTop = hasSinkAsset(cell) && isCounterAsset(topCell) && !hasWallTop;
+    const hasSinkBottom = hasSinkAsset(cell) && isCounterAsset(bottomCell) && !hasWallBottom;
+    const hasSinkLeft = hasSinkAsset(cell) && isCounterAsset(leftCell) && !hasWallLeft;
+    const hasSinkRight = hasSinkAsset(cell) && isCounterAsset(rightCell) && !hasWallRight;
+
     // Chair rotation based on adjacent tables/desks
     const chairRotation = getChairRotation(cell, getCell);
     
@@ -252,6 +279,14 @@ export const GameGrid = ({
       hasDeskBottom,
       hasDeskLeft,
       hasDeskRight,
+      hasStoveTop,
+      hasStoveBottom,
+      hasStoveLeft,
+      hasStoveRight,
+      hasSinkTop,
+      hasSinkBottom,
+      hasSinkLeft,
+      hasSinkRight,
       chairRotation,
       applianceRotation,
     };
@@ -398,6 +433,14 @@ export const GameGrid = ({
               hasDeskBottom={wallInfo.hasDeskBottom}
               hasDeskLeft={wallInfo.hasDeskLeft}
               hasDeskRight={wallInfo.hasDeskRight}
+              hasStoveTop={wallInfo.hasStoveTop}
+              hasStoveBottom={wallInfo.hasStoveBottom}
+              hasStoveLeft={wallInfo.hasStoveLeft}
+              hasStoveRight={wallInfo.hasStoveRight}
+              hasSinkTop={wallInfo.hasSinkTop}
+              hasSinkBottom={wallInfo.hasSinkBottom}
+              hasSinkLeft={wallInfo.hasSinkLeft}
+              hasSinkRight={wallInfo.hasSinkRight}
               chairRotation={wallInfo.chairRotation}
               applianceRotation={wallInfo.applianceRotation}
               onCellClick={onCellClick}

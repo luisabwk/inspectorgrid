@@ -25,6 +25,12 @@ export const BedIcon = ({
   const bottomY = connectedBottom ? 40 : 38;
   const leftX = connectedLeft ? 0 : 4;
   const rightX = connectedRight ? 48 : 44;
+
+  // Remove inner padding on connected edges so the bed reads as ONE piece across cells
+  const mattressInsetLeft = connectedLeft ? 0 : 2;
+  const mattressInsetRight = connectedRight ? 0 : 2;
+  const mattressX = leftX + mattressInsetLeft;
+  const mattressW = (rightX - leftX) - (mattressInsetLeft + mattressInsetRight);
   
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,18 +53,22 @@ export const BedIcon = ({
       <rect x={leftX} y={topY} width={rightX - leftX} height={bottomY - topY} fill="#8B7355" />
       
       {/* Mattress - top surface */}
-      <rect x={leftX + 2} y={topY + 2} width={rightX - leftX - 4} height={bottomY - topY - 4} fill="#F5EDE3" />
+      <rect x={mattressX} y={topY + 2} width={mattressW} height={bottomY - topY - 4} fill="#F5EDE3" />
       
-      {/* Pillows at head (only if not connected top) */}
+      {/* Pillows at head: only draw on the OUTER ends so a 2-cell bed doesn't look like 2 beds */}
       {!connectedTop && (
         <>
-          <rect x={leftX + 4} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
-          <rect x={rightX - 18} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+          {!connectedLeft && (
+            <rect x={leftX + 4} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+          )}
+          {!connectedRight && (
+            <rect x={rightX - 18} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+          )}
         </>
       )}
       
       {/* Blanket/duvet - top surface */}
-      <rect x={leftX + 2} y={connectedTop ? topY + 2 : topY + 12} width={rightX - leftX - 4} height={connectedTop ? bottomY - topY - 4 : bottomY - topY - 14} fill="#D4A574" />
+      <rect x={mattressX} y={connectedTop ? topY + 2 : topY + 12} width={mattressW} height={connectedTop ? bottomY - topY - 4 : bottomY - topY - 14} fill="#D4A574" />
       
       {/* Bed frame - front face */}
       {!connectedBottom && (

@@ -86,10 +86,26 @@ export const GameGrid = ({
     const rightCell = getCell(row, col + 1);
 
     // Walls appear between different rooms OR at grid edges
-    const hasWallTop = row === 0 || areDifferentRooms(cell, topCell) || cell.walls.includes('top');
-    const hasWallBottom = row === gridSize - 1 || areDifferentRooms(cell, bottomCell) || cell.walls.includes('bottom');
-    const hasWallLeft = col === 0 || areDifferentRooms(cell, leftCell) || cell.walls.includes('left');
-    const hasWallRight = col === gridSize - 1 || areDifferentRooms(cell, rightCell) || cell.walls.includes('right');
+    const hasWallTop =
+      row === 0 ||
+      areDifferentRooms(cell, topCell) ||
+      cell.walls.includes('top') ||
+      (topCell?.walls.includes('bottom') ?? false);
+    const hasWallBottom =
+      row === gridSize - 1 ||
+      areDifferentRooms(cell, bottomCell) ||
+      cell.walls.includes('bottom') ||
+      (bottomCell?.walls.includes('top') ?? false);
+    const hasWallLeft =
+      col === 0 ||
+      areDifferentRooms(cell, leftCell) ||
+      cell.walls.includes('left') ||
+      (leftCell?.walls.includes('right') ?? false);
+    const hasWallRight =
+      col === gridSize - 1 ||
+      areDifferentRooms(cell, rightCell) ||
+      cell.walls.includes('right') ||
+      (rightCell?.walls.includes('left') ?? false);
 
     // Windows on walls - check if this cell or neighbor has window asset at the wall boundary
     const hasWindowTop = hasWallTop && (hasWindowAsset(cell) || hasWindowAsset(topCell));
@@ -98,22 +114,22 @@ export const GameGrid = ({
     const hasWindowRight = hasWallRight && (hasWindowAsset(cell) || hasWindowAsset(rightCell));
 
     // Table connections - check if adjacent cells also have tables
-    const hasTableTop = hasTableAsset(cell) && hasTableAsset(topCell);
-    const hasTableBottom = hasTableAsset(cell) && hasTableAsset(bottomCell);
-    const hasTableLeft = hasTableAsset(cell) && hasTableAsset(leftCell);
-    const hasTableRight = hasTableAsset(cell) && hasTableAsset(rightCell);
+    const hasTableTop = hasTableAsset(cell) && hasTableAsset(topCell) && !hasWallTop;
+    const hasTableBottom = hasTableAsset(cell) && hasTableAsset(bottomCell) && !hasWallBottom;
+    const hasTableLeft = hasTableAsset(cell) && hasTableAsset(leftCell) && !hasWallLeft;
+    const hasTableRight = hasTableAsset(cell) && hasTableAsset(rightCell) && !hasWallRight;
 
     // Bed connections - check if adjacent cells also have beds
-    const hasBedTop = hasBedAsset(cell) && hasBedAsset(topCell);
-    const hasBedBottom = hasBedAsset(cell) && hasBedAsset(bottomCell);
-    const hasBedLeft = hasBedAsset(cell) && hasBedAsset(leftCell);
-    const hasBedRight = hasBedAsset(cell) && hasBedAsset(rightCell);
+    const hasBedTop = hasBedAsset(cell) && hasBedAsset(topCell) && !hasWallTop;
+    const hasBedBottom = hasBedAsset(cell) && hasBedAsset(bottomCell) && !hasWallBottom;
+    const hasBedLeft = hasBedAsset(cell) && hasBedAsset(leftCell) && !hasWallLeft;
+    const hasBedRight = hasBedAsset(cell) && hasBedAsset(rightCell) && !hasWallRight;
 
     // Sofa connections - check if adjacent cells also have sofas
-    const hasSofaTop = hasSofaAsset(cell) && hasSofaAsset(topCell);
-    const hasSofaBottom = hasSofaAsset(cell) && hasSofaAsset(bottomCell);
-    const hasSofaLeft = hasSofaAsset(cell) && hasSofaAsset(leftCell);
-    const hasSofaRight = hasSofaAsset(cell) && hasSofaAsset(rightCell);
+    const hasSofaTop = hasSofaAsset(cell) && hasSofaAsset(topCell) && !hasWallTop;
+    const hasSofaBottom = hasSofaAsset(cell) && hasSofaAsset(bottomCell) && !hasWallBottom;
+    const hasSofaLeft = hasSofaAsset(cell) && hasSofaAsset(leftCell) && !hasWallLeft;
+    const hasSofaRight = hasSofaAsset(cell) && hasSofaAsset(rightCell) && !hasWallRight;
 
     return {
       hasWallTop,

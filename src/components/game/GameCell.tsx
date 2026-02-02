@@ -80,9 +80,16 @@ export const GameCell = ({
   const isTableCell = cell.asset === 'table';
   const isBedCell = cell.asset === 'bed';
   const isSofaCell = cell.asset === 'sofa';
+  const isLonelySofa =
+    isSofaCell &&
+    !hasSofaTop &&
+    !hasSofaBottom &&
+    !hasSofaLeft &&
+    !hasSofaRight;
   const isConnectableAsset = isTableCell || isBedCell || isSofaCell;
   const isOccupiable = isCellOccupiable(cell);
   const AssetIcon = !isWindowCell && !isConnectableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
+  const ArmchairAssetIcon = AssetIconMap['armchair'];
   
   const handleClick = () => {
     if (isOccupiable) {
@@ -222,13 +229,17 @@ export const GameCell = ({
       {/* Sofa asset with connection support */}
       {isSofaCell && (
         <div className="absolute inset-0 flex items-center justify-center opacity-70">
-          <SofaIcon 
-            className="w-full h-full" 
-            connectedTop={hasSofaTop}
-            connectedBottom={hasSofaBottom}
-            connectedLeft={hasSofaLeft}
-            connectedRight={hasSofaRight}
-          />
+          {isLonelySofa ? (
+            <ArmchairAssetIcon className="w-full h-full" />
+          ) : (
+            <SofaIcon 
+              className="w-full h-full" 
+              connectedTop={hasSofaTop}
+              connectedBottom={hasSofaBottom}
+              connectedLeft={hasSofaLeft}
+              connectedRight={hasSofaRight}
+            />
+          )}
         </div>
       )}
       

@@ -1,6 +1,6 @@
 import { Cell, Suspect, isCellOccupiable, getCellKey, AssetType } from "@/types/game";
 import { cn } from "@/lib/utils";
-import { AssetIconMap, TableIcon, BedIcon, SofaIcon } from "./assets/AssetIcons";
+import { AssetIconMap, TableIcon, BedIcon, SofaIcon, DeskIcon } from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
 import { assetDictionary } from "@/data/assetDictionary";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -41,6 +41,11 @@ interface GameCellProps {
   hasSofaBottom: boolean;
   hasSofaLeft: boolean;
   hasSofaRight: boolean;
+  // Adjacent desk connections
+  hasDeskTop: boolean;
+  hasDeskBottom: boolean;
+  hasDeskLeft: boolean;
+  hasDeskRight: boolean;
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -75,6 +80,10 @@ export const GameCell = ({
   hasSofaBottom,
   hasSofaLeft,
   hasSofaRight,
+  hasDeskTop,
+  hasDeskBottom,
+  hasDeskLeft,
+  hasDeskRight,
   onCellClick,
   onCellDrop,
   onDragOver,
@@ -86,13 +95,14 @@ export const GameCell = ({
   const isTableCell = cell.asset === 'table';
   const isBedCell = cell.asset === 'bed';
   const isSofaCell = cell.asset === 'sofa';
+  const isDeskCell = cell.asset === 'desk';
   const isLonelySofa =
     isSofaCell &&
     !hasSofaTop &&
     !hasSofaBottom &&
     !hasSofaLeft &&
     !hasSofaRight;
-  const isConnectableAsset = isTableCell || isBedCell || isSofaCell;
+  const isConnectableAsset = isTableCell || isBedCell || isSofaCell || isDeskCell;
   const isOccupiable = isCellOccupiable(cell);
   const AssetIcon = !isWindowCell && !isConnectableAsset ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
   const ArmchairAssetIcon = AssetIconMap['armchair'];
@@ -259,6 +269,19 @@ export const GameCell = ({
               connectedRight={hasSofaRight}
             />
           )}
+        </div>
+      )}
+      
+      {/* Desk asset with connection support */}
+      {isDeskCell && (
+        <div className="absolute inset-0 flex items-center justify-center opacity-80">
+          <DeskIcon 
+            className="w-full h-full" 
+            connectedTop={hasDeskTop}
+            connectedBottom={hasDeskBottom}
+            connectedLeft={hasDeskLeft}
+            connectedRight={hasDeskRight}
+          />
         </div>
       )}
       

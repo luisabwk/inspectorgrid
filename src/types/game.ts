@@ -26,10 +26,10 @@ export type AssetType =
   | 'computer';
 
 // Assets that allow suspects
-export const OCCUPIABLE_ASSETS: AssetType[] = ['empty', 'bed', 'sofa', 'armchair', 'rug', 'window', 'door', 'chair'];
+export const OCCUPIABLE_ASSETS: AssetType[] = ['empty', 'bed', 'sofa', 'armchair', 'rug', 'window', 'door', 'chair', 'toilet', 'shower'];
 
 // Assets that block suspects
-export const BLOCKED_ASSETS: AssetType[] = ['plant', 'table', 'tv', 'bookshelf', 'rock', 'debris', 'fridge', 'stove', 'toilet', 'sink', 'shower', 'desk', 'computer'];
+export const BLOCKED_ASSETS: AssetType[] = ['plant', 'table', 'tv', 'bookshelf', 'rock', 'debris', 'fridge', 'stove', 'sink', 'desk', 'computer'];
 
 // Wall directions
 export type WallDirection = 'top' | 'right' | 'bottom' | 'left';

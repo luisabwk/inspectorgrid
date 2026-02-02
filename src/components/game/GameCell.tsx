@@ -37,6 +37,10 @@ interface GameCellProps {
   isHighlighted: boolean;
   isPencilMode: boolean;
   roomColor?: string;
+  // Latin square blocking - cell is blocked by another suspect in same row/col
+  isBlockedByPlacement: boolean;
+  // Conflict - this cell has a suspect in a blocked position
+  hasConflict: boolean;
   // Walls info from neighboring cells for proper rendering
   hasWallTop: boolean;
   hasWallRight: boolean;
@@ -89,6 +93,8 @@ export const GameCell = ({
   isHighlighted,
   isPencilMode,
   roomColor,
+  isBlockedByPlacement,
+  hasConflict,
   hasWallTop,
   hasWallRight,
   hasWallBottom,
@@ -455,9 +461,21 @@ export const GameCell = ({
         </div>
       )}
       
-      {/* Blocked indicator */}
+      {/* Blocked indicator - asset not occupiable */}
       {!isOccupiable && (
         <div className="absolute inset-0 bg-foreground/5 pointer-events-none" />
+      )}
+      
+      {/* Latin square block indicator - X for blocked row/col */}
+      {isBlockedByPlacement && !suspect && isOccupiable && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]">
+          <X className="w-3/5 h-3/5 text-red-500 opacity-30" strokeWidth={3} />
+        </div>
+      )}
+      
+      {/* Conflict indicator - suspect placed in blocked position */}
+      {hasConflict && suspect && (
+        <div className="absolute inset-0 ring-2 ring-red-500 ring-inset pointer-events-none z-[15] animate-pulse" />
       )}
         </div>
       </PopoverTrigger>

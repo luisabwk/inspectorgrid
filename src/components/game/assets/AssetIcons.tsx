@@ -683,23 +683,29 @@ export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetPro
     );
   }
   
-  // Chair facing up - seeing seat from front, backrest at back
+  // Chair facing up - back view (seeing the backrest from behind)
   if (direction === 'up') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Backrest visible behind (at bottom of view) */}
-        <rect x="10" y="34" width="28" height="8" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
-        <rect x="10" y="32" width="28" height="3" fill="#8B7355" />
-        {/* Front legs - at top */}
-        <rect x="12" y="4" width="3" height="14" fill="#5A4A3A" />
-        <rect x="33" y="4" width="3" height="14" fill="#5A4A3A" />
-        {/* Seat */}
-        <rect x="10" y="18" width="28" height="14" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
-        {/* Seat front edge */}
-        <rect x="10" y="16" width="28" height="2" fill="#A08050" />
-        {/* Back legs */}
-        <rect x="12" y="38" width="3" height="8" fill="#4A3D30" />
-        <rect x="33" y="38" width="3" height="8" fill="#4A3D30" />
+        {/* Back legs - visible at bottom, going down */}
+        <rect x="12" y="36" width="3" height="10" fill="#4A3D30" />
+        <rect x="33" y="36" width="3" height="10" fill="#4A3D30" />
+        
+        {/* Backrest - main visible element, tall wooden back */}
+        <rect x="10" y="4" width="28" height="20" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
+        {/* Backrest wood grain detail */}
+        <rect x="14" y="8" width="6" height="12" fill="#D4B584" stroke="#A08050" strokeWidth="0.5" opacity="0.6" />
+        <rect x="28" y="8" width="6" height="12" fill="#D4B584" stroke="#A08050" strokeWidth="0.5" opacity="0.6" />
+        {/* Backrest top curve detail */}
+        <rect x="10" y="4" width="28" height="4" fill="#B89A64" stroke="#8B7355" strokeWidth="1" />
+        
+        {/* Backrest depth - side thickness */}
+        <rect x="10" y="22" width="28" height="4" fill="#A08050" />
+        
+        {/* Seat - partially visible behind backrest */}
+        <rect x="10" y="26" width="28" height="10" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
+        {/* Seat edge */}
+        <rect x="10" y="34" width="28" height="2" fill="#8B7355" />
       </svg>
     );
   }
@@ -971,36 +977,44 @@ export const DeskIcon = ({
   );
 };
 
-// Computer (monitor + keyboard + mouse) - designed to overlay on desk/table
+// Laptop - designed to overlay on desk/table
 export const ComputerIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Monitor stand base */}
-    <rect x="18" y="32" width="12" height="3" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-    {/* Monitor stand neck */}
-    <rect x="21" y="26" width="6" height="7" fill="#3A3A3A" stroke="#2A2A2A" strokeWidth="1" />
-    {/* Monitor frame */}
-    <rect x="6" y="4" width="36" height="24" rx="1" fill="#2A2A2A" stroke="#1A1A1A" strokeWidth="1" />
-    {/* Screen */}
-    <rect x="8" y="6" width="32" height="18" fill="#3A5A6A" stroke="#2A4A5A" strokeWidth="1" />
-    {/* Screen reflection */}
-    <rect x="8" y="6" width="32" height="6" fill="#4A6A7A" opacity="0.4" />
-    {/* Screen content hint */}
-    <rect x="10" y="14" width="12" height="2" fill="#5A7A8A" opacity="0.6" />
-    <rect x="10" y="18" width="8" height="2" fill="#5A7A8A" opacity="0.4" />
-    {/* Monitor bezel bottom */}
-    <rect x="6" y="24" width="36" height="2" fill="#1A1A1A" />
-    {/* Keyboard */}
-    <rect x="8" y="38" width="24" height="8" rx="1" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+    {/* Laptop base/keyboard section */}
+    <rect x="8" y="28" width="32" height="16" rx="1" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+    {/* Keyboard area */}
+    <rect x="10" y="30" width="28" height="10" fill="#3A3A3A" />
     {/* Keyboard keys row 1 */}
-    <rect x="10" y="40" width="20" height="2" fill="#5A5A5A" />
+    <rect x="12" y="32" width="24" height="2" fill="#5A5A5A" rx="0.5" />
     {/* Keyboard keys row 2 */}
-    <rect x="10" y="43" width="20" height="2" fill="#5A5A5A" />
-    {/* Mouse */}
-    <ellipse cx="38" cy="42" rx="5" ry="4" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-    {/* Mouse button divider */}
-    <line x1="38" y1="38" x2="38" y2="42" stroke="#3A3A3A" strokeWidth="1" />
-    {/* Mouse scroll wheel */}
-    <rect x="37" y="39" width="2" height="2" rx="0.5" fill="#5A5A5A" />
+    <rect x="12" y="35" width="24" height="2" fill="#5A5A5A" rx="0.5" />
+    {/* Trackpad */}
+    <rect x="18" y="40" width="12" height="3" rx="0.5" fill="#505050" stroke="#404040" strokeWidth="0.5" />
+    
+    {/* Screen - tilted back (perspective) */}
+    <path d="M10 28 L8 6 L40 6 L38 28 Z" fill="#2A2A2A" stroke="#1A1A1A" strokeWidth="1" />
+    {/* Screen display */}
+    <path d="M11 26 L9.5 8 L38.5 8 L37 26 Z" fill="#3A5A6A" stroke="#2A4A5A" strokeWidth="1" />
+    {/* Screen reflection/gradient */}
+    <path d="M11 26 L9.5 8 L38.5 8 L37 26 Z" fill="url(#screenGradient)" opacity="0.3" />
+    {/* Screen content hints */}
+    <rect x="14" y="12" width="14" height="2" fill="#5A7A8A" opacity="0.6" />
+    <rect x="14" y="16" width="10" height="2" fill="#5A7A8A" opacity="0.4" />
+    <rect x="14" y="20" width="8" height="2" fill="#5A7A8A" opacity="0.3" />
+    
+    {/* Hinge line */}
+    <rect x="10" y="27" width="28" height="2" fill="#3A3A3A" />
+    
+    {/* Camera dot */}
+    <circle cx="24" cy="8" r="1" fill="#2A2A2A" stroke="#3A3A3A" strokeWidth="0.5" />
+    
+    {/* Gradient definition */}
+    <defs>
+      <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#8AC" />
+        <stop offset="100%" stopColor="#468" />
+      </linearGradient>
+    </defs>
   </svg>
 );
 

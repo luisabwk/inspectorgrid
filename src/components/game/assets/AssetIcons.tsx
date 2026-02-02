@@ -14,6 +14,7 @@ interface ConnectableAssetProps {
 }
 
 // 60-degree perspective bed with connection support
+// Convention: headboard = top (vertical) or left (horizontal), footboard = bottom or right
 export const BedIcon = ({ 
   className,
   connectedTop = false,
@@ -21,31 +22,57 @@ export const BedIcon = ({
   connectedLeft = false,
   connectedRight = false
 }: ConnectableAssetProps) => {
-  const topY = connectedTop ? 4 : 6;
-  const bottomY = connectedBottom ? 40 : 38;
+  // Determine bed role based on connections
+  // Headboard: no connection above/left but has connection below/right
+  // Footboard: has connection above/left but no connection below/right
+  // Single: no connections (shows both)
+  
+  const isVerticalBed = connectedTop || connectedBottom;
+  const isHorizontalBed = connectedLeft || connectedRight;
+  
+  // For vertical beds: top cell is head, bottom cell is foot
+  const isHeadVertical = !connectedTop && connectedBottom;
+  const isFootVertical = connectedTop && !connectedBottom;
+  
+  // For horizontal beds: left cell is head, right cell is foot
+  const isHeadHorizontal = !connectedLeft && connectedRight;
+  const isFootHorizontal = connectedLeft && !connectedRight;
+  
+  const isHead = isHeadVertical || isHeadHorizontal;
+  const isFoot = isFootVertical || isFootHorizontal;
+  const isSingle = !connectedTop && !connectedBottom && !connectedLeft && !connectedRight;
+  
+  // Extend edges to connect with adjacent cells
+  const topY = connectedTop ? 0 : 6;
+  const bottomY = connectedBottom ? 48 : 38;
   const leftX = connectedLeft ? 0 : 4;
   const rightX = connectedRight ? 48 : 44;
 
-  // Remove inner padding on connected edges so the bed reads as ONE piece across cells
+  // Mattress insets
   const mattressInsetLeft = connectedLeft ? 0 : 2;
   const mattressInsetRight = connectedRight ? 0 : 2;
+  const mattressInsetTop = connectedTop ? 0 : 2;
+  const mattressInsetBottom = connectedBottom ? 0 : 2;
   const mattressX = leftX + mattressInsetLeft;
-  const mattressW = (rightX - leftX) - (mattressInsetLeft + mattressInsetRight);
+  const mattressY = topY + mattressInsetTop;
+  const mattressW = (rightX - leftX) - mattressInsetLeft - mattressInsetRight;
+  const mattressH = (bottomY - topY) - mattressInsetTop - mattressInsetBottom;
   
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Back legs */}
-      {!connectedTop && !connectedLeft && (
+      {/* Back legs - only on head cell or single */}
+      {(isHead || isSingle) && !connectedTop && !connectedLeft && (
         <rect x="6" y="4" width="3" height="8" fill="#5A4030" />
       )}
-      {!connectedTop && !connectedRight && (
+      {(isHead || isSingle) && !connectedTop && !connectedRight && !isHeadHorizontal && (
         <rect x="39" y="4" width="3" height="8" fill="#5A4030" />
       )}
-      {/* Front legs */}
-      {!connectedBottom && !connectedLeft && (
+      
+      {/* Front legs - only on foot cell or single */}
+      {(isFoot || isSingle) && !connectedBottom && !connectedLeft && !isFootHorizontal && (
         <rect x="6" y="38" width="3" height="8" fill="#6B5040" />
       )}
-      {!connectedBottom && !connectedRight && (
+      {(isFoot || isSingle) && !connectedBottom && !connectedRight && (
         <rect x="39" y="38" width="3" height="8" fill="#6B5040" />
       )}
       
@@ -53,26 +80,59 @@ export const BedIcon = ({
       <rect x={leftX} y={topY} width={rightX - leftX} height={bottomY - topY} fill="#8B7355" />
       
       {/* Mattress - top surface */}
-      <rect x={mattressX} y={topY + 2} width={mattressW} height={bottomY - topY - 4} fill="#F5EDE3" />
+      <rect x={mattressX} y={mattressY} width={mattressW} height={mattressH} fill="#F5EDE3" />
       
-      {/* Pillows at head: only draw on the OUTER ends so a 2-cell bed doesn't look like 2 beds */}
-      {!connectedTop && (
+      {/* Pillows - only on head cell or single bed */}
+      {(isHead || isSingle) && (
         <>
-          {!connectedLeft && (
-            <rect x={leftX + 4} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
-          )}
-          {!connectedRight && (
-            <rect x={rightX - 18} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+          {isHorizontalBed ? (
+            // Horizontal bed: pillows on the left side (vertical arrangement)
+            <>
+              <rect x={leftX + 4} y={topY + 4} width="6" height="12" rx="1" fill="#E8D4BE" />
+              <rect x={leftX + 4} y={bottomY - 16} width="6" height="12" rx="1" fill="#E8D4BE" />
+            </>
+          ) : (
+            // Vertical or single bed: pillows at top (horizontal arrangement)
+            <>
+              <rect x={leftX + 4} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+              <rect x={rightX - 18} y={topY + 4} width="14" height="6" rx="1" fill="#E8D4BE" />
+            </>
           )}
         </>
       )}
       
-      {/* Blanket/duvet - top surface */}
-      <rect x={mattressX} y={connectedTop ? topY + 2 : topY + 12} width={mattressW} height={connectedTop ? bottomY - topY - 4 : bottomY - topY - 14} fill="#D4A574" />
+      {/* Blanket/duvet */}
+      {isHorizontalBed ? (
+        // Horizontal bed: blanket covers from after pillows to the right
+        <rect 
+          x={isHead ? leftX + 14 : mattressX} 
+          y={mattressY} 
+          width={isHead ? mattressW - 12 : mattressW} 
+          height={mattressH} 
+          fill="#D4A574" 
+        />
+      ) : (
+        // Vertical or single bed: blanket from after pillows down
+        <rect 
+          x={mattressX} 
+          y={isHead || isSingle ? topY + 12 : mattressY} 
+          width={mattressW} 
+          height={isHead || isSingle ? mattressH - 10 : mattressH} 
+          fill="#D4A574" 
+        />
+      )}
       
-      {/* Bed frame - front face */}
-      {!connectedBottom && (
-        <rect x={leftX} y={bottomY} width={rightX - leftX} height="3" fill="#6B5A48" />
+      {/* Bed frame - front/foot face - only on foot cell or single */}
+      {(isFoot || isSingle) && !connectedBottom && !connectedRight && (
+        <>
+          {isHorizontalBed ? (
+            // Horizontal bed: footboard on the right side
+            <rect x={rightX - 3} y={topY} width="3" height={bottomY - topY} fill="#6B5A48" />
+          ) : (
+            // Vertical or single bed: footboard at the bottom
+            <rect x={leftX} y={bottomY} width={rightX - leftX} height="3" fill="#6B5A48" />
+          )}
+        </>
       )}
     </svg>
   );

@@ -549,25 +549,25 @@ export const ChairIcon = ({ className }: AssetIconProps) => (
 
 // === BATHROOM ASSETS ===
 
-// 60-degree perspective toilet
+// Side-view toilet (easier to distinguish)
 export const ToiletIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Shadow */}
-    <ellipse cx="24" cy="42" rx="12" ry="3" fill="#505050" opacity="0.2" />
-    {/* Tank */}
-    <rect x="14" y="6" width="20" height="12" rx="2" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
-    <rect x="14" y="18" width="20" height="2" fill="#D0D0D0" />
+    <ellipse cx="26" cy="44" rx="14" ry="2" fill="#505050" opacity="0.2" />
+    {/* Tank - back left */}
+    <rect x="4" y="10" width="10" height="22" rx="2" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
     {/* Tank lid */}
-    <rect x="12" y="4" width="24" height="4" rx="1" fill="#FAFAFA" stroke="#E0E0E0" strokeWidth="1" />
-    {/* Flush button */}
-    <rect x="22" y="6" width="4" height="2" rx="1" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="0.5" />
-    {/* Bowl */}
-    <ellipse cx="24" cy="30" rx="12" ry="10" fill="#F5F5F5" stroke="#D0D0D0" strokeWidth="1" />
-    <ellipse cx="24" cy="30" rx="9" ry="7" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="1" />
-    {/* Seat */}
-    <ellipse cx="24" cy="30" rx="11" ry="9" fill="none" stroke="#C0C0C0" strokeWidth="2" />
-    {/* Bowl front */}
-    <path d="M12 30 Q12 42 24 42 Q36 42 36 30" fill="#E0E0E0" stroke="#D0D0D0" strokeWidth="1" />
+    <rect x="3" y="6" width="12" height="5" rx="1" fill="#FAFAFA" stroke="#E0E0E0" strokeWidth="1" />
+    {/* Flush lever */}
+    <rect x="12" y="14" width="4" height="2" rx="1" fill="#C0C0C0" stroke="#A0A0A0" strokeWidth="0.5" />
+    {/* Bowl base - side view curved */}
+    <path d="M12 32 L12 24 Q12 18 18 18 L32 18 Q40 18 40 26 L40 32 Q40 42 30 42 L20 42 Q12 42 12 32 Z" fill="#F5F5F5" stroke="#D0D0D0" strokeWidth="1" />
+    {/* Seat - side view */}
+    <path d="M14 20 L36 20 Q42 20 42 26 L42 28 Q42 32 36 32 L14 32 Q10 32 10 26 L10 24 Q10 20 14 20 Z" fill="#FAFAFA" stroke="#C0C0C0" strokeWidth="1" />
+    {/* Seat opening hint */}
+    <ellipse cx="28" cy="26" rx="8" ry="4" fill="#E0E0E0" stroke="#C0C0C0" strokeWidth="1" />
+    {/* Bowl front depth */}
+    <path d="M14 32 L36 32 Q40 32 40 36 L40 38 Q40 42 34 42 L18 42 Q14 42 14 38 L14 32 Z" fill="#E8E8E8" stroke="#D0D0D0" strokeWidth="1" />
   </svg>
 );
 
@@ -596,35 +596,37 @@ export const SinkIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
-// 60-degree perspective shower
+// Side-view shower (easier to distinguish)
 export const ShowerIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Base/tray */}
-    <rect x="4" y="38" width="40" height="8" fill="#E8E8E8" stroke="#D0D0D0" strokeWidth="1" />
-    <rect x="4" y="38" width="40" height="2" fill="#F0F0F0" />
-    {/* Back wall */}
-    <rect x="4" y="4" width="40" height="34" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
-    {/* Tiles pattern */}
-    <line x1="4" y1="14" x2="44" y2="14" stroke="#C0C0C0" strokeWidth="1" />
-    <line x1="4" y1="24" x2="44" y2="24" stroke="#C0C0C0" strokeWidth="1" />
-    <line x1="4" y1="34" x2="44" y2="34" stroke="#C0C0C0" strokeWidth="1" />
-    <line x1="14" y1="4" x2="14" y2="38" stroke="#C0C0C0" strokeWidth="1" />
-    <line x1="24" y1="4" x2="24" y2="38" stroke="#C0C0C0" strokeWidth="1" />
-    <line x1="34" y1="4" x2="34" y2="38" stroke="#C0C0C0" strokeWidth="1" />
-    {/* Shower head */}
-    <rect x="20" y="6" width="8" height="3" rx="1" fill="#A8A8A8" stroke="#888888" strokeWidth="1" />
-    <ellipse cx="24" cy="11" rx="5" ry="2" fill="#989898" stroke="#787878" strokeWidth="1" />
-    {/* Shower arm */}
-    <rect x="23" y="4" width="2" height="4" fill="#909090" />
-    {/* Water drops */}
-    <circle cx="20" cy="16" r="1" fill="#88C8E8" opacity="0.7" />
-    <circle cx="24" cy="18" r="1" fill="#88C8E8" opacity="0.7" />
-    <circle cx="28" cy="16" r="1" fill="#88C8E8" opacity="0.7" />
-    <circle cx="22" cy="22" r="1" fill="#88C8E8" opacity="0.6" />
-    <circle cx="26" cy="24" r="1" fill="#88C8E8" opacity="0.6" />
-    {/* Glass door */}
-    <rect x="40" y="4" width="4" height="34" fill="#A8C8E0" opacity="0.4" stroke="#90B0C8" strokeWidth="1" />
-    <rect x="40" y="4" width="1" height="34" fill="#90B0C8" />
+    {/* Base/tray - side view */}
+    <rect x="6" y="40" width="36" height="6" fill="#E8E8E8" stroke="#D0D0D0" strokeWidth="1" />
+    <rect x="6" y="40" width="36" height="2" fill="#F0F0F0" />
+    {/* Back wall - side perspective */}
+    <path d="M6 8 L6 40 L14 40 L14 8 Z" fill="#F0F0F0" stroke="#D0D0D0" strokeWidth="1" />
+    {/* Tiles on back wall */}
+    <line x1="6" y1="18" x2="14" y2="18" stroke="#C0C0C0" strokeWidth="1" />
+    <line x1="6" y1="28" x2="14" y2="28" stroke="#C0C0C0" strokeWidth="1" />
+    {/* Shower pipe on wall */}
+    <rect x="8" y="8" width="3" height="20" fill="#A0A0A0" stroke="#808080" strokeWidth="1" />
+    {/* Shower head - angled outward */}
+    <ellipse cx="18" cy="12" rx="6" ry="3" fill="#A8A8A8" stroke="#888888" strokeWidth="1" />
+    <ellipse cx="18" cy="13" rx="5" ry="2" fill="#989898" stroke="#787878" strokeWidth="1" />
+    {/* Arm connecting head to pipe */}
+    <rect x="11" y="10" width="8" height="3" fill="#909090" stroke="#808080" strokeWidth="1" />
+    {/* Water drops - cascading */}
+    <circle cx="14" cy="20" r="1.5" fill="#88C8E8" opacity="0.7" />
+    <circle cx="18" cy="24" r="1.5" fill="#88C8E8" opacity="0.6" />
+    <circle cx="22" cy="22" r="1" fill="#88C8E8" opacity="0.7" />
+    <circle cx="16" cy="30" r="1" fill="#88C8E8" opacity="0.5" />
+    <circle cx="20" cy="32" r="1.5" fill="#88C8E8" opacity="0.5" />
+    <circle cx="14" cy="36" r="1" fill="#88C8E8" opacity="0.4" />
+    {/* Glass door/panel - side view */}
+    <rect x="36" y="8" width="6" height="32" fill="#A8C8E0" opacity="0.4" stroke="#90B0C8" strokeWidth="1" />
+    {/* Glass door frame */}
+    <rect x="36" y="8" width="2" height="32" fill="#90B0C8" opacity="0.6" />
+    {/* Door handle */}
+    <rect x="38" y="22" width="2" height="6" rx="1" fill="#B0B0B0" stroke="#909090" strokeWidth="0.5" />
   </svg>
 );
 
@@ -706,29 +708,36 @@ export const DeskIcon = ({
   );
 };
 
-// 60-degree perspective computer
+// Computer (monitor + keyboard + mouse) - designed to overlay on desk/table
 export const ComputerIcon = ({ className }: AssetIconProps) => (
   <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Desk surface hint */}
-    <rect x="4" y="32" width="40" height="14" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
-    <rect x="4" y="46" width="40" height="2" fill="#8B7355" />
-    {/* Monitor stand */}
-    <rect x="20" y="28" width="8" height="6" fill="#3A3A3A" stroke="#2A2A2A" strokeWidth="1" />
-    <rect x="16" y="32" width="16" height="2" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-    {/* Monitor */}
-    <rect x="6" y="6" width="36" height="24" rx="1" fill="#2A2A2A" stroke="#1A1A1A" strokeWidth="1" />
+    {/* Monitor stand base */}
+    <rect x="18" y="32" width="12" height="3" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+    {/* Monitor stand neck */}
+    <rect x="21" y="26" width="6" height="7" fill="#3A3A3A" stroke="#2A2A2A" strokeWidth="1" />
+    {/* Monitor frame */}
+    <rect x="6" y="4" width="36" height="24" rx="1" fill="#2A2A2A" stroke="#1A1A1A" strokeWidth="1" />
     {/* Screen */}
-    <rect x="8" y="8" width="32" height="18" fill="#3A5A6A" stroke="#2A4A5A" strokeWidth="1" />
+    <rect x="8" y="6" width="32" height="18" fill="#3A5A6A" stroke="#2A4A5A" strokeWidth="1" />
     {/* Screen reflection */}
-    <rect x="8" y="8" width="32" height="6" fill="#4A6A7A" opacity="0.4" />
+    <rect x="8" y="6" width="32" height="6" fill="#4A6A7A" opacity="0.4" />
+    {/* Screen content hint */}
+    <rect x="10" y="14" width="12" height="2" fill="#5A7A8A" opacity="0.6" />
+    <rect x="10" y="18" width="8" height="2" fill="#5A7A8A" opacity="0.4" />
     {/* Monitor bezel bottom */}
-    <rect x="6" y="26" width="36" height="2" fill="#1A1A1A" />
+    <rect x="6" y="24" width="36" height="2" fill="#1A1A1A" />
     {/* Keyboard */}
-    <rect x="10" y="36" width="22" height="6" rx="1" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-    <rect x="12" y="38" width="18" height="2" fill="#5A5A5A" />
+    <rect x="8" y="38" width="24" height="8" rx="1" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+    {/* Keyboard keys row 1 */}
+    <rect x="10" y="40" width="20" height="2" fill="#5A5A5A" />
+    {/* Keyboard keys row 2 */}
+    <rect x="10" y="43" width="20" height="2" fill="#5A5A5A" />
     {/* Mouse */}
-    <ellipse cx="38" cy="39" rx="4" ry="3" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
-    <rect x="37" y="37" width="2" height="2" fill="#5A5A5A" />
+    <ellipse cx="38" cy="42" rx="5" ry="4" fill="#4A4A4A" stroke="#3A3A3A" strokeWidth="1" />
+    {/* Mouse button divider */}
+    <line x1="38" y1="38" x2="38" y2="42" stroke="#3A3A3A" strokeWidth="1" />
+    {/* Mouse scroll wheel */}
+    <rect x="37" y="39" width="2" height="2" rx="0.5" fill="#5A5A5A" />
   </svg>
 );
 

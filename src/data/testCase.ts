@@ -64,7 +64,7 @@ const generateTestGrid = (): Cell[][] => {
   grid[4][0].asset = 'stove';
   grid[4][2].asset = 'chair';
   grid[5][0].asset = 'sink';
-  grid[5][2].asset = 'debris';
+  // grid[5][2] - célula vazia (entulho removido)
   
   // === ESCRITÓRIO (bottom-right 3x3 - rows 3-5, cols 3-5) ===
   for (let r = 3; r <= 5; r++) {

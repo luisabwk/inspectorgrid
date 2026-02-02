@@ -656,91 +656,90 @@ export const StoveIcon = ({
   );
 };
 
-// 60-degree perspective chair with directional variants
+// 60-degree perspective chair with directional variants - cleaner design
 export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
-  // Chair facing down (default) - seeing backrest from behind
+  // Chair facing down (default) - seeing seat and backrest from above/behind
   if (direction === 'down') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Back legs - darker */}
-        <rect x="12" y="6" width="3" height="10" fill="#4A3D30" />
-        <rect x="33" y="6" width="3" height="10" fill="#4A3D30" />
-        {/* Front legs - lighter */}
-        <rect x="12" y="32" width="3" height="14" fill="#5A4A3A" />
-        <rect x="33" y="32" width="3" height="14" fill="#5A4A3A" />
-        {/* Backrest */}
-        <rect x="10" y="8" width="28" height="8" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
-        <rect x="10" y="16" width="28" height="2" fill="#8B7355" />
-        {/* Seat */}
-        <rect x="10" y="18" width="28" height="14" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
-        {/* Seat front edge */}
-        <rect x="10" y="32" width="28" height="2" fill="#8B7355" />
+        {/* Front legs */}
+        <rect x="11" y="34" width="4" height="10" fill="#6B5A48" rx="1" />
+        <rect x="33" y="34" width="4" height="10" fill="#6B5A48" rx="1" />
+        
+        {/* Seat cushion - main visible element */}
+        <rect x="8" y="20" width="32" height="16" rx="2" fill="#8B7355" stroke="#6B5A48" strokeWidth="1.5" />
+        {/* Seat surface */}
+        <rect x="10" y="22" width="28" height="12" rx="1" fill="#A08968" />
+        
+        {/* Backrest - behind seat */}
+        <rect x="10" y="6" width="28" height="14" rx="2" fill="#A08968" stroke="#6B5A48" strokeWidth="1.5" />
+        {/* Backrest detail - vertical slats */}
+        <rect x="14" y="8" width="4" height="10" rx="1" fill="#B89A74" />
+        <rect x="22" y="8" width="4" height="10" rx="1" fill="#B89A74" />
+        <rect x="30" y="8" width="4" height="10" rx="1" fill="#B89A74" />
       </svg>
     );
   }
   
-  // Chair facing up - back view (seeing the backrest from behind)
+  // Chair facing up - seeing backrest prominently
   if (direction === 'up') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Back legs - visible at bottom, going down */}
-        <rect x="12" y="36" width="3" height="10" fill="#4A3D30" />
-        <rect x="33" y="36" width="3" height="10" fill="#4A3D30" />
+        {/* Back legs */}
+        <rect x="11" y="36" width="4" height="10" fill="#6B5A48" rx="1" />
+        <rect x="33" y="36" width="4" height="10" fill="#6B5A48" rx="1" />
         
-        {/* Backrest - main visible element, tall wooden back */}
-        <rect x="10" y="4" width="28" height="20" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
-        {/* Backrest wood grain detail */}
-        <rect x="14" y="8" width="6" height="12" fill="#D4B584" stroke="#A08050" strokeWidth="0.5" opacity="0.6" />
-        <rect x="28" y="8" width="6" height="12" fill="#D4B584" stroke="#A08050" strokeWidth="0.5" opacity="0.6" />
-        {/* Backrest top curve detail */}
-        <rect x="10" y="4" width="28" height="4" fill="#B89A64" stroke="#8B7355" strokeWidth="1" />
+        {/* Tall backrest - main element */}
+        <rect x="8" y="4" width="32" height="24" rx="2" fill="#A08968" stroke="#6B5A48" strokeWidth="1.5" />
+        {/* Backrest slats */}
+        <rect x="12" y="6" width="5" height="18" rx="1" fill="#B89A74" />
+        <rect x="21" y="6" width="6" height="18" rx="1" fill="#B89A74" />
+        <rect x="31" y="6" width="5" height="18" rx="1" fill="#B89A74" />
         
-        {/* Backrest depth - side thickness */}
-        <rect x="10" y="22" width="28" height="4" fill="#A08050" />
+        {/* Backrest thickness */}
+        <rect x="8" y="26" width="32" height="4" fill="#8B7355" />
         
-        {/* Seat - partially visible behind backrest */}
-        <rect x="10" y="26" width="28" height="10" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
-        {/* Seat edge */}
-        <rect x="10" y="34" width="28" height="2" fill="#8B7355" />
+        {/* Seat - partially visible */}
+        <rect x="10" y="30" width="28" height="8" rx="1" fill="#A08968" stroke="#6B5A48" strokeWidth="1" />
       </svg>
     );
   }
   
-  // Chair facing left - side view
+  // Chair facing left - side profile
   if (direction === 'left') {
     return (
       <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Back legs (right side in view) */}
-        <rect x="32" y="6" width="3" height="10" fill="#4A3D30" />
-        <rect x="32" y="32" width="3" height="14" fill="#4A3D30" />
-        {/* Front legs (left side in view) */}
-        <rect x="12" y="18" width="3" height="28" fill="#5A4A3A" />
-        {/* Backrest - vertical on right */}
-        <rect x="30" y="6" width="6" height="28" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
-        <rect x="28" y="6" width="3" height="28" fill="#8B7355" />
-        {/* Seat - extends forward */}
-        <rect x="12" y="18" width="20" height="14" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
-        {/* Seat front edge */}
-        <rect x="12" y="32" width="20" height="2" fill="#8B7355" />
+        {/* Back leg */}
+        <rect x="32" y="6" width="4" height="12" fill="#6B5A48" rx="1" />
+        <rect x="32" y="34" width="4" height="10" fill="#6B5A48" rx="1" />
+        {/* Front leg */}
+        <rect x="10" y="22" width="4" height="22" fill="#5A4A3A" rx="1" />
+        
+        {/* Backrest - side view */}
+        <rect x="30" y="6" width="8" height="28" rx="2" fill="#A08968" stroke="#6B5A48" strokeWidth="1.5" />
+        
+        {/* Seat */}
+        <rect x="10" y="20" width="24" height="14" rx="2" fill="#8B7355" stroke="#6B5A48" strokeWidth="1" />
+        <rect x="12" y="22" width="20" height="10" rx="1" fill="#A08968" />
       </svg>
     );
   }
   
-  // Chair facing right - side view mirrored
+  // Chair facing right - side profile mirrored
   return (
     <svg viewBox="0 0 48 48" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Back legs (left side in view) */}
-      <rect x="13" y="6" width="3" height="10" fill="#4A3D30" />
-      <rect x="13" y="32" width="3" height="14" fill="#4A3D30" />
-      {/* Front legs (right side in view) */}
-      <rect x="33" y="18" width="3" height="28" fill="#5A4A3A" />
-      {/* Backrest - vertical on left */}
-      <rect x="12" y="6" width="6" height="28" fill="#C4A574" stroke="#8B7355" strokeWidth="1" />
-      <rect x="17" y="6" width="3" height="28" fill="#8B7355" />
-      {/* Seat - extends forward */}
-      <rect x="16" y="18" width="20" height="14" fill="#D4B584" stroke="#A08050" strokeWidth="1" />
-      {/* Seat front edge */}
-      <rect x="16" y="32" width="20" height="2" fill="#8B7355" />
+      {/* Back leg */}
+      <rect x="12" y="6" width="4" height="12" fill="#6B5A48" rx="1" />
+      <rect x="12" y="34" width="4" height="10" fill="#6B5A48" rx="1" />
+      {/* Front leg */}
+      <rect x="34" y="22" width="4" height="22" fill="#5A4A3A" rx="1" />
+      
+      {/* Backrest - side view */}
+      <rect x="10" y="6" width="8" height="28" rx="2" fill="#A08968" stroke="#6B5A48" strokeWidth="1.5" />
+      
+      {/* Seat */}
+      <rect x="14" y="20" width="24" height="14" rx="2" fill="#8B7355" stroke="#6B5A48" strokeWidth="1" />
+      <rect x="16" y="22" width="20" height="10" rx="1" fill="#A08968" />
     </svg>
   );
 };

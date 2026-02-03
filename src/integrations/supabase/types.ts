@@ -200,10 +200,12 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
-      verify_case_solution: {
-        Args: { _case_id: string; _placements: Json }
-        Returns: Json
-      }
+      verify_case_solution:
+        | { Args: { _case_id: string; _placements: Json }; Returns: Json }
+        | {
+            Args: { _case_id: string; _placements: Json; _time_taken?: number }
+            Returns: Json
+          }
     }
     Enums: {
       app_role: "admin" | "player"

@@ -173,7 +173,12 @@ export const useGame = (gameCase: GameCase | null) => {
   }, []);
 
   // Check solution using server-side validation
-  const checkSolution = useCallback(async (): Promise<{ valid: boolean; message: string }> => {
+  const checkSolution = useCallback(async (timeTakenSeconds?: number): Promise<{ 
+    valid: boolean; 
+    message: string;
+    score?: number;
+    alreadyCompleted?: boolean;
+  }> => {
     if (!gameCase) return { valid: false, message: 'Caso não carregado' };
     
     try {
@@ -188,7 +193,8 @@ export const useGame = (gameCase: GameCase | null) => {
       
       const { data, error } = await supabase.rpc('verify_case_solution', {
         _case_id: gameCase.id,
-        _placements: cleanPlacements
+        _placements: cleanPlacements,
+        _time_taken: timeTakenSeconds ?? null
       });
       
       if (error) {
@@ -197,11 +203,18 @@ export const useGame = (gameCase: GameCase | null) => {
       }
       
       // Parse the response - it comes as a JSON object
-      const result = data as { valid?: boolean; message?: string } | null;
+      const result = data as { 
+        valid?: boolean; 
+        message?: string;
+        score?: number;
+        already_completed?: boolean;
+      } | null;
       
       return {
         valid: result?.valid ?? false,
-        message: result?.message ?? 'Erro desconhecido'
+        message: result?.message ?? 'Erro desconhecido',
+        score: result?.score,
+        alreadyCompleted: result?.already_completed
       };
     } catch (err) {
       console.error('Solution check failed:', err);

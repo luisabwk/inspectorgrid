@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { GameCase, GameState, PlacementState, PencilMarks, getCellKey, isCellOccupiable } from "@/types/game";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useGame = (gameCase: GameCase | null) => {
   const [placements, setPlacements] = useState<PlacementState>({});
@@ -171,57 +172,40 @@ export const useGame = (gameCase: GameCase | null) => {
     setIsPencilMode(false);
   }, []);
 
-  // Check solution
-  const checkSolution = useCallback(() => {
+  // Check solution using server-side validation
+  const checkSolution = useCallback(async (): Promise<{ valid: boolean; message: string }> => {
     if (!gameCase) return { valid: false, message: 'Caso não carregado' };
     
-    // Validate Latin Square rules (one suspect per row/column)
-    const gridSize = gameCase.gridSize;
-    
-    // Check rows
-    for (let row = 0; row < gridSize; row++) {
-      const rowSuspects = new Set<string>();
-      for (let col = 0; col < gridSize; col++) {
-        const cellKey = getCellKey(row, col);
-        const suspectId = placements[cellKey];
+    try {
+      // Convert placements to the format expected by the server
+      // Filter out null values and create a clean JSONB object
+      const cleanPlacements: Record<string, string> = {};
+      for (const [cellKey, suspectId] of Object.entries(placements)) {
         if (suspectId) {
-          if (rowSuspects.has(suspectId)) {
-            return { valid: false, message: `Linha ${row + 1} tem suspeitos duplicados!` };
-          }
-          rowSuspects.add(suspectId);
+          cleanPlacements[cellKey] = suspectId;
         }
       }
-    }
-    
-    // Check columns
-    for (let col = 0; col < gridSize; col++) {
-      const colSuspects = new Set<string>();
-      for (let row = 0; row < gridSize; row++) {
-        const cellKey = getCellKey(row, col);
-        const suspectId = placements[cellKey];
-        if (suspectId) {
-          if (colSuspects.has(suspectId)) {
-            return { valid: false, message: `Coluna ${col + 1} tem suspeitos duplicados!` };
-          }
-          colSuspects.add(suspectId);
-        }
+      
+      const { data, error } = await supabase.rpc('verify_case_solution', {
+        _case_id: gameCase.id,
+        _placements: cleanPlacements
+      });
+      
+      if (error) {
+        console.error('Solution verification error:', error);
+        return { valid: false, message: 'Erro ao verificar solução. Tente novamente.' };
       }
-    }
-    
-    // Check against solution
-    let allCorrect = true;
-    for (const [suspectId, position] of Object.entries(gameCase.solution)) {
-      const cellKey = getCellKey(position.row, position.col);
-      if (placements[cellKey] !== suspectId) {
-        allCorrect = false;
-        break;
-      }
-    }
-    
-    if (allCorrect) {
-      return { valid: true, message: 'Parabéns! Você resolveu o caso!' };
-    } else {
-      return { valid: false, message: 'Algo está errado. Continue investigando!' };
+      
+      // Parse the response - it comes as a JSON object
+      const result = data as { valid?: boolean; message?: string } | null;
+      
+      return {
+        valid: result?.valid ?? false,
+        message: result?.message ?? 'Erro desconhecido'
+      };
+    } catch (err) {
+      console.error('Solution check failed:', err);
+      return { valid: false, message: 'Erro ao verificar solução. Tente novamente.' };
     }
   }, [placements, gameCase]);
 

@@ -41,7 +41,7 @@ export const useCases = () => {
     try {
       setLoading(true);
       const { data, error: queryError } = await supabase
-        .from("cases")
+        .from("cases_public")
         .select("*")
         .order("difficulty", { ascending: true });
 
@@ -78,7 +78,7 @@ export const useCase = (caseId: string | null) => {
       try {
         setLoading(true);
         const { data, error: queryError } = await supabase
-          .from("cases")
+          .from("cases_public")
           .select("*")
           .eq("id", caseId)
           .maybeSingle();
@@ -119,7 +119,7 @@ export const useNextCase = (currentLevel: number = 1) => {
         
         // Fetch a case at the appropriate difficulty
         const { data, error: queryError } = await supabase
-          .from("cases")
+          .from("cases_public")
           .select("*")
           .eq("difficulty", difficulty)
           .limit(1)
@@ -130,7 +130,7 @@ export const useNextCase = (currentLevel: number = 1) => {
         // If no case at this difficulty, try lower difficulties
         if (!data) {
           const { data: fallbackData, error: fallbackError } = await supabase
-            .from("cases")
+            .from("cases_public")
             .select("*")
             .lte("difficulty", difficulty)
             .order("difficulty", { ascending: false })

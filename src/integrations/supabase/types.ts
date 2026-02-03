@@ -119,6 +119,13 @@ export type Database = {
             referencedRelation: "cases"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "progress_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_roles: {
@@ -144,7 +151,45 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      cases_public: {
+        Row: {
+          clues: Json | null
+          created_at: string | null
+          description: string | null
+          difficulty: number | null
+          grid_size: number | null
+          id: string | null
+          layout_config: Json | null
+          suspects: Json | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          clues?: Json | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: number | null
+          grid_size?: number | null
+          id?: string | null
+          layout_config?: Json | null
+          suspects?: Json | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          clues?: Json | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: number | null
+          grid_size?: number | null
+          id?: string | null
+          layout_config?: Json | null
+          suspects?: Json | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {

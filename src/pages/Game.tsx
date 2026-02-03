@@ -17,7 +17,7 @@ const Game = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { saveProgress, getPlayerStats } = useProgress();
+  const { getPlayerStats } = useProgress();
   
   const [playerLevel, setPlayerLevel] = useState(1);
   const [startTime] = useState(() => Date.now());
@@ -73,39 +73,38 @@ const Game = () => {
   const handleCheckSolution = async () => {
     if (!gameCase) return;
     
-    const result = await checkSolution();
+    // Calculate time taken and pass to server
+    const timeTakenSeconds = Math.floor((Date.now() - startTime) / 1000);
     
-    if (result.valid && user) {
-      // Calculate time taken
-      const timeTakenSeconds = Math.floor((Date.now() - startTime) / 1000);
-      
-      // Save progress
-      const progressResult = await saveProgress(
-        gameCase.id,
-        gameCase.difficulty,
-        timeTakenSeconds
-      );
-
-      if (progressResult) {
-        setResultDialog({
-          open: true,
-          success: true,
-          message: `Você resolveu o caso em ${formatTime(timeTakenSeconds)}!`,
-          score: progressResult.score,
-          levelUp: progressResult.levelUp,
-          newLevel: progressResult.newLevel,
-        });
-        
-        if (progressResult.levelUp) {
-          setPlayerLevel(progressResult.newLevel);
+    // Server handles both validation AND progress recording atomically
+    const result = await checkSolution(timeTakenSeconds);
+    
+    if (result.valid) {
+      // Refresh player stats after successful completion
+      if (user && !result.alreadyCompleted) {
+        const stats = await getPlayerStats();
+        if (stats && stats.level > playerLevel) {
+          setResultDialog({
+            open: true,
+            success: true,
+            message: `Você resolveu o caso em ${formatTime(timeTakenSeconds)}!`,
+            score: result.score,
+            levelUp: true,
+            newLevel: stats.level,
+          });
+          setPlayerLevel(stats.level);
+          return;
         }
-      } else {
-        setResultDialog({
-          open: true,
-          success: true,
-          message: result.message,
-        });
       }
+      
+      setResultDialog({
+        open: true,
+        success: true,
+        message: result.alreadyCompleted 
+          ? result.message 
+          : `Você resolveu o caso em ${formatTime(timeTakenSeconds)}!`,
+        score: result.score,
+      });
     } else {
       setResultDialog({
         open: true,

@@ -73,7 +73,7 @@ const Game = () => {
   const handleCheckSolution = async () => {
     if (!gameCase) return;
     
-    const result = checkSolution();
+    const result = await checkSolution();
     
     if (result.valid && user) {
       // Calculate time taken

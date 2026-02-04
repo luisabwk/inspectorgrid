@@ -343,7 +343,7 @@ export const GameGrid = ({
           {Array.from({ length: gridSize }, (_, i) => (
             <div 
               key={`row-${i}`} 
-              className="text-[8px] sm:text-[10px] text-muted-foreground/60 font-medium flex items-center justify-end"
+              className="text-[8px] sm:text-[10px] text-foreground/70 font-bold flex items-center justify-end"
               style={{ height: `${100 / gridSize}%` }}
             >
               L{i + 1}
@@ -484,7 +484,7 @@ export const GameGrid = ({
         {Array.from({ length: gridSize }, (_, i) => (
           <div 
             key={`col-${i}`} 
-            className="text-[8px] sm:text-[10px] text-muted-foreground/60 font-medium text-center"
+            className="text-[8px] sm:text-[10px] text-foreground/70 font-bold text-center"
             style={{ width: `${100 / gridSize}%` }}
           >
             C{i + 1}

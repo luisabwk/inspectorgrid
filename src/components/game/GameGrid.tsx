@@ -466,7 +466,7 @@ export const GameGrid = ({
               }}
             >
               <span 
-                className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider opacity-60 text-center leading-tight px-1"
+                className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-center leading-tight px-2 py-0.5 rounded-sm bg-white/40"
                 style={{ color: 'hsl(var(--foreground))' }}
               >
                 {room.name}

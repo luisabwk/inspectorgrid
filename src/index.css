@@ -2,78 +2,290 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Pixel Art Theme - Stardew Valley Inspired */
+/* All colors in HSL format */
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
 
 @layer base {
   :root {
-    /* Clean Pastel Theme - Warm and inviting */
-    --background: 30 40% 96%;
-    --foreground: 240 10% 20%;
+    /* Warm earthy pixel art palette */
+    --background: 35 45% 85%;
+    --foreground: 25 35% 18%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 20%;
+    --card: 40 50% 92%;
+    --card-foreground: 25 35% 18%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 20%;
+    --popover: 40 50% 90%;
+    --popover-foreground: 25 35% 18%;
 
-    /* Purple accent */
-    --primary: 280 60% 55%;
-    --primary-foreground: 0 0% 100%;
+    /* Forest green accent - like Stardew */
+    --primary: 140 45% 35%;
+    --primary-foreground: 45 80% 95%;
 
-    --secondary: 30 30% 90%;
-    --secondary-foreground: 240 10% 20%;
+    --secondary: 35 40% 78%;
+    --secondary-foreground: 25 35% 18%;
 
-    --muted: 30 20% 92%;
-    --muted-foreground: 240 5% 45%;
+    --muted: 35 30% 80%;
+    --muted-foreground: 25 20% 40%;
 
-    --accent: 280 30% 92%;
-    --accent-foreground: 280 30% 30%;
+    --accent: 25 50% 70%;
+    --accent-foreground: 25 35% 15%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 45 80% 95%;
 
-    --border: 30 20% 85%;
-    --input: 30 20% 92%;
-    --ring: 280 60% 55%;
+    --border: 30 40% 55%;
+    --input: 35 35% 82%;
+    --ring: 140 45% 35%;
 
-    --radius: 0.5rem;
+    --radius: 0px;
 
-    /* Warning - soft yellow */
-    --warning: 45 90% 60%;
-    --warning-foreground: 45 90% 20%;
+    /* Warning - golden wheat */
+    --warning: 45 85% 55%;
+    --warning-foreground: 30 50% 15%;
 
-    /* Info - soft teal */
-    --info: 180 50% 45%;
-    --info-foreground: 0 0% 100%;
+    /* Info - river blue */
+    --info: 200 60% 50%;
+    --info-foreground: 45 80% 95%;
 
-    /* Game-specific colors */
-    --room-living: 30 50% 82%;
-    --room-bedroom: 280 35% 88%;
-    --room-bathroom: 200 45% 85%;
-    --room-kitchen: 45 50% 85%;
-    --room-study: 150 30% 85%;
-    --room-guest: 15 40% 87%;
-    --room-corridor: 30 20% 90%;
+    /* Game-specific room colors - more saturated for pixel art */
+    --room-living: 35 55% 75%;
+    --room-bedroom: 280 40% 82%;
+    --room-bathroom: 190 50% 78%;
+    --room-kitchen: 45 55% 78%;
+    --room-study: 140 35% 78%;
+    --room-guest: 20 45% 80%;
+    --room-corridor: 35 25% 82%;
 
-    --sidebar-background: 30 30% 95%;
-    --sidebar-foreground: 240 10% 30%;
-    --sidebar-primary: 280 60% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 30% 90%;
-    --sidebar-accent-foreground: 240 10% 20%;
-    --sidebar-border: 30 20% 85%;
-    --sidebar-ring: 280 60% 55%;
+    /* Wood and UI colors for pixel art */
+    --wood-light: 30 55% 65%;
+    --wood-medium: 25 50% 45%;
+    --wood-dark: 20 45% 30%;
+    --pixel-shadow: 25 35% 25%;
+    --pixel-highlight: 45 60% 88%;
+
+    --sidebar-background: 35 45% 80%;
+    --sidebar-foreground: 25 35% 20%;
+    --sidebar-primary: 140 45% 35%;
+    --sidebar-primary-foreground: 45 80% 95%;
+    --sidebar-accent: 35 40% 75%;
+    --sidebar-accent-foreground: 25 35% 18%;
+    --sidebar-border: 30 40% 55%;
+    --sidebar-ring: 140 45% 35%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  html {
+    font-family: 'VT323', monospace;
+    font-size: 18px;
   }
 
   body {
     @apply bg-background text-foreground;
+    background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' x='0' y='0' fill='%23a08060' fill-opacity='0.03'/%3E%3C/svg%3E");
+    background-repeat: repeat;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+  }
+
+  h1 { font-size: 1.25rem; }
+  h2 { font-size: 1rem; }
+  h3 { font-size: 0.85rem; }
+}
+
+@layer components {
+  /* Pixel art border style */
+  .pixel-border {
+    border: 3px solid hsl(var(--wood-dark));
+    box-shadow: 
+      inset -2px -2px 0 hsl(var(--wood-medium)),
+      inset 2px 2px 0 hsl(var(--pixel-highlight)),
+      3px 3px 0 hsl(var(--pixel-shadow));
+  }
+
+  .pixel-border-thin {
+    border: 2px solid hsl(var(--wood-dark));
+    box-shadow: 
+      inset -1px -1px 0 hsl(var(--wood-medium)),
+      inset 1px 1px 0 hsl(var(--pixel-highlight)),
+      2px 2px 0 hsl(var(--pixel-shadow));
+  }
+
+  /* Wood panel style for cards */
+  .wood-panel {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--wood-light)) 0%,
+      hsl(35 50% 60%) 50%,
+      hsl(var(--wood-light)) 100%
+    );
+    border: 3px solid hsl(var(--wood-dark));
+    box-shadow: 
+      inset -3px -3px 0 hsl(var(--wood-medium)),
+      inset 3px 3px 0 hsl(40 55% 72%),
+      4px 4px 0 hsl(var(--pixel-shadow));
+  }
+
+  /* Pixel button styles */
+  .pixel-btn {
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(
+      180deg,
+      hsl(140 45% 42%) 0%,
+      hsl(140 45% 35%) 50%,
+      hsl(140 45% 28%) 100%
+    );
+    color: hsl(45 80% 95%);
+    border: 3px solid hsl(140 40% 20%);
+    box-shadow: 
+      inset -2px -2px 0 hsl(140 40% 22%),
+      inset 2px 2px 0 hsl(140 45% 50%),
+      3px 3px 0 hsl(var(--pixel-shadow));
+    transition: all 0.1s;
+    cursor: pointer;
+  }
+
+  .pixel-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 
+      inset -2px -2px 0 hsl(140 40% 22%),
+      inset 2px 2px 0 hsl(140 45% 55%),
+      4px 4px 0 hsl(var(--pixel-shadow));
+  }
+
+  .pixel-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 
+      inset 2px 2px 0 hsl(140 40% 22%),
+      inset -2px -2px 0 hsl(140 45% 50%),
+      1px 1px 0 hsl(var(--pixel-shadow));
+  }
+
+  .pixel-btn-secondary {
+    background: linear-gradient(
+      180deg,
+      hsl(35 50% 72%) 0%,
+      hsl(35 45% 62%) 50%,
+      hsl(35 40% 52%) 100%
+    );
+    color: hsl(25 35% 18%);
+    border-color: hsl(25 45% 30%);
+    box-shadow: 
+      inset -2px -2px 0 hsl(30 40% 45%),
+      inset 2px 2px 0 hsl(40 55% 80%),
+      3px 3px 0 hsl(var(--pixel-shadow));
+  }
+
+  .pixel-btn-secondary:hover {
+    box-shadow: 
+      inset -2px -2px 0 hsl(30 40% 45%),
+      inset 2px 2px 0 hsl(40 55% 85%),
+      4px 4px 0 hsl(var(--pixel-shadow));
+  }
+
+  /* Pixel card with wood frame */
+  .pixel-card {
+    background: hsl(var(--card));
+    border: 4px solid hsl(var(--wood-dark));
+    box-shadow: 
+      inset -3px -3px 0 hsl(var(--wood-medium)),
+      inset 3px 3px 0 hsl(var(--pixel-highlight)),
+      4px 4px 0 hsl(var(--pixel-shadow));
+  }
+
+  /* Grid cell style */
+  .pixel-cell {
+    border: 1px solid hsl(var(--border));
+    image-rendering: pixelated;
+  }
+
+  /* Input field pixel style */
+  .pixel-input {
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    background: hsl(var(--input));
+    border: 2px solid hsl(var(--wood-dark));
+    box-shadow: 
+      inset 2px 2px 0 hsl(var(--wood-medium) / 0.3),
+      2px 2px 0 hsl(var(--pixel-shadow) / 0.5);
+    padding: 0.5rem 0.75rem;
+  }
+
+  .pixel-input:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 
+      inset 2px 2px 0 hsl(var(--primary) / 0.2),
+      2px 2px 0 hsl(var(--pixel-shadow) / 0.5),
+      0 0 0 2px hsl(var(--primary) / 0.3);
+  }
+
+  /* Scrollbar pixel style */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border: 2px solid hsl(var(--border));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--wood-medium));
+    border: 2px solid hsl(var(--wood-dark));
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--wood-light));
+  }
+}
+
+/* Animation for fade-in */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Pixel art specific animations */
+@keyframes pixel-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes pixel-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pixel-bounce {
+  animation: pixel-bounce 0.5s ease-in-out;
+}
+
+.animate-pixel-pulse {
+  animation: pixel-pulse 1s ease-in-out infinite;
 }

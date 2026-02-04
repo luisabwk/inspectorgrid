@@ -228,14 +228,15 @@ export const GameCell = ({
       <PopoverTrigger asChild>
         <div
           className={cn(
-            "relative aspect-square flex items-center justify-center transition-all duration-150",
-            "border-r border-b border-foreground/10",
+            "relative aspect-square flex items-center justify-center transition-all duration-100",
+            "border-r border-b border-foreground/20",
             isOccupiable ? "cursor-pointer hover:brightness-95" : "cursor-not-allowed",
             isSelected && "ring-2 ring-primary ring-inset",
             isHighlighted && !isSelected && "brightness-[0.92]",
           )}
           style={{
             backgroundColor: roomColor || 'hsl(var(--muted))',
+            imageRendering: 'pixelated',
           }}
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
@@ -509,24 +510,24 @@ export const GameCell = ({
         </div>
       </PopoverTrigger>
       
-      <PopoverContent side="top" className="w-64 p-3">
+      <PopoverContent side="top" className="pixel-card w-64 p-3">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="font-bold text-sm">{assetInfo.name}</h4>
+            <h4 className="font-pixel text-base font-bold">{assetInfo.name}</h4>
             {assetInfo.canOccupy ? (
-              <span className="flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
+              <span className="flex items-center gap-1 text-xs font-pixel text-green-700 bg-green-100 px-2 py-0.5">
                 <Check className="w-3 h-3" />
                 Ocupável
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-xs text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
+              <span className="flex items-center gap-1 text-xs font-pixel text-red-700 bg-red-100 px-2 py-0.5">
                 <X className="w-3 h-3" />
                 Bloqueado
               </span>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">{assetInfo.description}</p>
-          <p className="text-xs text-foreground/80 italic">{assetInfo.occupyReason}</p>
+          <p className="text-xs font-pixel text-muted-foreground">{assetInfo.description}</p>
+          <p className="text-xs font-pixel text-foreground/80 italic">{assetInfo.occupyReason}</p>
         </div>
       </PopoverContent>
     </Popover>

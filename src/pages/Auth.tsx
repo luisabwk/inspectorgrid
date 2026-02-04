@@ -152,23 +152,54 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      {/* Soft decorative shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-primary/5" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-accent/30" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Pixel art background */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Sky gradient */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(180deg, hsl(200 70% 75%) 0%, hsl(35 45% 85%) 100%)'
+          }}
+        />
+        {/* Decorative pixel clouds */}
+        <div className="absolute top-10 left-[10%] w-24 h-8 bg-white/80" style={{ clipPath: 'polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%)' }} />
+        <div className="absolute top-20 right-[15%] w-32 h-10 bg-white/70" style={{ clipPath: 'polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%)' }} />
+        <div className="absolute top-8 right-[35%] w-20 h-6 bg-white/60" style={{ clipPath: 'polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%)' }} />
+        
+        {/* Ground */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-32"
+          style={{
+            background: 'linear-gradient(180deg, hsl(120 35% 45%) 0%, hsl(120 40% 35%) 100%)'
+          }}
+        />
+        {/* Grass detail */}
+        <div className="absolute bottom-28 left-0 right-0 h-6 overflow-hidden flex">
+          {Array.from({ length: 60 }).map((_, i) => (
+            <div 
+              key={i} 
+              className="flex-shrink-0 w-3 h-5" 
+              style={{ 
+                backgroundColor: `hsl(${115 + (i % 3) * 8} ${35 + (i % 2) * 10}% ${40 + (i % 4) * 5}%)`,
+                clipPath: 'polygon(50% 0, 100% 100%, 0 100%)'
+              }} 
+            />
+          ))}
+        </div>
       </div>
 
-      <Card className="w-full max-w-md border-border bg-card shadow-lg">
+      {/* Main card */}
+      <Card className="w-full max-w-md relative z-10 pixel-card">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Search className="w-8 h-8 text-primary" />
+          <div className="mx-auto w-14 h-14 flex items-center justify-center bg-primary pixel-border">
+            <Search className="w-8 h-8 text-primary-foreground" />
           </div>
           <div>
-            <CardTitle className="text-3xl font-bold tracking-tight text-foreground">
+            <CardTitle className="font-pixel-title text-lg text-foreground">
               InspectorGrid
             </CardTitle>
-            <CardDescription className="text-muted-foreground mt-2">
+            <CardDescription className="text-muted-foreground mt-2 font-pixel text-base">
               {isLogin ? "Entre para continuar sua investigação" : "Registre-se para começar a investigar"}
             </CardDescription>
           </div>
@@ -178,7 +209,7 @@ const Auth = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="displayName" className="text-foreground">
+                <Label htmlFor="displayName" className="text-foreground font-pixel text-base">
                   Nome de Detetive
                 </Label>
                 <Input
@@ -187,17 +218,17 @@ const Auth = () => {
                   placeholder="Seu codinome"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="bg-background border-border focus:ring-primary"
+                  className="pixel-input"
                   disabled={isLoading}
                 />
                 {errors.displayName && (
-                  <p className="text-sm text-destructive">{errors.displayName}</p>
+                  <p className="text-sm text-destructive font-pixel">{errors.displayName}</p>
                 )}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground">
+              <Label htmlFor="email" className="text-foreground font-pixel text-base">
                 Email
               </Label>
               <Input
@@ -206,16 +237,16 @@ const Auth = () => {
                 placeholder="detetive@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-background border-border focus:ring-primary"
+                className="pixel-input"
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
+                <p className="text-sm text-destructive font-pixel">{errors.email}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground">
+              <Label htmlFor="password" className="text-foreground font-pixel text-base">
                 Senha
               </Label>
               <div className="relative">
@@ -225,7 +256,7 @@ const Auth = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-background border-border focus:ring-primary pr-10"
+                  className="pixel-input pr-10"
                   disabled={isLoading}
                 />
                 <button
@@ -237,18 +268,18 @@ const Auth = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
+                <p className="text-sm text-destructive font-pixel">{errors.password}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+              className="w-full pixel-btn text-lg h-12"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                   {isLogin ? "Entrando..." : "Registrando..."}
                 </>
               ) : (
@@ -264,13 +295,13 @@ const Auth = () => {
                 setIsLogin(!isLogin);
                 setErrors({});
               }}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              className="text-base text-muted-foreground hover:text-primary transition-colors font-pixel"
               disabled={isLoading}
             >
               {isLogin ? (
-                <>Novo por aqui? <span className="text-primary font-medium">Criar conta</span></>
+                <>Novo por aqui? <span className="text-primary font-bold">Criar conta</span></>
               ) : (
-                <>Já tem conta? <span className="text-primary font-medium">Fazer login</span></>
+                <>Já tem conta? <span className="text-primary font-bold">Fazer login</span></>
               )}
             </button>
           </div>

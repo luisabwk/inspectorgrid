@@ -8,6 +8,7 @@ interface GameGridProps {
   placements: PlacementState;
   pencilMarks: PencilMarks;
   selectedCell: string | null;
+  selectedSuspect: string | null;
   isPencilMode: boolean;
   rooms?: LayoutConfig['rooms'];
   onCellClick: (row: number, col: number) => void;
@@ -136,6 +137,7 @@ export const GameGrid = ({
   placements,
   pencilMarks,
   selectedCell,
+  selectedSuspect,
   isPencilMode,
   rooms = [],
   onCellClick,
@@ -403,6 +405,7 @@ export const GameGrid = ({
               isHighlighted={isInSelectedRow || isInSelectedCol}
               isPencilMode={isPencilMode}
               roomColor={roomColor}
+              isPositioningSuspect={selectedSuspect !== null}
               isBlockedByPlacement={isBlockedByPlacement}
               hasConflict={hasConflict}
               hasWallTop={wallInfo.hasWallTop && cell.row !== 0}

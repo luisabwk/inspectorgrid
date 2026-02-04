@@ -37,6 +37,8 @@ interface GameCellProps {
   isHighlighted: boolean;
   isPencilMode: boolean;
   roomColor?: string;
+  // Whether a suspect is being positioned (to disable dictionary popover)
+  isPositioningSuspect: boolean;
   // Latin square blocking - cell is blocked by another suspect in same row/col
   isBlockedByPlacement: boolean;
   // Conflict - this cell has a suspect in a blocked position
@@ -103,6 +105,7 @@ export const GameCell = ({
   isHighlighted,
   isPencilMode,
   roomColor,
+  isPositioningSuspect,
   isBlockedByPlacement,
   hasConflict,
   hasWallTop,
@@ -184,14 +187,18 @@ export const GameCell = ({
   const assetInfo = assetDictionary[displayAsset];
   
   const handleClick = () => {
+    // Close popover if open (to prevent staying open during placement)
+    if (showInfo) {
+      setShowInfo(false);
+    }
     if (isOccupiable) {
       onCellClick(cell.row, cell.col);
     }
   };
   
   const handleDoubleClick = (e: React.MouseEvent) => {
-    // Don't show popover if there's a suspect in the cell
-    if (suspect) return;
+    // Don't show popover if there's a suspect in the cell OR if user is positioning a suspect
+    if (suspect || isPositioningSuspect) return;
     
     e.preventDefault();
     e.stopPropagation();

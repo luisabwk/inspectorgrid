@@ -606,6 +606,7 @@ export const AssetIconMap: Record<string, React.FC<any>> = {
   sink: SinkIcon,
   desk: DeskIcon,
   laptop: LaptopIcon,
+  computer: LaptopIcon,
   lamp: LampIcon,
   mirror: MirrorIcon,
   wardrobe: WardrobeIcon,

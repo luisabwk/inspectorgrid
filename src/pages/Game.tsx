@@ -139,10 +139,10 @@ const Game = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-[100dvh] bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
+      <div className="min-h-[100dvh] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 pixel-card p-8">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Carregando caso...</p>
+          <p className="text-muted-foreground font-pixel">Carregando caso...</p>
         </div>
       </div>
     );
@@ -151,53 +151,51 @@ const Game = () => {
   // Error state
   if (error || !gameCase) {
     return (
-      <div className="min-h-[100dvh] bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-center px-4">
+      <div className="min-h-[100dvh] flex items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-4 text-center pixel-card p-8">
           <XCircle className="w-12 h-12 text-destructive" />
-          <h2 className="text-lg font-semibold">Erro ao carregar caso</h2>
-          <p className="text-muted-foreground">{error || "Nenhum caso disponível"}</p>
-          <Button onClick={() => navigate('/')}>
-            <Home className="w-4 h-4 mr-2" />
+          <h2 className="font-pixel-title text-sm">Erro ao carregar caso</h2>
+          <p className="text-muted-foreground font-pixel">{error || "Nenhum caso disponível"}</p>
+          <button onClick={() => navigate('/')} className="pixel-btn">
+            <Home className="w-4 h-4 mr-2 inline" />
             Voltar ao Menu
-          </Button>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-[100dvh] bg-background flex flex-col">
-      {/* Header - compact */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-2 py-1.5 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
+    <div className="min-h-[100dvh] flex flex-col">
+      {/* Header */}
+      <header className="wood-panel mx-2 mt-2 sticky top-2 z-50">
+        <div className="container mx-auto px-3 py-2 flex items-center justify-between">
+          <button
             onClick={() => navigate('/')}
-            className="h-7 px-2"
+            className="pixel-btn-secondary px-2 py-1 text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-          </Button>
+          </button>
           
           <Popover>
             <PopoverTrigger asChild>
-              <button className="text-center cursor-pointer flex items-center gap-1">
-                <span className="text-sm font-bold text-foreground">{gameCase.title}</span>
-                <Info className="w-3 h-3 text-muted-foreground" />
+              <button className="text-center cursor-pointer flex items-center gap-2 hover:opacity-80">
+                <span className="font-pixel-title text-xs text-foreground">{gameCase.title}</span>
+                <Info className="w-4 h-4 text-muted-foreground" />
               </button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" className="max-w-xs text-center">
-              <p className="text-sm">{gameCase.description}</p>
-              <p className="text-xs text-muted-foreground mt-2">Dificuldade: {gameCase.difficulty}</p>
+            <PopoverContent side="bottom" className="pixel-card max-w-xs text-center">
+              <p className="font-pixel text-sm">{gameCase.description}</p>
+              <p className="text-xs text-muted-foreground mt-2 font-pixel">Dificuldade: {gameCase.difficulty}</p>
             </PopoverContent>
           </Popover>
           
-          <div className="text-xs text-muted-foreground">{placedCount}/{totalSuspects}</div>
+          <div className="font-pixel text-sm text-muted-foreground">{placedCount}/{totalSuspects}</div>
         </div>
       </header>
 
       {/* Main Game Area */}
-      <main className="flex-1 container mx-auto px-2 py-2 flex flex-col gap-3 overflow-hidden">
+      <main className="flex-1 container mx-auto px-2 py-3 flex flex-col gap-3 overflow-hidden">
         {/* Suspects Panel */}
         <SuspectClueCards
           suspects={gameCase.suspects}
@@ -208,11 +206,11 @@ const Game = () => {
           onSuspectDragStart={handleDragStart}
         />
 
-        {/* Grid - fills remaining space */}
-        <div className="flex-1 flex flex-col items-center gap-2 min-h-0">
+        {/* Grid */}
+        <div className="flex-1 flex flex-col items-center gap-3 min-h-0">
           {/* Selected suspect indicator */}
           {selectedSuspect && (
-            <p className="text-xs text-muted-foreground text-center">
+            <p className="font-pixel text-xs text-muted-foreground text-center">
               Toque em uma célula para posicionar{' '}
               <span className="font-bold text-foreground">
                 {gameCase.suspects.find(s => s.id === selectedSuspect)?.name}
@@ -220,7 +218,7 @@ const Game = () => {
             </p>
           )}
 
-          <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] mx-auto">
+          <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] mx-auto pixel-card p-2">
             <GameGrid
               cells={gameCase.layoutConfig.cells}
               suspects={gameCase.suspects}
@@ -236,74 +234,71 @@ const Game = () => {
             />
           </div>
 
-          {/* Minimal Controls */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            <button
               onClick={handleResetGame}
-              className="h-8 px-3 text-xs"
+              className="pixel-btn-secondary px-4 py-2 text-sm"
             >
               Reiniciar
-            </Button>
-            <Button
-              size="sm"
+            </button>
+            <button
               onClick={handleCheckSolution}
               disabled={!canCheck}
-              className="h-8 px-4 text-xs"
+              className="pixel-btn px-6 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Verificar
-            </Button>
+            </button>
           </div>
         </div>
       </main>
 
       {/* Result Dialog */}
       <Dialog open={resultDialog.open} onOpenChange={(open) => !open && handleContinue()}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="pixel-card sm:max-w-md border-0">
           <DialogHeader>
             <div className="mx-auto mb-4">
               {resultDialog.success ? (
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Trophy className="w-8 h-8 text-primary" />
+                <div className="w-16 h-16 flex items-center justify-center bg-primary pixel-border">
+                  <Trophy className="w-8 h-8 text-primary-foreground" />
                 </div>
               ) : (
-                <div className="w-16 h-16 rounded-full bg-destructive/20 flex items-center justify-center">
-                  <XCircle className="w-8 h-8 text-destructive" />
+                <div className="w-16 h-16 flex items-center justify-center bg-destructive pixel-border">
+                  <XCircle className="w-8 h-8 text-destructive-foreground" />
                 </div>
               )}
             </div>
-            <DialogTitle className="text-center">
+            <DialogTitle className="text-center font-pixel-title text-sm">
               {resultDialog.success ? 'Caso Resolvido!' : 'Continue Investigando'}
             </DialogTitle>
-            <DialogDescription className="text-center space-y-2">
+            <DialogDescription className="text-center space-y-2 font-pixel">
               <p>{resultDialog.message}</p>
               {resultDialog.success && resultDialog.score && (
                 <p className="text-lg font-bold text-primary">+{resultDialog.score} pontos</p>
               )}
               {resultDialog.levelUp && (
-                <p className="text-sm text-primary font-medium">
-                  🎉 Subiu para o Nível {resultDialog.newLevel}!
+                <p className="text-sm text-primary font-bold animate-pixel-pulse">
+                  ⭐ Subiu para o Nível {resultDialog.newLevel}!
                 </p>
               )}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="sm:justify-center gap-2">
+          <DialogFooter className="sm:justify-center gap-3">
             {resultDialog.success ? (
               <>
-                <Button variant="outline" onClick={handleGoHome}>
-                  <Home className="w-4 h-4 mr-2" />
+                <button onClick={handleGoHome} className="pixel-btn-secondary px-4 py-2">
+                  <Home className="w-4 h-4 mr-2 inline" />
                   Menu
-                </Button>
-                <Button onClick={handleNextCase}>
+                </button>
+                <button onClick={handleNextCase} className="pixel-btn px-4 py-2">
                   Próximo Caso
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                  <ArrowRight className="w-4 h-4 ml-2 inline" />
+                </button>
               </>
             ) : (
-              <Button onClick={handleContinue}>
+              <button onClick={handleContinue} className="pixel-btn px-6 py-2">
                 Continuar
-              </Button>
+              </button>
             )}
           </DialogFooter>
         </DialogContent>

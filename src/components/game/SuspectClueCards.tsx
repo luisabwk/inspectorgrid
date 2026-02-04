@@ -56,7 +56,7 @@ export const SuspectClueCards = ({
   return (
     <div 
       ref={containerRef}
-      className="flex gap-1.5 overflow-x-auto pb-2 pt-1 px-1 scrollbar-thin items-stretch justify-center"
+      className="flex gap-2 overflow-x-auto pb-2 pt-1 px-1 scrollbar-thin items-stretch justify-center"
     >
       {suspects.map((suspect) => {
         const isPlaced = placedSuspects.has(suspect.id);
@@ -73,32 +73,38 @@ export const SuspectClueCards = ({
             onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
             onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
             className={cn(
-              "relative flex-shrink-0 flex items-center rounded-lg border transition-all duration-300 ease-out cursor-pointer bg-card",
-              "hover:shadow-md active:scale-[0.98]",
+              "relative flex-shrink-0 flex items-center transition-all duration-150 cursor-pointer",
+              "pixel-border-thin bg-card",
               isPlaced && "opacity-40 cursor-not-allowed",
-              isSelected && "shadow-[0_4px_20px_-2px_rgba(0,0,0,0.15)]",
-              isSelected && isVictim && "border-red-400 shadow-[0_4px_20px_-2px_rgba(239,68,68,0.3)]",
-              isSelected && !isVictim && "border-primary/60 shadow-[0_4px_20px_-2px_rgba(139,92,246,0.3)]",
-              !isSelected && "border-border",
-              !isSelected && isVictim && "border-red-300 bg-red-50/50",
+              isSelected && !isVictim && "translate-y-[-2px]",
+              isSelected && isVictim && "translate-y-[-2px]",
+              isVictim && !isSelected && "bg-red-100",
             )}
+            style={{
+              boxShadow: isSelected 
+                ? isVictim 
+                  ? '4px 4px 0 hsl(0 65% 40%)' 
+                  : '4px 4px 0 hsl(140 45% 30%)'
+                : undefined
+            }}
           >
             {/* Portrait section */}
             <div className={cn(
-              "flex flex-col items-center p-1 flex-shrink-0",
-              isSelected && clue && "border-r border-border/50"
+              "flex flex-col items-center p-1.5 flex-shrink-0",
+              isSelected && clue && "border-r-2 border-wood-dark"
             )}>
               <div 
                 className={cn(
-                  "w-9 h-11 sm:w-10 sm:h-12 rounded overflow-hidden border",
-                  isVictim ? "border-red-500" : "border-transparent"
+                  "w-10 h-12 sm:w-11 sm:h-14 overflow-hidden",
+                  isVictim && "border-2 border-red-600"
                 )}
+                style={{ imageRendering: 'pixelated' }}
               >
                 {Portrait && <Portrait className="w-full h-full" />}
               </div>
               
               <p className={cn(
-                "text-[9px] sm:text-[10px] font-bold leading-tight mt-0.5 text-center whitespace-nowrap",
+                "text-xs font-pixel leading-tight mt-1 text-center whitespace-nowrap",
                 isVictim ? "text-red-700" : "text-foreground"
               )}>
                 {suspect.name.split(' ')[0]}
@@ -107,8 +113,8 @@ export const SuspectClueCards = ({
 
             {/* Clue section - only visible when selected */}
             {isSelected && clue && (
-              <div className="px-2 py-1.5 animate-fade-in max-w-[180px]">
-                <p className="text-[10px] sm:text-[11px] text-muted-foreground leading-snug">
+              <div className="px-2 py-1.5 animate-fade-in max-w-[160px]">
+                <p className="text-xs font-pixel text-muted-foreground leading-relaxed">
                   {formatClueText(clue.text, suspect.name)}
                 </p>
               </div>
@@ -116,8 +122,8 @@ export const SuspectClueCards = ({
 
             {/* Placed indicator */}
             {isPlaced && (
-              <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-lg">
-                <span className="text-sm font-bold text-primary">✓</span>
+              <div className="absolute inset-0 flex items-center justify-center bg-background/70">
+                <span className="text-lg font-pixel-title text-primary">✓</span>
               </div>
             )}
           </div>

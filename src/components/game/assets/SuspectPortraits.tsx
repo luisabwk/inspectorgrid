@@ -3,393 +3,315 @@ interface PortraitProps {
   color?: string;
 }
 
-// Avatar portraits following cartela reference style
-// Style: Geometric hair silhouettes with dark outlines, expressive eyes (white + iris + pupil)
+// Pixel art portraits - Stardew Valley inspired style
+// 16x20 grid with chunky pixels
 
-// Portrait 1 - Alberto: Cabelo curto escuro bagunçado, pele média, camisa verde
+// Portrait 1 - Alberto: Short dark messy hair, medium skin, green shirt
 export const Portrait1 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - verde água */}
-    <rect width="32" height="40" fill="#C8E8E0" />
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#A8D8C8" />
     
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="6" fill="#E8C4A0" />
+    {/* Neck & Shirt */}
+    <rect x="6" y="14" width="4" height="2" fill="#D4A574" />
+    <rect x="4" y="16" width="8" height="4" fill="#4A7C59" />
+    <rect x="4" y="16" width="8" height="1" fill="#5A8C69" />
     
-    {/* Shirt - green */}
-    <path d="M8 32 L12 28 L16 31 L20 28 L24 32 L24 40 L8 40 Z" fill="#4A7C59" />
+    {/* Head */}
+    <rect x="4" y="6" width="8" height="8" fill="#D4A574" />
+    <rect x="5" y="5" width="6" height="1" fill="#D4A574" />
     
-    {/* Head oval - pele média */}
-    <ellipse cx="16" cy="18" rx="8.5" ry="10" fill="#E8C4A0" />
-    
-    {/* Hair - short messy dark (linha 2 style) */}
-    <path 
-      d="M7.5 16 Q7.5 10 11 7 Q14 5 16 5 Q18 5 21 7 Q24.5 10 24.5 16 L24 14 Q23 9 16 7 Q9 9 8 14 Z" 
-      fill="#4A4A4A" 
-      stroke="#2C2C2C" 
-      strokeWidth="0.8" 
-    />
-    {/* Messy top spikes */}
-    <path d="M10 9 L11 6 L13 9" fill="#4A4A4A" stroke="#2C2C2C" strokeWidth="0.5" />
-    <path d="M14 7 L16 4 L18 7" fill="#4A4A4A" stroke="#2C2C2C" strokeWidth="0.5" />
-    <path d="M19 9 L21 6 L22 9" fill="#4A4A4A" stroke="#2C2C2C" strokeWidth="0.5" />
-    
-    {/* Eyes - white base + brown iris + black pupil */}
-    <ellipse cx="12" cy="18" rx="2" ry="2.2" fill="white" />
-    <ellipse cx="20" cy="18" rx="2" ry="2.2" fill="white" />
-    <circle cx="12" cy="18.3" r="1.3" fill="#5C4033" />
-    <circle cx="20" cy="18.3" r="1.3" fill="#5C4033" />
-    <circle cx="12" cy="18.3" r="0.6" fill="#1A1A1A" />
-    <circle cx="20" cy="18.3" r="0.6" fill="#1A1A1A" />
-    
-    {/* Eyebrows */}
-    <path d="M9.5 15 Q12 14 14 15" stroke="#2C2C2C" strokeWidth="0.8" fill="none" />
-    <path d="M18 15 Q20 14 22.5 15" stroke="#2C2C2C" strokeWidth="0.8" fill="none" />
-    
-    {/* Nose - subtle L shape */}
-    <path d="M16 19 L16 22 L17.5 22" stroke="#D4A574" strokeWidth="0.6" fill="none" strokeLinecap="round" />
-  </svg>
-);
-
-// Portrait 2 - Beatriz: Cabelo longo liso loiro, pele clara, blusa roxa
-export const Portrait2 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - creme */}
-    <rect width="32" height="40" fill="#F5ECD7" />
-    
-    {/* Long hair behind - clean geometric shape */}
-    <path 
-      d="M6 14 C6 14 5 24 8 32 L8 40 L24 40 L24 32 C27 24 26 14 26 14 C26 10 22 6 16 6 C10 6 6 10 6 14 Z" 
-      fill="#B8944A" 
-      stroke="#8B6B35" 
-      strokeWidth="0.8" 
-    />
-    
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="5" fill="#FADCBC" />
-    
-    {/* Blouse - purple */}
-    <path d="M10 31 L16 35 L22 31 L22 40 L10 40 Z" fill="#7B5B9A" />
-    
-    {/* Head oval - pele clara */}
-    <ellipse cx="16" cy="18" rx="8" ry="9.5" fill="#FADCBC" />
-    
-    {/* Hair front - smooth top */}
-    <path 
-      d="M8 15 C8 10 11 6 16 6 C21 6 24 10 24 15 L24 13 C24 9 21 7 16 7 C11 7 8 9 8 13 Z" 
-      fill="#B8944A" 
-      stroke="#8B6B35" 
-      strokeWidth="0.8" 
-    />
-    {/* Side hair falling down */}
-    <path d="M8 14 L7 26 C7 28 9 28 9 26 L9 15 Z" fill="#B8944A" stroke="#8B6B35" strokeWidth="0.5" />
-    <path d="M24 14 L25 26 C25 28 23 28 23 26 L23 15 Z" fill="#B8944A" stroke="#8B6B35" strokeWidth="0.5" />
+    {/* Hair - messy dark */}
+    <rect x="3" y="4" width="10" height="3" fill="#3A3A3A" />
+    <rect x="4" y="3" width="8" height="2" fill="#3A3A3A" />
+    <rect x="5" y="2" width="2" height="2" fill="#3A3A3A" />
+    <rect x="9" y="2" width="2" height="2" fill="#3A3A3A" />
+    <rect x="3" y="6" width="1" height="3" fill="#3A3A3A" />
+    <rect x="12" y="6" width="1" height="3" fill="#3A3A3A" />
     
     {/* Eyes */}
-    <ellipse cx="12" cy="18" rx="1.8" ry="2" fill="white" />
-    <ellipse cx="20" cy="18" rx="1.8" ry="2" fill="white" />
-    <circle cx="12" cy="18.3" r="1.2" fill="#5C4033" />
-    <circle cx="20" cy="18.3" r="1.2" fill="#5C4033" />
-    <circle cx="12" cy="18.3" r="0.5" fill="#1A1A1A" />
-    <circle cx="20" cy="18.3" r="0.5" fill="#1A1A1A" />
+    <rect x="5" y="9" width="2" height="2" fill="white" />
+    <rect x="9" y="9" width="2" height="2" fill="white" />
+    <rect x="6" y="9" width="1" height="2" fill="#4A3020" />
+    <rect x="10" y="9" width="1" height="2" fill="#4A3020" />
     
-    {/* Eyebrows - thin feminine */}
-    <path d="M10 15.5 Q12 14.8 14 15.5" stroke="#8B6B35" strokeWidth="0.6" fill="none" />
-    <path d="M18 15.5 Q20 14.8 22 15.5" stroke="#8B6B35" strokeWidth="0.6" fill="none" />
+    {/* Eyebrows */}
+    <rect x="5" y="8" width="2" height="1" fill="#2A2A2A" />
+    <rect x="9" y="8" width="2" height="1" fill="#2A2A2A" />
     
     {/* Nose */}
-    <path d="M16 19 L16 21.5 L17 21.5" stroke="#E8C4A0" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+    <rect x="7" y="10" width="2" height="2" fill="#C49464" />
   </svg>
 );
 
-// Portrait 3 - Carlos: Cabelo médio castanho, óculos retangulares, camisa vermelha
+// Portrait 2 - Beatriz: Long blonde hair, light skin, purple blouse
+export const Portrait2 = ({ className }: PortraitProps) => (
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#F0E8D0" />
+    
+    {/* Hair behind */}
+    <rect x="2" y="5" width="12" height="15" fill="#C8A040" />
+    <rect x="3" y="4" width="10" height="2" fill="#C8A040" />
+    
+    {/* Neck & Blouse */}
+    <rect x="6" y="14" width="4" height="2" fill="#F0D0B0" />
+    <rect x="5" y="16" width="6" height="4" fill="#7B5BA0" />
+    <rect x="5" y="16" width="6" height="1" fill="#8B6BB0" />
+    
+    {/* Head */}
+    <rect x="4" y="6" width="8" height="8" fill="#F0D0B0" />
+    <rect x="5" y="5" width="6" height="1" fill="#F0D0B0" />
+    
+    {/* Hair front */}
+    <rect x="3" y="4" width="10" height="3" fill="#C8A040" />
+    <rect x="3" y="6" width="2" height="8" fill="#C8A040" />
+    <rect x="11" y="6" width="2" height="8" fill="#C8A040" />
+    
+    {/* Eyes */}
+    <rect x="5" y="9" width="2" height="2" fill="white" />
+    <rect x="9" y="9" width="2" height="2" fill="white" />
+    <rect x="6" y="9" width="1" height="2" fill="#4A3020" />
+    <rect x="10" y="9" width="1" height="2" fill="#4A3020" />
+    
+    {/* Eyebrows */}
+    <rect x="5" y="8" width="2" height="1" fill="#987030" />
+    <rect x="9" y="8" width="2" height="1" fill="#987030" />
+    
+    {/* Nose */}
+    <rect x="7" y="10" width="2" height="2" fill="#E0C0A0" />
+  </svg>
+);
+
+// Portrait 3 - Carlos: Medium brown hair, glasses, red shirt
 export const Portrait3 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - bege */}
-    <rect width="32" height="40" fill="#E8DCC8" />
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#E0D8C8" />
     
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="6" fill="#E8C4A0" />
+    {/* Neck & Shirt */}
+    <rect x="6" y="14" width="4" height="2" fill="#D4A574" />
+    <rect x="4" y="16" width="8" height="4" fill="#A05050" />
+    <rect x="4" y="16" width="8" height="1" fill="#B06060" />
     
-    {/* Shirt - red */}
-    <path d="M9 32 L12 28 L16 31 L20 28 L23 32 L23 40 L9 40 Z" fill="#C75B5B" />
+    {/* Head */}
+    <rect x="4" y="6" width="8" height="8" fill="#D4A574" />
+    <rect x="5" y="5" width="6" height="1" fill="#D4A574" />
     
-    {/* Head oval */}
-    <ellipse cx="16" cy="18" rx="8.5" ry="10" fill="#E8C4A0" />
+    {/* Hair */}
+    <rect x="3" y="4" width="10" height="3" fill="#5A4030" />
+    <rect x="4" y="3" width="8" height="2" fill="#5A4030" />
+    <rect x="3" y="6" width="1" height="2" fill="#5A4030" />
+    <rect x="12" y="6" width="1" height="2" fill="#5A4030" />
     
-    {/* Hair - medium masculine brown (linha 2 style) */}
-    <path 
-      d="M7.5 15 Q7.5 9 12 6 Q14 5 16 5 Q18 5 20 6 Q24.5 9 24.5 15 L24 13 Q23 8 16 6.5 Q9 8 8 13 Z" 
-      fill="#5C4033" 
-      stroke="#3C2818" 
-      strokeWidth="0.8" 
-    />
-    {/* Side hair */}
-    <path d="M7.5 15 L7 19 Q8.5 19 8.5 17 L8 15 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.5" />
-    <path d="M24.5 15 L25 19 Q23.5 19 23.5 17 L24 15 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.5" />
-    
-    {/* Glasses - rectangular frames */}
-    <rect x="8" y="16" width="6" height="4.5" rx="0.8" fill="none" stroke="#2C2C2C" strokeWidth="1" />
-    <rect x="18" y="16" width="6" height="4.5" rx="0.8" fill="none" stroke="#2C2C2C" strokeWidth="1" />
-    <line x1="14" y1="18" x2="18" y2="18" stroke="#2C2C2C" strokeWidth="1" />
-    <line x1="8" y1="18" x2="6" y2="16" stroke="#2C2C2C" strokeWidth="0.8" />
-    <line x1="24" y1="18" x2="26" y2="16" stroke="#2C2C2C" strokeWidth="0.8" />
+    {/* Glasses */}
+    <rect x="4" y="8" width="3" height="3" fill="none" stroke="#2A2A2A" strokeWidth="1" />
+    <rect x="9" y="8" width="3" height="3" fill="none" stroke="#2A2A2A" strokeWidth="1" />
+    <rect x="7" y="9" width="2" height="1" fill="#2A2A2A" />
     
     {/* Eyes behind glasses */}
-    <circle cx="11" cy="18" r="1" fill="#5C4033" />
-    <circle cx="21" cy="18" r="1" fill="#5C4033" />
-    <circle cx="11" cy="18" r="0.4" fill="#1A1A1A" />
-    <circle cx="21" cy="18" r="0.4" fill="#1A1A1A" />
+    <rect x="5" y="9" width="1" height="1" fill="#4A3020" />
+    <rect x="10" y="9" width="1" height="1" fill="#4A3020" />
     
-    {/* Eyebrows above glasses */}
-    <path d="M8.5 14.5 Q11 13.5 13.5 14.5" stroke="#3C2818" strokeWidth="0.7" fill="none" />
-    <path d="M18.5 14.5 Q21 13.5 23.5 14.5" stroke="#3C2818" strokeWidth="0.7" fill="none" />
+    {/* Nose */}
+    <rect x="7" y="10" width="2" height="2" fill="#C49464" />
   </svg>
 );
 
-// Portrait 4 - Diana: Cabelo afro volumoso, pele escura, brincos, blusa azul
+// Portrait 4 - Diana: Afro hair, dark skin, earrings, blue blouse
 export const Portrait4 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - azul claro */}
-    <rect width="32" height="40" fill="#C8DDE8" />
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#B8D0E0" />
     
-    {/* Afro hair behind - big round (linha 5 style) */}
-    <ellipse cx="16" cy="14" rx="13" ry="11" fill="#4A4A4A" stroke="#2C2C2C" strokeWidth="0.8" />
-    {/* Curly texture circles */}
-    <circle cx="6" cy="12" r="3.5" fill="#3C3C3C" stroke="#2C2C2C" strokeWidth="0.4" />
-    <circle cx="26" cy="12" r="3.5" fill="#3C3C3C" stroke="#2C2C2C" strokeWidth="0.4" />
-    <circle cx="10" cy="6" r="3" fill="#3C3C3C" stroke="#2C2C2C" strokeWidth="0.4" />
-    <circle cx="16" cy="4" r="3" fill="#3C3C3C" stroke="#2C2C2C" strokeWidth="0.4" />
-    <circle cx="22" cy="6" r="3" fill="#3C3C3C" stroke="#2C2C2C" strokeWidth="0.4" />
-    <circle cx="4" cy="18" r="2.5" fill="#3C3C3C" stroke="#2C2C2C" strokeWidth="0.4" />
-    <circle cx="28" cy="18" r="2.5" fill="#3C3C3C" stroke="#2C2C2C" strokeWidth="0.4" />
+    {/* Afro hair behind */}
+    <rect x="1" y="2" width="14" height="10" fill="#3A3A3A" />
+    <rect x="2" y="1" width="12" height="2" fill="#3A3A3A" />
+    <rect x="0" y="4" width="2" height="6" fill="#3A3A3A" />
+    <rect x="14" y="4" width="2" height="6" fill="#3A3A3A" />
     
     {/* Earrings */}
-    <circle cx="5" cy="24" r="1.8" fill="#FFD700" stroke="#DAA520" strokeWidth="0.3" />
-    <circle cx="27" cy="24" r="1.8" fill="#FFD700" stroke="#DAA520" strokeWidth="0.3" />
+    <rect x="1" y="11" width="2" height="2" fill="#F0C040" />
+    <rect x="13" y="11" width="2" height="2" fill="#F0C040" />
     
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="5" fill="#8B6B4A" />
+    {/* Neck & Blouse */}
+    <rect x="6" y="14" width="4" height="2" fill="#8B6040" />
+    <rect x="5" y="16" width="6" height="4" fill="#5080A0" />
+    <rect x="5" y="16" width="6" height="1" fill="#6090B0" />
     
-    {/* Blouse - blue */}
-    <path d="M10 31 L16 35 L22 31 L22 40 L10 40 Z" fill="#5B8BC7" />
-    
-    {/* Head oval - pele escura */}
-    <ellipse cx="16" cy="19" rx="8" ry="9" fill="#A07850" />
+    {/* Head */}
+    <rect x="4" y="6" width="8" height="8" fill="#9B7050" />
+    <rect x="5" y="5" width="6" height="1" fill="#9B7050" />
     
     {/* Eyes */}
-    <ellipse cx="12" cy="19" rx="1.8" ry="2" fill="white" />
-    <ellipse cx="20" cy="19" rx="1.8" ry="2" fill="white" />
-    <circle cx="12" cy="19.3" r="1.2" fill="#2C1810" />
-    <circle cx="20" cy="19.3" r="1.2" fill="#2C1810" />
-    <circle cx="12" cy="19.3" r="0.5" fill="#1A1A1A" />
-    <circle cx="20" cy="19.3" r="0.5" fill="#1A1A1A" />
+    <rect x="5" y="9" width="2" height="2" fill="white" />
+    <rect x="9" y="9" width="2" height="2" fill="white" />
+    <rect x="6" y="9" width="1" height="2" fill="#2A1810" />
+    <rect x="10" y="9" width="1" height="2" fill="#2A1810" />
     
     {/* Eyebrows */}
-    <path d="M10 16.5 Q12 15.8 14 16.5" stroke="#2C2C2C" strokeWidth="0.6" fill="none" />
-    <path d="M18 16.5 Q20 15.8 22 16.5" stroke="#2C2C2C" strokeWidth="0.6" fill="none" />
+    <rect x="5" y="8" width="2" height="1" fill="#2A2A2A" />
+    <rect x="9" y="8" width="2" height="1" fill="#2A2A2A" />
     
     {/* Nose */}
-    <path d="M16 20 L16 22.5 L17.5 22.5" stroke="#8B6B4A" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+    <rect x="7" y="10" width="2" height="2" fill="#8B6040" />
   </svg>
 );
 
-// Portrait 5 - Eduardo: Cabelo curto ondulado/cacheado, pele média, camisa amarela
+// Portrait 5 - Eduardo: Short wavy hair, medium skin, yellow shirt
 export const Portrait5 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - amarelo claro */}
-    <rect width="32" height="40" fill="#F5F0C8" />
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#F0E8C0" />
     
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="6" fill="#E8C4A0" />
+    {/* Neck & Shirt */}
+    <rect x="6" y="14" width="4" height="2" fill="#D4A574" />
+    <rect x="4" y="16" width="8" height="4" fill="#C0A050" />
+    <rect x="4" y="16" width="8" height="1" fill="#D0B060" />
     
-    {/* Shirt - yellow */}
-    <path d="M9 32 L12 28 L16 31 L20 28 L23 32 L23 40 L9 40 Z" fill="#C7A85B" />
+    {/* Head */}
+    <rect x="4" y="6" width="8" height="8" fill="#D4A574" />
+    <rect x="5" y="5" width="6" height="1" fill="#D4A574" />
     
-    {/* Head oval */}
-    <ellipse cx="16" cy="18" rx="8.5" ry="10" fill="#E8C4A0" />
-    
-    {/* Hair - short wavy/curly masculine style */}
-    <path 
-      d="M7 15 C7 10 10 5 16 5 C22 5 25 10 25 15 L25 12 C25 8 22 6 16 6 C10 6 7 8 7 12 Z" 
-      fill="#5C4033" 
-      stroke="#3C2818" 
-      strokeWidth="0.8" 
-    />
-    {/* Wavy texture on top */}
-    <path d="M9 10 C10 8 12 9 13 8 C14 7 15 8 16 7 C17 8 18 7 19 8 C20 9 22 8 23 10" 
-      fill="#5C4033" stroke="#3C2818" strokeWidth="0.6" />
-    {/* Side volume */}
-    <path d="M7 14 L6 17 C7 18 8 17 8 15 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.4" />
-    <path d="M25 14 L26 17 C25 18 24 17 24 15 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.4" />
+    {/* Hair - wavy */}
+    <rect x="3" y="4" width="10" height="3" fill="#5A4030" />
+    <rect x="4" y="3" width="8" height="2" fill="#5A4030" />
+    <rect x="5" y="2" width="6" height="2" fill="#5A4030" />
+    <rect x="3" y="6" width="1" height="2" fill="#5A4030" />
+    <rect x="12" y="6" width="1" height="2" fill="#5A4030" />
     
     {/* Eyes */}
-    <ellipse cx="12" cy="18" rx="2" ry="2.2" fill="white" />
-    <ellipse cx="20" cy="18" rx="2" ry="2.2" fill="white" />
-    <circle cx="12" cy="18.3" r="1.3" fill="#5C4033" />
-    <circle cx="20" cy="18.3" r="1.3" fill="#5C4033" />
-    <circle cx="12" cy="18.3" r="0.6" fill="#1A1A1A" />
-    <circle cx="20" cy="18.3" r="0.6" fill="#1A1A1A" />
+    <rect x="5" y="9" width="2" height="2" fill="white" />
+    <rect x="9" y="9" width="2" height="2" fill="white" />
+    <rect x="6" y="9" width="1" height="2" fill="#4A3020" />
+    <rect x="10" y="9" width="1" height="2" fill="#4A3020" />
     
     {/* Eyebrows */}
-    <path d="M9.5 15 Q12 14 14 15" stroke="#3C2818" strokeWidth="0.7" fill="none" />
-    <path d="M18 15 Q20 14 22.5 15" stroke="#3C2818" strokeWidth="0.7" fill="none" />
+    <rect x="5" y="8" width="2" height="1" fill="#3A2818" />
+    <rect x="9" y="8" width="2" height="1" fill="#3A2818" />
     
     {/* Nose */}
-    <path d="M16 19 L16 22 L17.5 22" stroke="#D4A574" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+    <rect x="7" y="10" width="2" height="2" fill="#C49464" />
   </svg>
 );
 
-// Portrait 6 - Vitória (Vítima): Cabelo médio ondulado, colar e brincos, blusa rosa
+// Portrait 6 - Vitória (Victim): Wavy hair, necklace, pink blouse
 export const Portrait6 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - rosa */}
-    <rect width="32" height="40" fill="#F0D4D4" />
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#F0D0D0" />
     
-    {/* Wavy hair behind */}
-    <path 
-      d="M5 14 Q4 30 11 40 L21 40 Q28 30 27 14 Q26 8 16 6 Q6 8 5 14 Z" 
-      fill="#5C4033" 
-      stroke="#3C2818" 
-      strokeWidth="0.8" 
-    />
+    {/* Hair behind */}
+    <rect x="2" y="5" width="12" height="15" fill="#5A4030" />
+    <rect x="3" y="4" width="10" height="2" fill="#5A4030" />
     
     {/* Earrings */}
-    <circle cx="5.5" cy="23" r="1.5" fill="#FFD700" stroke="#DAA520" strokeWidth="0.3" />
-    <circle cx="26.5" cy="23" r="1.5" fill="#FFD700" stroke="#DAA520" strokeWidth="0.3" />
+    <rect x="2" y="12" width="1" height="2" fill="#F0C040" />
+    <rect x="13" y="12" width="1" height="2" fill="#F0C040" />
     
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="5" fill="#FADCBC" />
+    {/* Neck & Blouse */}
+    <rect x="6" y="14" width="4" height="2" fill="#F0D0B0" />
+    <rect x="5" y="16" width="6" height="4" fill="#A05080" />
+    <rect x="5" y="16" width="6" height="1" fill="#B06090" />
     
     {/* Necklace */}
-    <path d="M11 30 Q16 33 21 30" stroke="#FFD700" strokeWidth="1.2" fill="none" />
-    <circle cx="16" cy="32" r="2" fill="#FFD700" stroke="#DAA520" strokeWidth="0.3" />
+    <rect x="6" y="15" width="4" height="1" fill="#F0C040" />
+    <rect x="7" y="16" width="2" height="1" fill="#F0C040" />
     
-    {/* Blouse - pink */}
-    <path d="M10 31 L16 36 L22 31 L22 40 L10 40 Z" fill="#C75B8B" />
+    {/* Head */}
+    <rect x="4" y="6" width="8" height="8" fill="#F0D0B0" />
+    <rect x="5" y="5" width="6" height="1" fill="#F0D0B0" />
     
-    {/* Head oval - pele clara */}
-    <ellipse cx="16" cy="18" rx="8" ry="9.5" fill="#FADCBC" />
-    
-    {/* Wavy hair front */}
-    <path 
-      d="M8 14 Q8 8 16 6 Q24 8 24 14" 
-      fill="#5C4033" 
-      stroke="#3C2818" 
-      strokeWidth="0.8" 
-    />
-    {/* Wavy bangs */}
-    <path d="M9 14 Q11 11 14 14 Q16 12 18 14 Q20 11 23 14" fill="#5C4033" stroke="#3C2818" strokeWidth="0.5" />
-    {/* Side waves */}
-    <path d="M8 14 Q6 20 7 26 Q9 27 10 24 Q8 20 9 16 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.5" />
-    <path d="M24 14 Q26 20 25 26 Q23 27 22 24 Q24 20 23 16 Z" fill="#5C4033" stroke="#3C2818" strokeWidth="0.5" />
+    {/* Hair front - wavy */}
+    <rect x="3" y="4" width="10" height="3" fill="#5A4030" />
+    <rect x="3" y="6" width="2" height="6" fill="#5A4030" />
+    <rect x="11" y="6" width="2" height="6" fill="#5A4030" />
     
     {/* Eyes */}
-    <ellipse cx="12" cy="18" rx="1.8" ry="2" fill="white" />
-    <ellipse cx="20" cy="18" rx="1.8" ry="2" fill="white" />
-    <circle cx="12" cy="18.3" r="1.2" fill="#5C4033" />
-    <circle cx="20" cy="18.3" r="1.2" fill="#5C4033" />
-    <circle cx="12" cy="18.3" r="0.5" fill="#1A1A1A" />
-    <circle cx="20" cy="18.3" r="0.5" fill="#1A1A1A" />
-    
-    {/* Eyebrows - feminine */}
-    <path d="M10 15.5 Q12 14.8 14 15.5" stroke="#3C2818" strokeWidth="0.6" fill="none" />
-    <path d="M18 15.5 Q20 14.8 22 15.5" stroke="#3C2818" strokeWidth="0.6" fill="none" />
-    
-    {/* Nose */}
-    <path d="M16 19 L16 21.5 L17 21.5" stroke="#E8C4A0" strokeWidth="0.5" fill="none" strokeLinecap="round" />
-  </svg>
-);
-
-// Portrait 7 - Senhor Idoso: Cabelo grisalho/calvo, bigode, camisa ciano
-export const Portrait7 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - cinza */}
-    <rect width="32" height="40" fill="#D4D4D4" />
-    
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="6" fill="#D4A574" />
-    
-    {/* Shirt - cyan */}
-    <path d="M9 32 L12 28 L16 31 L20 28 L23 32 L23 40 L9 40 Z" fill="#5BC7C7" />
-    
-    {/* Head oval */}
-    <ellipse cx="16" cy="18" rx="9" ry="10" fill="#D4A574" />
-    
-    {/* Hair - balding gray (linha 1 style) */}
-    <path d="M7 17 Q7 14 9 11 L10 15 Q8 15 7 17 Z" fill="#808080" stroke="#606060" strokeWidth="0.6" />
-    <path d="M25 17 Q25 14 23 11 L22 15 Q24 15 25 17 Z" fill="#808080" stroke="#606060" strokeWidth="0.6" />
-    {/* Top sparse hair */}
-    <path d="M10 11 Q13 9 16 10 Q19 9 22 11" stroke="#808080" strokeWidth="1.2" fill="none" />
-    <path d="M11 9 Q14 7 16 8 Q18 7 21 9" stroke="#707070" strokeWidth="0.8" fill="none" />
-    
-    {/* Mustache - full */}
-    <path 
-      d="M9 23 Q12 24.5 16 23 Q20 24.5 23 23 L23 24.5 Q20 26 16 24.5 Q12 26 9 24.5 Z" 
-      fill="#606060" 
-      stroke="#404040" 
-      strokeWidth="0.4" 
-    />
-    
-    {/* Eyes */}
-    <ellipse cx="12" cy="17" rx="1.8" ry="2" fill="white" />
-    <ellipse cx="20" cy="17" rx="1.8" ry="2" fill="white" />
-    <circle cx="12" cy="17.3" r="1.1" fill="#5C4033" />
-    <circle cx="20" cy="17.3" r="1.1" fill="#5C4033" />
-    <circle cx="12" cy="17.3" r="0.5" fill="#1A1A1A" />
-    <circle cx="20" cy="17.3" r="0.5" fill="#1A1A1A" />
-    
-    {/* Eyebrows - bushy gray */}
-    <path d="M9 14 Q12 12.5 14.5 14" stroke="#606060" strokeWidth="1.2" fill="none" />
-    <path d="M17.5 14 Q20 12.5 23 14" stroke="#606060" strokeWidth="1.2" fill="none" />
-    
-    {/* Nose */}
-    <path d="M16 18 L16 21 L17.5 21" stroke="#C4956A" strokeWidth="0.6" fill="none" strokeLinecap="round" />
-  </svg>
-);
-
-// Portrait 8 - Homem Careca: Careca com brilho, óculos redondos, camisa laranja
-export const Portrait8 = ({ className }: PortraitProps) => (
-  <svg viewBox="0 0 32 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background - bege */}
-    <rect width="32" height="40" fill="#E8DCC8" />
-    
-    {/* Neck */}
-    <rect x="12" y="27" width="8" height="6" fill="#E8C4A0" />
-    
-    {/* Shirt - orange */}
-    <path d="M9 32 L12 28 L16 31 L20 28 L23 32 L23 40 L9 40 Z" fill="#D4804A" />
-    
-    {/* Head - bald, slightly larger */}
-    <ellipse cx="16" cy="16" rx="10" ry="12" fill="#E8C4A0" />
-    
-    {/* Bald head shine highlights */}
-    <ellipse cx="11" cy="9" rx="4" ry="2.5" fill="#F5E0C8" opacity="0.8" />
-    <ellipse cx="20" cy="7" rx="2" ry="1.2" fill="#F5E0C8" opacity="0.6" />
-    
-    {/* Subtle head outline */}
-    <ellipse cx="16" cy="16" rx="10" ry="12" fill="none" stroke="#D4B090" strokeWidth="0.4" />
-    
-    {/* Glasses - round frames */}
-    <circle cx="11" cy="17" r="4" fill="none" stroke="#2C2C2C" strokeWidth="1.2" />
-    <circle cx="21" cy="17" r="4" fill="none" stroke="#2C2C2C" strokeWidth="1.2" />
-    <line x1="15" y1="17" x2="17" y2="17" stroke="#2C2C2C" strokeWidth="1.2" />
-    <line x1="7" y1="16" x2="5" y2="14" stroke="#2C2C2C" strokeWidth="1" />
-    <line x1="25" y1="16" x2="27" y2="14" stroke="#2C2C2C" strokeWidth="1" />
-    
-    {/* Eyes behind glasses */}
-    <ellipse cx="11" cy="17" rx="1.2" ry="1.4" fill="white" />
-    <ellipse cx="21" cy="17" rx="1.2" ry="1.4" fill="white" />
-    <circle cx="11" cy="17.2" r="0.8" fill="#5C4033" />
-    <circle cx="21" cy="17.2" r="0.8" fill="#5C4033" />
-    <circle cx="11" cy="17.2" r="0.35" fill="#1A1A1A" />
-    <circle cx="21" cy="17.2" r="0.35" fill="#1A1A1A" />
+    <rect x="5" y="9" width="2" height="2" fill="white" />
+    <rect x="9" y="9" width="2" height="2" fill="white" />
+    <rect x="6" y="9" width="1" height="2" fill="#4A3020" />
+    <rect x="10" y="9" width="1" height="2" fill="#4A3020" />
     
     {/* Eyebrows */}
-    <path d="M8 13 Q11 12 14 13" stroke="#8B7355" strokeWidth="0.7" fill="none" />
-    <path d="M18 13 Q21 12 24 13" stroke="#8B7355" strokeWidth="0.7" fill="none" />
+    <rect x="5" y="8" width="2" height="1" fill="#3A2818" />
+    <rect x="9" y="8" width="2" height="1" fill="#3A2818" />
     
     {/* Nose */}
-    <path d="M16 18 L16 21 L17.5 21" stroke="#D4A574" strokeWidth="0.5" fill="none" strokeLinecap="round" />
+    <rect x="7" y="10" width="2" height="2" fill="#E0C0A0" />
+  </svg>
+);
+
+// Portrait 7 - Senior: Balding gray hair, mustache, cyan shirt
+export const Portrait7 = ({ className }: PortraitProps) => (
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#D0D0D0" />
+    
+    {/* Neck & Shirt */}
+    <rect x="6" y="14" width="4" height="2" fill="#C49464" />
+    <rect x="4" y="16" width="8" height="4" fill="#50A0A0" />
+    <rect x="4" y="16" width="8" height="1" fill="#60B0B0" />
+    
+    {/* Head */}
+    <rect x="4" y="6" width="8" height="8" fill="#C49464" />
+    <rect x="5" y="5" width="6" height="1" fill="#C49464" />
+    
+    {/* Balding hair */}
+    <rect x="3" y="5" width="2" height="3" fill="#808080" />
+    <rect x="11" y="5" width="2" height="3" fill="#808080" />
+    <rect x="5" y="4" width="6" height="2" fill="#808080" />
+    
+    {/* Mustache */}
+    <rect x="5" y="11" width="6" height="2" fill="#606060" />
+    
+    {/* Eyes */}
+    <rect x="5" y="8" width="2" height="2" fill="white" />
+    <rect x="9" y="8" width="2" height="2" fill="white" />
+    <rect x="6" y="8" width="1" height="2" fill="#4A3020" />
+    <rect x="10" y="8" width="1" height="2" fill="#4A3020" />
+    
+    {/* Eyebrows */}
+    <rect x="5" y="7" width="2" height="1" fill="#606060" />
+    <rect x="9" y="7" width="2" height="1" fill="#606060" />
+  </svg>
+);
+
+// Portrait 8 - Bald man: Bald with shine, round glasses, orange shirt
+export const Portrait8 = ({ className }: PortraitProps) => (
+  <svg viewBox="0 0 16 20" className={className} style={{ imageRendering: 'pixelated' }}>
+    {/* Background */}
+    <rect width="16" height="20" fill="#E0D8C0" />
+    
+    {/* Neck & Shirt */}
+    <rect x="6" y="14" width="4" height="2" fill="#D4A574" />
+    <rect x="4" y="16" width="8" height="4" fill="#C07040" />
+    <rect x="4" y="16" width="8" height="1" fill="#D08050" />
+    
+    {/* Head - bald */}
+    <rect x="3" y="4" width="10" height="10" fill="#D4A574" />
+    <rect x="4" y="3" width="8" height="2" fill="#D4A574" />
+    <rect x="5" y="2" width="6" height="2" fill="#D4A574" />
+    
+    {/* Head shine */}
+    <rect x="5" y="3" width="3" height="2" fill="#E4B584" />
+    <rect x="9" y="4" width="2" height="1" fill="#E4B584" />
+    
+    {/* Round glasses */}
+    <rect x="4" y="8" width="3" height="3" fill="none" stroke="#2A2A2A" strokeWidth="1" />
+    <rect x="9" y="8" width="3" height="3" fill="none" stroke="#2A2A2A" strokeWidth="1" />
+    <rect x="7" y="9" width="2" height="1" fill="#2A2A2A" />
+    
+    {/* Eyes */}
+    <rect x="5" y="9" width="1" height="1" fill="#4A3020" />
+    <rect x="10" y="9" width="1" height="1" fill="#4A3020" />
+    
+    {/* Eyebrows */}
+    <rect x="4" y="7" width="3" height="1" fill="#8B7355" />
+    <rect x="9" y="7" width="3" height="1" fill="#8B7355" />
+    
+    {/* Nose */}
+    <rect x="7" y="10" width="2" height="2" fill="#C49464" />
   </svg>
 );
 

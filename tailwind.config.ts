@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        pixel: ['"VT323"', 'monospace'],
+        'pixel-title': ['"Press Start 2P"', 'cursive'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -64,6 +68,15 @@ export default {
           guest: "hsl(var(--room-guest))",
           corridor: "hsl(var(--room-corridor))",
         },
+        wood: {
+          light: "hsl(var(--wood-light))",
+          medium: "hsl(var(--wood-medium))",
+          dark: "hsl(var(--wood-dark))",
+        },
+        pixel: {
+          shadow: "hsl(var(--pixel-shadow))",
+          highlight: "hsl(var(--pixel-highlight))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -97,10 +110,20 @@ export default {
             height: "0",
           },
         },
+        "pixel-bounce": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-4px)" },
+        },
+        "pixel-pulse": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pixel-bounce": "pixel-bounce 0.5s ease-in-out",
+        "pixel-pulse": "pixel-pulse 1s ease-in-out infinite",
       },
     },
   },

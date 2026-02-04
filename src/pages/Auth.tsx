@@ -166,7 +166,7 @@ const Auth = () => {
           </div>
           <div>
             <CardTitle className="text-3xl font-bold tracking-tight text-foreground">
-              Murdoku
+              InspectorGrid
             </CardTitle>
             <CardDescription className="text-muted-foreground mt-2">
               {isLogin ? "Entre para continuar sua investigação" : "Registre-se para começar a investigar"}

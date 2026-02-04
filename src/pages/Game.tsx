@@ -227,6 +227,7 @@ const Game = () => {
               placements={placements}
               pencilMarks={pencilMarks}
               selectedCell={selectedCell}
+              selectedSuspect={selectedSuspect}
               isPencilMode={isPencilMode}
               rooms={gameCase.layoutConfig.rooms}
               onCellClick={handleCellClick}

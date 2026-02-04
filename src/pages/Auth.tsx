@@ -152,42 +152,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Pixel art background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Sky gradient */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(180deg, hsl(200 70% 75%) 0%, hsl(35 45% 85%) 100%)'
-          }}
-        />
-        {/* Decorative pixel clouds */}
-        <div className="absolute top-10 left-[10%] w-24 h-8 bg-white/80" style={{ clipPath: 'polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%)' }} />
-        <div className="absolute top-20 right-[15%] w-32 h-10 bg-white/70" style={{ clipPath: 'polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%)' }} />
-        <div className="absolute top-8 right-[35%] w-20 h-6 bg-white/60" style={{ clipPath: 'polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%)' }} />
-        
-        {/* Ground */}
-        <div 
-          className="absolute bottom-0 left-0 right-0 h-32"
-          style={{
-            background: 'linear-gradient(180deg, hsl(120 35% 45%) 0%, hsl(120 40% 35%) 100%)'
-          }}
-        />
-        {/* Grass detail */}
-        <div className="absolute bottom-28 left-0 right-0 h-6 overflow-hidden flex">
-          {Array.from({ length: 60 }).map((_, i) => (
-            <div 
-              key={i} 
-              className="flex-shrink-0 w-3 h-5" 
-              style={{ 
-                backgroundColor: `hsl(${115 + (i % 3) * 8} ${35 + (i % 2) * 10}% ${40 + (i % 4) * 5}%)`,
-                clipPath: 'polygon(50% 0, 100% 100%, 0 100%)'
-              }} 
-            />
-          ))}
-        </div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
 
       {/* Main card */}
       <Card className="w-full max-w-md relative z-10 pixel-card">

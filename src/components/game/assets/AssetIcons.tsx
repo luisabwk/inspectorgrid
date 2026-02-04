@@ -26,7 +26,7 @@ interface ConnectableDirectionalAssetProps extends ConnectableAssetProps {
   direction?: AssetDirection;
 }
 
-// Pixel art color palette - Stardew Valley inspired
+// Pixel art color palette - Clean pastel style
 const COLORS = {
   wood: {
     light: '#C4A574',
@@ -35,38 +35,38 @@ const COLORS = {
     highlight: '#E8D4A8',
   },
   fabric: {
-    blue: '#4A6FA5',
-    blueDark: '#2E4A6F',
-    blueLight: '#6B8FC5',
-    red: '#A55A5A',
-    redDark: '#6F3A3A',
-    purple: '#7B5BA5',
-    purpleDark: '#4F3A6F',
-    green: '#5AA56A',
-    greenDark: '#3A6F4A',
+    blue: '#6B8FC5',
+    blueDark: '#4A6FA5',
+    blueLight: '#8BAFD5',
+    red: '#C57A7A',
+    redDark: '#A55A5A',
+    purple: '#9B7BC5',
+    purpleDark: '#7B5BA5',
+    green: '#7AC58A',
+    greenDark: '#5AA56A',
   },
   metal: {
-    light: '#B0B0B0',
-    medium: '#808080',
-    dark: '#505050',
-    highlight: '#D0D0D0',
+    light: '#D0D0D0',
+    medium: '#A0A0A0',
+    dark: '#707070',
+    highlight: '#E8E8E8',
   },
   plant: {
-    leaf: '#4A8B5A',
-    leafDark: '#2E5A3A',
-    leafLight: '#6AB57A',
-    pot: '#8B5A2B',
-    potDark: '#5A3A1B',
-    soil: '#3A2A1A',
+    leaf: '#6AB57A',
+    leafDark: '#4A8B5A',
+    leafLight: '#8AD59A',
+    pot: '#A87050',
+    potDark: '#886040',
+    soil: '#4A3A2A',
   },
   water: {
-    light: '#7AC4E8',
-    medium: '#5AA4C8',
-    dark: '#3A84A8',
+    light: '#A0D8F0',
+    medium: '#70B8D8',
+    dark: '#50A0C0',
   },
-  white: '#F5F5F0',
-  cream: '#F0E8D8',
-  shadow: '#2A2A2A',
+  white: '#FAFAFA',
+  cream: '#F5F0E8',
+  shadow: '#404040',
 };
 
 // Pixel art bed

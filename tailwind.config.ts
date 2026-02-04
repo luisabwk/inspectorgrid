@@ -68,12 +68,9 @@ export default {
           guest: "hsl(var(--room-guest))",
           corridor: "hsl(var(--room-corridor))",
         },
-        wood: {
-          light: "hsl(var(--wood-light))",
-          medium: "hsl(var(--wood-medium))",
-          dark: "hsl(var(--wood-dark))",
-        },
         pixel: {
+          border: "hsl(var(--pixel-border))",
+          "border-light": "hsl(var(--pixel-border-light))",
           shadow: "hsl(var(--pixel-shadow))",
           highlight: "hsl(var(--pixel-highlight))",
         },

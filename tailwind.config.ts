@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         pixel: ['"VT323"', 'monospace'],
-        'pixel-title': ['"Press Start 2P"', 'cursive'],
+        'pixel-title': ['"Press Start 2P"', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

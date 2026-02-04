@@ -67,7 +67,7 @@ const COLORS = {
 
 // ==================== CONNECTABLE ASSETS ====================
 
-// Bed - occupies full cell, headboard at top
+// Bed - occupies full cell, extends to edges for seamless connection
 export const BedIcon = ({ 
   className,
   connectedTop = false,
@@ -78,130 +78,167 @@ export const BedIcon = ({
   const isHead = (!connectedTop && connectedBottom) || (!connectedLeft && connectedRight);
   const isSingle = !connectedTop && !connectedBottom && !connectedLeft && !connectedRight;
   
+  // Calculate dynamic bounds for seamless connections
+  const left = connectedLeft ? 0 : 1;
+  const right = connectedRight ? 16 : 15;
+  const top = connectedTop ? 0 : 1;
+  const bottom = connectedBottom ? 16 : 15;
+  const width = right - left;
+  const height = bottom - top;
+  
   return (
     <svg viewBox="0 0 16 16" className={className}>
       {/* Headboard - only on head or single */}
       {(isHead || isSingle) && (
         <>
-          <rect x="1" y="1" width="14" height="3" fill={COLORS.wood.front} />
-          <rect x="1" y="1" width="14" height="1" fill={COLORS.wood.top} />
+          <rect x={left} y={top} width={width} height="3" fill={COLORS.wood.front} />
+          <rect x={left} y={top} width={width} height="1" fill={COLORS.wood.top} />
         </>
       )}
       
-      {/* Mattress + Blanket */}
-      <rect x="1" y="4" width="14" height="10" fill={COLORS.fabric.blue.front} />
-      <rect x="1" y="4" width="14" height="1" fill={COLORS.fabric.blue.top} />
+      {/* Mattress + Blanket - extends to edges for connection */}
+      <rect x={left} y={connectedTop ? 0 : 4} width={width} height={bottom - (connectedTop ? 0 : 4)} fill={COLORS.fabric.blue.front} />
+      <rect x={left} y={connectedTop ? 0 : 4} width={width} height="1" fill={COLORS.fabric.blue.top} />
       
       {/* Pillows - only on head or single */}
       {(isHead || isSingle) && (
         <>
-          <rect x="2" y="4" width="5" height="3" fill={COLORS.pillow} />
-          <rect x="9" y="4" width="5" height="3" fill={COLORS.pillow} />
+          <rect x={left + 1} y={top + 3} width="5" height="3" fill={COLORS.pillow} />
+          <rect x={right - 6} y={top + 3} width="5" height="3" fill={COLORS.pillow} />
         </>
       )}
       
-      {/* Frame edges */}
-      <rect x="1" y="13" width="14" height="2" fill={COLORS.wood.front} />
-      <rect x="1" y="13" width="14" height="1" fill={COLORS.wood.top} />
+      {/* Frame edges - only on non-connected sides */}
+      {!connectedBottom && (
+        <>
+          <rect x={left} y="13" width={width} height="2" fill={COLORS.wood.front} />
+          <rect x={left} y="13" width={width} height="1" fill={COLORS.wood.top} />
+        </>
+      )}
     </svg>
   );
 };
 
-// Sofa - wide seating, armrests on sides
+// Sofa - wide seating, extends to edges for seamless connection
 export const SofaIcon = ({ 
   className,
   connectedTop = false,
   connectedBottom = false,
   connectedLeft = false,
   connectedRight = false
-}: ConnectableAssetProps) => (
-  <svg viewBox="0 0 16 16" className={className}>
-    {/* Back cushion */}
-    {!connectedTop && (
-      <>
-        <rect x="1" y="1" width="14" height="4" fill={COLORS.fabric.purple.front} />
-        <rect x="1" y="1" width="14" height="1" fill={COLORS.fabric.purple.top} />
-      </>
-    )}
-    
-    {/* Seat */}
-    <rect x="1" y="5" width="14" height="6" fill={COLORS.fabric.purple.front} />
-    <rect x="1" y="5" width="14" height="1" fill={COLORS.fabric.purple.top} />
-    
-    {/* Left arm */}
-    {!connectedLeft && (
-      <>
-        <rect x="1" y="1" width="3" height="11" fill={COLORS.fabric.purple.side} />
-        <rect x="1" y="1" width="3" height="1" fill={COLORS.fabric.purple.top} />
-      </>
-    )}
-    
-    {/* Right arm */}
-    {!connectedRight && (
-      <>
-        <rect x="12" y="1" width="3" height="11" fill={COLORS.fabric.purple.side} />
-        <rect x="12" y="1" width="3" height="1" fill={COLORS.fabric.purple.top} />
-      </>
-    )}
-    
-    {/* Base */}
-    <rect x="1" y="11" width="14" height="4" fill={COLORS.wood.front} />
-    <rect x="1" y="11" width="14" height="1" fill={COLORS.wood.top} />
-  </svg>
-);
+}: ConnectableAssetProps) => {
+  // Calculate dynamic bounds for seamless connections
+  const left = connectedLeft ? 0 : 1;
+  const right = connectedRight ? 16 : 15;
+  const width = right - left;
+  
+  return (
+    <svg viewBox="0 0 16 16" className={className}>
+      {/* Back cushion */}
+      {!connectedTop && (
+        <>
+          <rect x={left} y="1" width={width} height="4" fill={COLORS.fabric.purple.front} />
+          <rect x={left} y="1" width={width} height="1" fill={COLORS.fabric.purple.top} />
+        </>
+      )}
+      
+      {/* Seat - extends to edges */}
+      <rect x={left} y={connectedTop ? 0 : 5} width={width} height={connectedTop ? 11 : 6} fill={COLORS.fabric.purple.front} />
+      <rect x={left} y={connectedTop ? 0 : 5} width={width} height="1" fill={COLORS.fabric.purple.top} />
+      
+      {/* Left arm */}
+      {!connectedLeft && (
+        <>
+          <rect x="1" y="1" width="3" height="10" fill={COLORS.fabric.purple.side} />
+          <rect x="1" y="1" width="3" height="1" fill={COLORS.fabric.purple.top} />
+        </>
+      )}
+      
+      {/* Right arm */}
+      {!connectedRight && (
+        <>
+          <rect x="12" y="1" width="3" height="10" fill={COLORS.fabric.purple.side} />
+          <rect x="12" y="1" width="3" height="1" fill={COLORS.fabric.purple.top} />
+        </>
+      )}
+      
+      {/* Base - extends to edges */}
+      <rect x={left} y="11" width={width} height={connectedBottom ? 5 : 4} fill={COLORS.wood.front} />
+      <rect x={left} y="11" width={width} height="1" fill={COLORS.wood.top} />
+    </svg>
+  );
+};
 
-// Table - horizontal surface with legs
+// Table - horizontal surface with legs, extends to edges for seamless connection
 export const TableIcon = ({ 
   className, 
   connectedTop = false, 
   connectedBottom = false, 
   connectedLeft = false, 
   connectedRight = false 
-}: ConnectableAssetProps) => (
-  <svg viewBox="0 0 16 16" className={className}>
-    {/* Tabletop */}
-    <rect x="1" y="2" width="14" height="4" fill={COLORS.wood.front} />
-    <rect x="1" y="2" width="14" height="1" fill={COLORS.wood.top} />
-    
-    {/* Apron */}
-    <rect x="1" y="5" width="14" height="2" fill={COLORS.wood.side} />
-    
-    {/* Legs */}
-    {!connectedLeft && (
-      <rect x="2" y="7" width="2" height="8" fill={COLORS.wood.dark} />
-    )}
-    {!connectedRight && (
-      <rect x="12" y="7" width="2" height="8" fill={COLORS.wood.dark} />
-    )}
-  </svg>
-);
+}: ConnectableAssetProps) => {
+  // Calculate dynamic bounds for seamless connections
+  const left = connectedLeft ? 0 : 1;
+  const right = connectedRight ? 16 : 15;
+  const top = connectedTop ? 0 : 2;
+  const bottom = connectedBottom ? 16 : 15;
+  const width = right - left;
+  
+  return (
+    <svg viewBox="0 0 16 16" className={className}>
+      {/* Tabletop - extends to edges */}
+      <rect x={left} y={top} width={width} height="4" fill={COLORS.wood.front} />
+      <rect x={left} y={top} width={width} height="1" fill={COLORS.wood.top} />
+      
+      {/* Apron - extends to edges */}
+      <rect x={left} y={top + 3} width={width} height="2" fill={COLORS.wood.side} />
+      
+      {/* Legs - only on non-connected sides */}
+      {!connectedLeft && (
+        <rect x="2" y="7" width="2" height={bottom - 7} fill={COLORS.wood.dark} />
+      )}
+      {!connectedRight && (
+        <rect x="12" y="7" width="2" height={bottom - 7} fill={COLORS.wood.dark} />
+      )}
+    </svg>
+  );
+};
 
-// Desk - table with drawer cabinet
+// Desk - table with drawer cabinet, extends to edges for seamless connection
 export const DeskIcon = ({
   className,
   connectedTop = false,
   connectedBottom = false,
   connectedLeft = false,
   connectedRight = false
-}: ConnectableAssetProps) => (
-  <svg viewBox="0 0 16 16" className={className}>
-    {/* Desktop */}
-    <rect x="1" y="2" width="14" height="3" fill={COLORS.wood.front} />
-    <rect x="1" y="2" width="14" height="1" fill={COLORS.wood.top} />
-    
-    {/* Drawer cabinet */}
-    <rect x="9" y="5" width="6" height="10" fill={COLORS.wood.front} />
-    <rect x="10" y="6" width="4" height="4" fill={COLORS.wood.top} />
-    <rect x="11" y="7" width="2" height="1" fill={COLORS.metal.dark} />
-    <rect x="10" y="11" width="4" height="3" fill={COLORS.wood.top} />
-    <rect x="11" y="12" width="2" height="1" fill={COLORS.metal.dark} />
-    
-    {/* Left leg */}
-    {!connectedLeft && (
-      <rect x="2" y="5" width="2" height="10" fill={COLORS.wood.dark} />
-    )}
-  </svg>
-);
+}: ConnectableAssetProps) => {
+  // Calculate dynamic bounds for seamless connections
+  const left = connectedLeft ? 0 : 1;
+  const right = connectedRight ? 16 : 15;
+  const top = connectedTop ? 0 : 2;
+  const bottom = connectedBottom ? 16 : 15;
+  const width = right - left;
+  
+  return (
+    <svg viewBox="0 0 16 16" className={className}>
+      {/* Desktop - extends to edges */}
+      <rect x={left} y={top} width={width} height="3" fill={COLORS.wood.front} />
+      <rect x={left} y={top} width={width} height="1" fill={COLORS.wood.top} />
+      
+      {/* Drawer cabinet */}
+      <rect x={right - 6} y={top + 3} width="6" height={bottom - top - 3} fill={COLORS.wood.front} />
+      <rect x={right - 5} y={top + 4} width="4" height="4" fill={COLORS.wood.top} />
+      <rect x={right - 4} y={top + 5} width="2" height="1" fill={COLORS.metal.dark} />
+      <rect x={right - 5} y={top + 9} width="4" height="3" fill={COLORS.wood.top} />
+      <rect x={right - 4} y={top + 10} width="2" height="1" fill={COLORS.metal.dark} />
+      
+      {/* Left leg - only on non-connected side */}
+      {!connectedLeft && (
+        <rect x="2" y={top + 3} width="2" height={bottom - top - 3} fill={COLORS.wood.dark} />
+      )}
+    </svg>
+  );
+};
 
 // Stove - kitchen counter with burners
 export const StoveIcon = ({ 

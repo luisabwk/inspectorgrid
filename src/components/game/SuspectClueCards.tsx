@@ -73,11 +73,11 @@ export const SuspectClueCards = ({
             onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
             onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
             className={cn(
-              "relative flex-shrink-0 flex items-center transition-all duration-150 cursor-pointer",
+              "relative flex-shrink-0 transition-all duration-150 cursor-pointer",
               "pixel-border-thin bg-card",
+              "w-16 sm:w-20",
               isPlaced && "opacity-40 cursor-not-allowed",
-              isSelected && !isVictim && "translate-y-[-2px]",
-              isSelected && isVictim && "translate-y-[-2px]",
+              isSelected && "translate-y-[-2px]",
               isVictim && !isSelected && "bg-red-100",
             )}
             style={{
@@ -89,13 +89,10 @@ export const SuspectClueCards = ({
             }}
           >
             {/* Portrait section */}
-            <div className={cn(
-              "flex flex-col items-center p-1.5 flex-shrink-0",
-              isSelected && clue && "border-r-2 border-wood-dark"
-            )}>
+            <div className="flex flex-col items-center p-1.5">
               <div 
                 className={cn(
-                  "w-10 h-12 sm:w-11 sm:h-14 overflow-hidden",
+                  "w-10 h-12 sm:w-12 sm:h-14 overflow-hidden",
                   isVictim && "border-2 border-red-600"
                 )}
                 style={{ imageRendering: 'pixelated' }}
@@ -104,21 +101,12 @@ export const SuspectClueCards = ({
               </div>
               
               <p className={cn(
-                "text-xs font-pixel leading-tight mt-1 text-center whitespace-nowrap",
-                isVictim ? "text-red-700" : "text-foreground"
+                "text-[10px] sm:text-xs leading-tight mt-1 text-center whitespace-nowrap truncate w-full",
+                isVictim ? "text-red-700 font-semibold" : "text-foreground"
               )}>
                 {suspect.name.split(' ')[0]}
               </p>
             </div>
-
-            {/* Clue section - only visible when selected */}
-            {isSelected && clue && (
-              <div className="px-2 py-1.5 animate-fade-in max-w-[160px]">
-                <p className="text-xs font-pixel text-muted-foreground leading-relaxed">
-                  {formatClueText(clue.text, suspect.name)}
-                </p>
-              </div>
-            )}
 
             {/* Placed indicator */}
             {isPlaced && (

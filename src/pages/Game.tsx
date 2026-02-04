@@ -218,7 +218,7 @@ const Game = () => {
             </p>
           )}
 
-          <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] mx-auto pixel-card p-2">
+          <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] mx-auto p-2">
             <GameGrid
               cells={gameCase.layoutConfig.cells}
               suspects={gameCase.suspects}

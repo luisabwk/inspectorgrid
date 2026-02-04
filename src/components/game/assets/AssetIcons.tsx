@@ -425,6 +425,31 @@ export const BathtubIcon = ({ className }: AssetIconProps) => (
   </svg>
 );
 
+// Shower icon
+export const ShowerIcon = ({ className }: AssetIconProps) => (
+  <svg viewBox="0 0 24 24" className={className}>
+    {/* Glass enclosure */}
+    <rect x="3" y="3" width="18" height="19" rx="1" fill={COLORS.water.light} opacity="0.4" />
+    <rect x="3" y="3" width="18" height="19" rx="1" fill="none" stroke={COLORS.metal.medium} strokeWidth="1" />
+    
+    {/* Shower head arm */}
+    <rect x="16" y="4" width="2" height="6" fill={COLORS.metal.medium} />
+    
+    {/* Shower head */}
+    <ellipse cx="13" cy="6" rx="5" ry="2" fill={COLORS.metal.light} />
+    
+    {/* Water droplets */}
+    <circle cx="10" cy="10" r="0.8" fill={COLORS.water.medium} />
+    <circle cx="13" cy="11" r="0.8" fill={COLORS.water.medium} />
+    <circle cx="16" cy="10" r="0.8" fill={COLORS.water.medium} />
+    <circle cx="11" cy="14" r="0.8" fill={COLORS.water.medium} />
+    <circle cx="14" cy="13" r="0.8" fill={COLORS.water.medium} />
+    
+    {/* Floor drain */}
+    <ellipse cx="12" cy="20" rx="3" ry="1" fill={COLORS.metal.dark} />
+  </svg>
+);
+
 // Sink icon
 export const SinkIcon = ({ 
   className, 
@@ -603,6 +628,7 @@ export const AssetIconMap: Record<string, React.FC<any>> = {
   chair: ChairIcon,
   toilet: ToiletIcon,
   bathtub: BathtubIcon,
+  shower: ShowerIcon,
   sink: SinkIcon,
   desk: DeskIcon,
   laptop: LaptopIcon,

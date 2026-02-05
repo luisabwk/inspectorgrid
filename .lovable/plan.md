@@ -1,32 +1,14 @@
 
 
-# Corrigir Proporção Geladeira vs Fogão
+# Aplicar Perspectiva 85° aos Assets do Banheiro
 
-## Problema Atual
+## Diagnóstico Atual
 
-| Asset | Dimensões Atuais | Altura Calculada |
-|-------|------------------|------------------|
-| Geladeira | top=3, bottom=29 | 26px |
-| Fogão | top=4, bottom=28 | 24px |
-| **Diferença** | | **Apenas 2px** |
-
-A diferença de apenas 2px não representa a escala real onde a geladeira é praticamente o dobro da altura do fogão.
-
----
-
-## Proporções Corrigidas
-
-Para refletir a escala real:
-- Geladeira real: ~170-180cm de altura
-- Fogão real: ~90-100cm de altura (bancada)
-
-### Novas Dimensões
-
-| Asset | Dimensões Novas | Altura Calculada |
-|-------|-----------------|------------------|
-| Geladeira | top=2, bottom=30 | **28px** (máximo) |
-| Fogão | top=8, bottom=28 | **20px** |
-| **Diferença** | | **8px (40% menor)** |
+| Asset | Estado | Problema |
+|-------|--------|----------|
+| SinkIcon | ✓ Correto | Já possui lateral esquerda de 2px e perspectiva 85° |
+| ToiletIcon | ✗ Incorreto | Sem lateral de profundidade, visão frontal plana |
+| ShowerIcon | ✗ Incorreto | Sem lateral de profundidade, box plano |
 
 ---
 
@@ -36,41 +18,57 @@ Para refletir a escala real:
 
 ---
 
-## 1. FridgeIcon - Aumentar Altura
+## 1. ToiletIcon - Adicionar Perspectiva 85°
 
-Aumentar a altura máxima da geladeira para ocupar quase toda a célula verticalmente.
+### Problemas Atuais
+- Tanque sem lateral esquerda
+- Vaso completamente frontal
+- Sem indicador de profundidade no topo
+
+### Código Corrigido
 
 ```tsx
-// Fridge - 85° perspective (taller than stove)
-export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
-  const left = 5;
-  const right = 27;
-  const top = 2;      // Mais alto (era 3)
-  const bottom = 30;  // Mais baixo (era 29)
+// Toilet - 85° perspective with depth
+export const ToiletIcon = ({ className }: AssetIconProps) => {
+  const left = 6;
+  const right = 26;
+  const top = 4;
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Left side depth (85°) */}
-      <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+      {/* Tank - left side depth (85°) */}
+      <rect x={left + 3} y={top} width="1.5" height="8" fill={COLORS.appliance.side} />
       
-      {/* Main body */}
-      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
+      {/* Tank main body */}
+      <rect x={left + 4.5} y={top} width="11" height="8" 
         fill={COLORS.appliance.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Top surface (85° depth indicator) */}
-      <rect x={left} y={top} width={right - left} height="2.5" fill={COLORS.metal.top} />
+      {/* Tank top surface (85° depth) */}
+      <rect x={left + 3} y={top} width="12.5" height="1.5" fill={COLORS.appliance.top} />
       
-      {/* Freezer compartment - slightly taller */}
-      <rect x={left + 4} y={top + 4} width={right - left - 6} height="8" fill={COLORS.appliance.top} />
-      <rect x={right - 5} y={top + 6} width="1.5" height="4" fill={COLORS.metal.handle} rx="0.3" />
+      {/* Flush button */}
+      <ellipse cx="16" cy={top + 2.5} rx="1.5" ry="0.7" fill={COLORS.metal.chrome} />
       
-      {/* Divider line */}
-      <rect x={left + 4} y={top + 12.5} width={right - left - 6} height="1" fill={COLORS.metal.shadow} />
+      {/* Seat lid - with left depth */}
+      <ellipse cx="16" cy={top + 10} rx="9" ry="4.5" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx="16" cy={top + 10} rx="7" ry="3.5" fill={COLORS.metal.top} />
       
-      {/* Fridge compartment - larger */}
-      <rect x={left + 4} y={top + 14} width={right - left - 6} height="13" fill={COLORS.appliance.top} />
-      <rect x={right - 5} y={top + 18} width="1.5" height="5" fill={COLORS.metal.handle} rx="0.3" />
+      {/* Bowl - with left depth indicator */}
+      <path d="M 7 19 Q 5 22 7 26 Q 12 30 16 30 Q 20 30 25 26 Q 27 22 25 19 Z" 
+        fill={COLORS.appliance.side} />
+      <ellipse cx="16" cy="21" rx="9" ry="6" 
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Water inside bowl */}
+      <ellipse cx="16" cy="19.5" rx="6" ry="4" fill={COLORS.water.top} />
+      <ellipse cx="16" cy="18.5" rx="4" ry="2.5" fill={COLORS.water.front} />
+      
+      {/* Base shadow */}
+      <ellipse cx="16" cy="26" rx="7" ry="1.8" fill={COLORS.appliance.shadow} />
     </svg>
   );
 };
@@ -78,66 +76,70 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
 
 ---
 
-## 2. StoveIcon - Reduzir Altura (Estilo Bancada)
+## 2. ShowerIcon - Adicionar Perspectiva 85°
 
-Representar o fogão como um equipamento de bancada, mais baixo.
+### Problemas Atuais
+- Box de vidro completamente plano
+- Sem lateral esquerda indicando profundidade
+- Sem superfície de topo visível
+
+### Código Corrigido
 
 ```tsx
-// Stove - 85° perspective (counter-height, shorter than fridge)
-export const StoveIcon = ({ 
-  className, 
-  direction = 'down',
-  connectedTop = false,
-  connectedBottom = false,
-  connectedLeft = false,
-  connectedRight = false
-}: ConnectableDirectionalAssetProps) => {
-  const left = connectedLeft ? 0 : 5;
-  const right = connectedRight ? 32 : 27;
-  const top = 8;      // Mais baixo (era 4)
-  const bottom = 28;  // Mantém (bancada termina antes)
-  const center = (left + right) / 2;
+// Shower - 85° perspective with glass box depth
+export const ShowerIcon = ({ className }: AssetIconProps) => {
+  const left = 4;
+  const right = 28;
+  const top = 4;
+  const bottom = 28;
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Left side depth (85°) */}
-      {!connectedLeft && (
-        <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
-      )}
+      {/* Left side depth (85°) - glass tint */}
+      <rect x={left} y={top} width="2" height={bottom - top} 
+        fill={COLORS.water.front} opacity="0.25" />
       
-      {/* Cooktop surface */}
-      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="5" 
-        fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Glass box background */}
+      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
+        fill={COLORS.water.top} opacity="0.12" />
       
-      {/* 4 Burners - adjusted for new height */}
-      <ellipse cx={center - 5} cy={top + 2.5} rx="3" ry="1.2" fill={COLORS.metal.shadow} />
-      <ellipse cx={center - 5} cy={top + 2.5} rx="1.8" ry="0.7" fill={COLORS.metal.side} />
-      <ellipse cx={center + 5} cy={top + 2.5} rx="3" ry="1.2" fill={COLORS.metal.shadow} />
-      <ellipse cx={center + 5} cy={top + 2.5} rx="1.8" ry="0.7" fill={COLORS.metal.side} />
+      {/* Top surface (85° depth indicator) */}
+      <rect x={left} y={top} width={right - left} height="2" 
+        fill={COLORS.water.top} opacity="0.35" />
       
-      {/* Body */}
-      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 5} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 5} 
-        fill={COLORS.metal.front}
+      {/* Frame with subtle outline */}
+      <rect x={left} y={top} width={right - left} height={bottom - top} 
+        fill="none" 
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Control panel with knobs */}
-      <rect x={left + (connectedLeft ? 1 : 3)} y={top + 6} width={right - left - (connectedLeft ? 2 : 4)} height="2.5" 
-        fill={COLORS.metal.side} />
-      <circle cx={center - 5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
-      <circle cx={center - 1.5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
-      <circle cx={center + 1.5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
-      <circle cx={center + 5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+      {/* Left frame edge (vertical) */}
+      <rect x={left} y={top} width="0.8" height={bottom - top} 
+        fill={COLORS.metal.chrome} opacity="0.6" />
       
-      {/* Oven door */}
-      <rect x={left + (connectedLeft ? 2 : 4)} y={top + 9.5} width={right - left - (connectedLeft ? 4 : 6)} height="7" 
-        fill={COLORS.appliance.top}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      {/* Oven handle */}
-      <rect x={left + (connectedLeft ? 3 : 5)} y={top + 10.5} width={right - left - (connectedLeft ? 6 : 8)} height="1.2" 
-        fill={COLORS.metal.chrome} rx="0.5" />
-      {/* Oven window */}
-      <rect x={left + (connectedLeft ? 4 : 6)} y={top + 12.5} width={right - left - (connectedLeft ? 8 : 10)} height="3" 
-        fill={COLORS.screen.display} opacity="0.4" />
+      {/* Showerhead pipe - with depth */}
+      <rect x={right - 6} y={top} width="1" height="6" fill={COLORS.metal.side} />
+      <rect x={right - 5} y={top} width="2" height="6" fill={COLORS.metal.chrome} />
+      
+      {/* Showerhead */}
+      <ellipse cx={(left + right) / 2 + 2} cy={top + 5} rx="5" ry="2.5" 
+        fill={COLORS.metal.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <ellipse cx={(left + right) / 2 + 2} cy={top + 5} rx="3.5" ry="1.7" fill={COLORS.metal.front} />
+      
+      {/* Water droplets */}
+      <ellipse cx={(left + right) / 2 - 2} cy={top + 11} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2 + 1} cy={top + 13} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2 + 4} cy={top + 10} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2} cy={top + 17} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2 + 3} cy={top + 19} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      
+      {/* Floor base with depth */}
+      <rect x={left} y={bottom - 3} width="2" height="3" fill={COLORS.appliance.side} />
+      <rect x={left + 2} y={bottom - 3} width={right - left - 2} height="3" 
+        fill={COLORS.appliance.front} opacity="0.5" />
+      
+      {/* Drain */}
+      <ellipse cx={(left + right) / 2} cy={bottom - 1.5} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
     </svg>
   );
 };
@@ -145,42 +147,43 @@ export const StoveIcon = ({
 
 ---
 
-## Comparação Visual
+## Resumo Visual
 
 ```text
-ANTES (proporção errada):
+ANTES (ToiletIcon):
 ┌──────────────────┐
-│   ┌──────────┐   │  Geladeira: 26px altura
-│   │ Geladeira│   │  
-│   │          │   │  
-│   │          │   │  
-│   └──────────┘   │
+│    ┌──────┐      │  Tanque plano
+│    │      │      │
+│    ╭──────╮      │  Assento frontal
+│   (  ~~~   )     │  
+│    ╰──────╯      │  
 └──────────────────┘
 
+DEPOIS (ToiletIcon):
 ┌──────────────────┐
-│   ┌──────────┐   │  Fogão: 24px altura
-│   │  Fogão   │   │  (quase igual!)
-│   │          │   │  
-│   │          │   │  
-│   └──────────┘   │
+│   ▌┌──────┐      │  Tanque com lateral + topo
+│   ▌│      │      │
+│    ╭──────╮      │  
+│   (  ~~~   )     │  Tigela com indicador lateral
+│    ╰──────╯      │  
 └──────────────────┘
 
-DEPOIS (proporção corrigida):
+ANTES (ShowerIcon):
 ┌──────────────────┐
-│ ┌──────────────┐ │  Geladeira: 28px altura
-│ │              │ │  (ocupa quase tudo)
-│ │  Geladeira   │ │  
-│ │              │ │  
-│ │              │ │  
+│ ┌──────────────┐ │  Box plano
+│ │   ●  água    │ │
+│ │   ○  ○      │ │
+│ │      ○      │ │
 │ └──────────────┘ │
 └──────────────────┘
 
+DEPOIS (ShowerIcon):
 ┌──────────────────┐
-│                  │  
-│                  │  (espaço vazio acima)
-│   ┌──────────┐   │  Fogão: 20px altura
-│   │  Fogão   │   │  (estilo bancada)
-│   └──────────┘   │
+│ █┌─────────────┐ │  Lateral esquerda de vidro
+│ █│   ●  água   │ │  Topo com superfície visível
+│ █│   ○  ○     │ │  Moldura cromada na borda
+│ █│      ○     │ │
+│ █└▄▄▄▄▄▄▄▄▄▄▄▄┘ │  Base com profundidade
 └──────────────────┘
 ```
 
@@ -188,18 +191,20 @@ DEPOIS (proporção corrigida):
 
 ## Seção Técnica
 
-### Hierarquia de Escala Final
+### Padrões de Perspectiva 85° Aplicados
 
-| Asset | Altura (px) | Proporção Real |
-|-------|-------------|----------------|
-| Geladeira | 28px | ~175cm |
-| Pia | 24px | ~115cm (com gabinete) |
-| Fogão | 20px | ~95cm |
+| Elemento | Largura | Cor |
+|----------|---------|-----|
+| Lateral esquerda (sólido) | 1.5-2px | `COLORS.appliance.side` |
+| Lateral esquerda (vidro) | 2px | `COLORS.water.front` opacity="0.25" |
+| Topo (sólido) | 1.5px | `COLORS.appliance.top` |
+| Topo (vidro) | 2px | `COLORS.water.top` opacity="0.35" |
 
-### Ajustes Internos do Fogão
+### Hierarquia de Escala do Banheiro
 
-- Cooktop reduzido de 7px → 5px
-- Knobs menores (r=1.2 → r=1.0)
-- Forno menor (9px → 7px)
-- Janela do forno menor (4px → 3px)
+| Asset | Dimensões | Ocupação Vertical |
+|-------|-----------|-------------------|
+| Pia (com gabinete) | top=4, bottom=28 | 24px |
+| Chuveiro (box) | top=4, bottom=28 | 24px |
+| Vaso Sanitário | top=4, bottom=27 | 23px |
 

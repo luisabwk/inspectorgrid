@@ -1,196 +1,197 @@
 
+# Aplicar Perspectiva 85° à Estante e TV
 
-# Tornar Marcações de Portas e Janelas Mais Evidentes
+## Diagnóstico dos Problemas Atuais
 
-## Diagnóstico do Problema
+### TvIcon (linhas 791-819)
+- Moldura da tela completamente frontal
+- Sem lateral esquerda indicando profundidade
+- Pescoço do suporte muito fino e centralizado
+- Base do suporte sem perspectiva lateral
 
-As marcações atuais de portas e janelas são muito sutis e difíceis de identificar visualmente:
-
-### Janelas (atual)
-- 3 listras finas azuis (1px cada) ocupando apenas 50% da largura
-- Baixo contraste contra a parede cinza
-- Sem indicador visual de "abertura" ou vidro
-
-### Portas (atual)
-- Faixa marrom sólida (40% da largura)
-- Sem indicador de abertura/passagem
-- Confunde-se visualmente com a parede
+### BookshelfIcon (linhas 822-865)
+- Caixa retangular sem indicador de profundidade lateral
+- Prateleiras completamente planas
+- Livros sem indicador de volume/espessura
+- Apenas faixa de topo, falta lateral esquerda
 
 ---
 
 ## Arquivo Afetado
 
-`src/components/game/GameCell.tsx`
+`src/components/game/assets/AssetIcons.tsx`
 
 ---
 
-## Solução Proposta
+## 1. TvIcon - Correções
 
-### 1. Janelas - Estilo "Vidraça com Moldura"
+### Problemas
+- Moldura sem lateral esquerda de profundidade
+- Base do suporte sem perspectiva 85°
+- Pescoço muito fino
 
-Trocar as listras finas por uma representação mais clara de janela com:
-- Moldura externa em marrom claro (madeira)
-- Interior com gradiente azul claro (vidro)
-- Ocupar 60-70% da parede para maior visibilidade
-- Linha de divisão central (estilo janela de 2 folhas)
-
-```tsx
-{/* Window marking - horizontal (top/bottom walls) */}
-{hasWindowTop && (
-  <div className="absolute inset-x-[15%] inset-y-0 flex items-center justify-center">
-    {/* Frame exterior */}
-    <div className="w-full h-full bg-amber-800 flex items-center justify-center p-[1px]">
-      {/* Glass panes */}
-      <div className="w-full h-full flex gap-[1px]">
-        <div className="flex-1 bg-sky-300 opacity-80" />
-        <div className="flex-1 bg-sky-200 opacity-80" />
-      </div>
-    </div>
-  </div>
-)}
-```
-
-### 2. Portas - Estilo "Vão de Passagem"
-
-Representar a porta como uma abertura/passagem visível:
-- Cor da porta mais escura (mogno) com borda
-- Indicador de maçaneta/puxador pequeno
-- Quebra visual clara na parede (gap nos cantos)
-- Ocupar 50-55% da parede
+### Código Corrigido
 
 ```tsx
-{/* Door marking - horizontal (top/bottom walls) */}
-{hasDoorTop && (
-  <div className="absolute inset-x-[22%] inset-y-0 flex items-center justify-center">
-    {/* Door frame */}
-    <div className="w-full h-full bg-amber-900 border-x border-amber-950 flex items-center justify-end pr-[2px]">
-      {/* Door handle */}
-      <div className="w-[2px] h-[40%] bg-yellow-600 rounded-full" />
-    </div>
-  </div>
-)}
-```
-
----
-
-## Alterações Detalhadas
-
-### Paredes Horizontais (Top/Bottom)
-
-| Elemento | Atual | Novo |
-|----------|-------|------|
-| Janela largura | 50% (`inset-x-1/4`) | 70% (`inset-x-[15%]`) |
-| Janela estilo | 3 listras azuis | Moldura + 2 painéis de vidro |
-| Janela cor | `bg-blue-300/200` | `bg-sky-300/200` com moldura `bg-amber-800` |
-| Porta largura | 40% | 55% (`inset-x-[22%]`) |
-| Porta estilo | Faixa sólida | Porta com maçaneta visível |
-| Porta cor | `bg-amber-700` | `bg-amber-900` + bordas + maçaneta `bg-yellow-600` |
-
-### Paredes Verticais (Left/Right)
-
-As mesmas alterações, mas com orientação vertical (altura ao invés de largura).
-
----
-
-## Código Completo das Alterações
-
-### Janela Horizontal (Top)
-```tsx
-{hasWindowTop && (
-  <div className="absolute inset-x-[15%] inset-y-0 flex items-center justify-center">
-    <div className="w-full h-full bg-amber-800 flex items-center justify-center" style={{ padding: '0.5px' }}>
-      <div className="w-full h-full flex gap-[1px]">
-        <div className="flex-1 bg-sky-300" />
-        <div className="flex-1 bg-sky-200" />
-      </div>
-    </div>
-  </div>
-)}
-```
-
-### Janela Vertical (Left)
-```tsx
-{hasWindowLeft && (
-  <div className="absolute inset-y-[15%] inset-x-0 flex items-center justify-center">
-    <div className="w-full h-full bg-amber-800 flex flex-col items-center justify-center" style={{ padding: '0.5px' }}>
-      <div className="w-full h-full flex flex-col gap-[1px]">
-        <div className="flex-1 bg-sky-300" />
-        <div className="flex-1 bg-sky-200" />
-      </div>
-    </div>
-  </div>
-)}
-```
-
-### Porta Horizontal (Top)
-```tsx
-{hasDoorTop && (
-  <div className="absolute inset-x-[20%] inset-y-0">
-    <div className="w-full h-full bg-amber-900 border-x border-amber-950 flex items-center justify-end" style={{ paddingRight: '1px' }}>
-      <div className="w-[2px] h-[35%] bg-yellow-500 rounded-sm" />
-    </div>
-  </div>
-)}
-```
-
-### Porta Vertical (Left)
-```tsx
-{hasDoorLeft && (
-  <div className="absolute inset-y-[20%] inset-x-0">
-    <div className="w-full h-full bg-amber-900 border-y border-amber-950 flex flex-col items-end justify-center" style={{ paddingBottom: '1px' }}>
-      <div className="h-[2px] w-[35%] bg-yellow-500 rounded-sm" />
-    </div>
-  </div>
-)}
+// TV - 85° perspective with depth
+export const TvIcon = ({ className }: AssetIconProps) => {
+  const left = 4;
+  const right = 28;
+  const top = 5;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      <rect x={left} y={top} width="2" height="14" fill={COLORS.metal.shadow} />
+      
+      {/* Screen frame */}
+      <rect x={left + 2} y={top} width={right - left - 2} height="14" 
+        fill={COLORS.screen.frame}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Top surface (85° depth indicator) */}
+      <rect x={left} y={top} width={right - left} height="2" fill={COLORS.metal.side} />
+      
+      {/* Display */}
+      <rect x={left + 3} y={top + 2.5} width={right - left - 5} height="10" fill={COLORS.screen.display} />
+      {/* Screen reflection */}
+      <rect x={left + 4} y={top + 3.5} width="7" height="2.5" fill={COLORS.screen.glow} opacity="0.25" />
+      
+      {/* Stand neck - thicker */}
+      <rect x="13" y={top + 14} width="6" height="3" fill={COLORS.metal.shadow} />
+      <rect x="13" y={top + 14} width="1.5" height="3" fill={COLORS.metal.side} opacity="0.5" />
+      
+      {/* Stand base with 85° depth */}
+      <rect x="10" y={top + 17} width="1.5" height="4" fill={COLORS.metal.side} />
+      <rect x="11.5" y={top + 17} width="10" height="4" 
+        fill={COLORS.metal.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="10" y={top + 17} width="11.5" height="1.5" fill={COLORS.metal.top} />
+    </svg>
+  );
+};
 ```
 
 ---
 
-## Resumo Visual
+## 2. BookshelfIcon - Correções
 
-```text
-ANTES (sutil):
-┌───────────────┐
-│   ═══ ═══    │  ← janela: 3 listras finas azuis
-└───────────────┘
+### Problemas
+- Sem lateral esquerda de profundidade
+- Prateleiras sem volume
+- Livros todos completamente frontais
 
-DEPOIS (evidente):
-┌───────────────┐
-│ ╔═══╦═══╗    │  ← janela: moldura marrom + 2 painéis azuis
-└───────────────┘
+### Código Corrigido
 
-ANTES (sutil):
-┌───────────────┐
-│    ████      │  ← porta: barra marrom simples
-└───────────────┘
-
-DEPOIS (evidente):
-┌───────────────┐
-│   █████│●    │  ← porta: moldura + maçaneta dourada
-└───────────────┘
+```tsx
+// Bookshelf - 85° perspective with depth
+export const BookshelfIcon = ({ className }: AssetIconProps) => {
+  const left = 4;
+  const right = 28;
+  const top = 4;
+  const bottom = 28;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.wood.side} />
+      
+      {/* Main frame */}
+      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
+        fill={COLORS.wood.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Top surface (85° depth indicator) */}
+      <rect x={left} y={top} width={right - left} height="2" fill={COLORS.wood.top} />
+      
+      {/* Shelves with depth */}
+      <rect x={left + 2} y={top + 8} width={right - left - 3} height="2" fill={COLORS.wood.shadow} />
+      <rect x={left + 2} y={top + 8} width={right - left - 3} height="0.8" fill={COLORS.wood.side} />
+      
+      <rect x={left + 2} y={top + 15} width={right - left - 3} height="2" fill={COLORS.wood.shadow} />
+      <rect x={left + 2} y={top + 15} width={right - left - 3} height="0.8" fill={COLORS.wood.side} />
+      
+      {/* Top shelf books - with slight 3D effect */}
+      <rect x={left + 3} y={top + 2} width="2.5" height="5.5" fill="#C86868" />
+      <rect x={left + 3} y={top + 2} width="0.6" height="5.5" fill="#A85050" />
+      
+      <rect x={left + 5.5} y={top + 2.5} width="3" height="5" fill="#6888B8" />
+      <rect x={left + 5.5} y={top + 2.5} width="0.6" height="5" fill="#4868A0" />
+      
+      <rect x={left + 8.5} y={top + 2} width="2.5" height="5.5" fill="#68B888" />
+      <rect x={left + 8.5} y={top + 2} width="0.6" height="5.5" fill="#48A868" />
+      
+      <rect x={left + 11} y={top + 2.5} width="3.5" height="5" fill="#B8A868" />
+      <rect x={left + 11} y={top + 2.5} width="0.6" height="5" fill="#A89050" />
+      
+      <rect x={left + 14.5} y={top + 2} width="2.5" height="5.5" fill="#8868B8" />
+      <rect x={left + 14.5} y={top + 2} width="0.6" height="5.5" fill="#6850A0" />
+      
+      <rect x={left + 17} y={top + 2.5} width="3.5" height="5" fill="#B86888" />
+      <rect x={left + 17} y={top + 2.5} width="0.6" height="5" fill="#A05068" />
+      
+      <rect x={left + 20.5} y={top + 2} width="2" height="5.5" fill="#689898" />
+      <rect x={left + 20.5} y={top + 2} width="0.5" height="5.5" fill="#508080" />
+      
+      {/* Middle shelf books */}
+      <rect x={left + 3} y={top + 10.5} width="4" height="4" fill="#6B8B9B" />
+      <rect x={left + 3} y={top + 10.5} width="0.7" height="4" fill="#4B6B7B" />
+      
+      <rect x={left + 7} y={top + 11} width="3" height="3.5" fill="#9B6B6B" />
+      <rect x={left + 7} y={top + 11} width="0.6" height="3.5" fill="#7B4B4B" />
+      
+      <rect x={left + 10} y={top + 10.5} width="4.5" height="4" fill="#6B9B6B" />
+      <rect x={left + 10} y={top + 10.5} width="0.7" height="4" fill="#4B7B4B" />
+      
+      <rect x={left + 14.5} y={top + 11} width="3" height="3.5" fill="#9B9B6B" />
+      <rect x={left + 14.5} y={top + 11} width="0.6" height="3.5" fill="#7B7B4B" />
+      
+      <rect x={left + 17.5} y={top + 10.5} width="4" height="4" fill="#6B6B9B" />
+      <rect x={left + 17.5} y={top + 10.5} width="0.7" height="4" fill="#4B4B7B" />
+      
+      {/* Bottom shelf books */}
+      <rect x={left + 3} y={top + 17.5} width="4.5" height="5" fill="#8B6B8B" />
+      <rect x={left + 3} y={top + 17.5} width="0.8" height="5" fill="#6B4B6B" />
+      
+      <rect x={left + 7.5} y={top + 18} width="3.5" height="4.5" fill="#6B8B8B" />
+      <rect x={left + 7.5} y={top + 18} width="0.6" height="4.5" fill="#4B6B6B" />
+      
+      <rect x={left + 11} y={top + 17.5} width="3" height="5" fill="#8B8B6B" />
+      <rect x={left + 11} y={top + 17.5} width="0.6" height="5" fill="#6B6B4B" />
+      
+      <rect x={left + 14} y={top + 18} width="3.5" height="4.5" fill="#6B6B8B" />
+      <rect x={left + 14} y={top + 18} width="0.6" height="4.5" fill="#4B4B6B" />
+      
+      <rect x={left + 17.5} y={top + 17.5} width="4" height="5" fill="#8B6B6B" />
+      <rect x={left + 17.5} y={top + 17.5} width="0.7" height="5" fill="#6B4B4B" />
+    </svg>
+  );
+};
 ```
+
+---
+
+## Resumo das Correções
+
+| Asset | Problemas Corrigidos |
+|-------|---------------------|
+| TV | Lateral esquerda na moldura, base com profundidade, pescoço mais robusto, reflexo de tela |
+| Estante | Lateral esquerda de 2px, prateleiras com topo visível, livros com faixa de lombada escura |
 
 ---
 
 ## Seção Técnica
 
+### Padrões de Perspectiva 85° Aplicados
+
+1. **Lateral esquerda**: 2px de largura, cor `*.side` ou `*.shadow`
+2. **Faixa de topo**: 1.5-2px de altura, cor `*.top`
+3. **Livros 3D**: Faixa escura de 0.5-0.8px na esquerda de cada livro (lombada)
+4. **Prateleiras**: Linha de topo mais clara para indicar superfície
+
 ### Cores Utilizadas
 
-| Elemento | Cor | Código |
-|----------|-----|--------|
-| Moldura janela | Marrom madeira | `bg-amber-800` |
-| Vidro claro | Azul céu | `bg-sky-200` |
-| Vidro escuro | Azul céu | `bg-sky-300` |
-| Porta | Mogno escuro | `bg-amber-900` |
-| Borda porta | Mogno muito escuro | `border-amber-950` |
-| Maçaneta | Dourado | `bg-yellow-500` / `bg-yellow-600` |
-
-### Dimensões
-
-| Elemento | Ocupação | Classes |
-|----------|----------|---------|
-| Janela horizontal | 70% | `inset-x-[15%]` |
-| Janela vertical | 70% | `inset-y-[15%]` |
-| Porta horizontal | 60% | `inset-x-[20%]` |
-| Porta vertical | 60% | `inset-y-[20%]` |
-
+- `COLORS.wood.side` / `COLORS.wood.top` - para estrutura de madeira da estante
+- `COLORS.metal.side` / `COLORS.metal.shadow` - para partes metálicas da TV
+- `COLORS.screen.frame` / `COLORS.screen.display` - para tela da TV
+- Cores dos livros com variante escura (`-20 hex` por canal RGB) para lombada

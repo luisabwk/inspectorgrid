@@ -149,16 +149,20 @@ export const BedIcon = ({
     if (isRightEnd) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
+          {/* Frame superior/inferior */}
           <rect x="0" y="1" width="30" height="2" fill={COLORS.bed.frame} />
           <rect x="0" y="29" width="30" height="2" fill={COLORS.bed.frame} />
+          {/* Pé da cama (madeira) */}
           <rect x="27" y="3" width="3" height="26" fill={COLORS.wood.side} />
           <rect x="27" y="3" width="1" height="26" fill={COLORS.wood.front} />
+          {/* Colchão base */}
           <rect x="0" y="3" width="27" height="26" fill={COLORS.bed.mattress} />
-          <rect x="1" y="4" width="25" height="24" fill={COLORS.bed.blanket} />
-          <rect x="1" y="4" width="2" height="24" fill={COLORS.bed.blanketLight} />
-          <line x1="8" y1="6" x2="8" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-          <line x1="14" y1="6" x2="14" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-          <line x1="20" y1="6" x2="20" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+          {/* Cobertor verde (continuidade da célula esquerda) */}
+          <rect x="0" y="4" width="26" height="24" fill={COLORS.bed.blanket} />
+          {/* Dobras do cobertor */}
+          <line x1="7" y1="6" x2="7" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+          <line x1="14" y1="6" x2="14" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+          <line x1="21" y1="6" x2="21" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.2" />
         </svg>
       );
     }

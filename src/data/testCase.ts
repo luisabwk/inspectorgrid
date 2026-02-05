@@ -35,9 +35,9 @@ const generateTestGrid = (): Cell[][] => {
       grid[r][c].roomId = 'bedroom';
     }
   }
-  // Cama dupla horizontal (2 células conectadas)
-  grid[0][3].asset = 'bed';
-  grid[0][4].asset = 'bed';
+  // Cama dupla vertical (2 células conectadas - topo/baixo)
+  grid[0][4].asset = 'bed';  // Head (cabeceira com travesseiros)
+  grid[1][4].asset = 'bed';  // Foot (cobertor com peseira)
   grid[0][5].asset = 'window';
   
   // === BANHEIRO (middle row 2, cols 4-5) ===

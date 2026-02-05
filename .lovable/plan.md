@@ -1,133 +1,133 @@
 
-# Padronizacao Visual dos Moveis
+# Contorno e Respiro Visual para Moveis Pendentes
 
-## Analise da Referencia
+## Icones a Atualizar
 
-A imagem de referencia mostra um estilo visual especifico:
-
-```text
-CARACTERISTICAS-CHAVE:
-+----------------------------------+
-| 1. Contorno sutil marrom/cinza   |
-|    (stroke ~1px, cor escura)     |
-|                                  |
-| 2. Vista mais top-down (~85-90°) |
-|    (menos perspectiva lateral)   |
-|                                  |
-| 3. Respiro visual (~15-20%)      |
-|    (padding interno na celula)   |
-|                                  |
-| 4. Proporcoes consistentes       |
-|    (poltrona = cadeira em escala)|
-|                                  |
-| 5. Cores pastel suaves           |
-|    (bege, verde musgo, azul)     |
-+----------------------------------+
-```
-
-## Problemas Atuais
-
-| Movel | Problema |
-|-------|----------|
-| ArmchairIcon | Preenche 100% da celula (x=2 a x=30), sem respiro |
-| SofaIcon | Muito grande, preenche toda a celula |
-| ChairIcon | Tamanho diferente da poltrona |
-| Todos | Sem contorno/stroke definido |
-| Todos | Perspectiva muito isometrica (75°) |
+| Icone | Status Atual | Problema |
+|-------|-------------|----------|
+| BedIcon | Sem outline, preenche ate a borda | Falta stroke e padding interno |
+| StoveIcon | Sem outline, sem padding | Conectavel mas falta stroke |
+| SinkIcon | Sem outline, sem padding | Conectavel mas falta stroke |
+| ToiletIcon | Sem outline, preenche ate x=6 | Falta stroke e mais respiro |
+| ShowerIcon | Borda de 2px mas sem padrao | Falta padding e stroke sutil |
+| RugIcon | Sem outline, elipse vai ate x=2 | Falta stroke sutil |
 
 ## Solucao Proposta
 
-### 1. Adicionar contorno sutil a todos os moveis
+### 1. BedIcon
 
-Cada SVG tera um stroke sutil na cor `#5D4E37` (marrom escuro) com `stroke-width="0.8"` nas formas principais.
+Adicionar `stroke={OUTLINE}` nas formas principais (frames e colchao). O BedIcon e conectavel, entao o padding ja e tratado pelas extremidades.
 
-### 2. Ajustar proporcoes com respiro visual
+Elementos a adicionar stroke:
+- Frames superior/inferior
+- Cabeceira/pe da cama
+- Colchao base
+
+### 2. StoveIcon
+
+Adicionar outline e padding nas extremidades quando nao conectado.
 
 ```text
-ANTES (sem respiro):           DEPOIS (com respiro):
-+------------------------+     +------------------------+
-|                        |     |    +--------------+    |
-|  [MOVEL PREENCHE TUDO] |     |    |    MOVEL     |    |
-|                        |     |    |   (~75-80%)  |    |
-|                        |     |    +--------------+    |
-+------------------------+     +------------------------+
-      viewBox 0-32                 padding ~3-4px
+ANTES:                    DEPOIS:
+x=2 a x=30                x=4 a x=28 (quando nao conectado)
+Sem stroke                Com stroke=#5D4E37
 ```
 
-Ajustes especificos:
-- **ArmchairIcon**: De (x=2-30) para (x=6-26) = ~62% da largura
-- **SofaIcon**: Reduzir altura e largura, deixar margens de ~3px
-- **ChairIcon**: Proporcao similar a poltrona
+Elementos a atualizar:
+- Body rect (principal)
+- Oven rect
 
-### 3. Atualizar perspectiva para ~85-90°
+### 3. SinkIcon
 
-Reduzir elementos laterais/profundidade. Os moveis serao mais "achatados" verticalmente, com enfase na vista de cima.
+Adicionar outline e padding nas extremidades.
 
-### 4. Padronizar cores
+Elementos a atualizar:
+- Counter rect
+- Cabinet rects
+- Basin ellipses
 
-Manter paleta existente mas aplicar de forma mais consistente.
+### 4. ToiletIcon
+
+Adicionar padding (~4px) e outline nas formas principais.
+
+```text
+ANTES (x=6-26):           DEPOIS (x=7-25):
+Sem stroke                Com stroke=#5D4E37
+                          Respiro de ~5px
+```
+
+Elementos a atualizar:
+- Tank rect (fundo)
+- Seat ellipses
+- Base ellipse
+
+### 5. ShowerIcon
+
+Adicionar padding e mudar o stroke atual para o padrao sutil.
+
+```text
+ANTES:                    DEPOIS:
+x=1 a x=31                x=4 a x=28
+stroke=2px chrome         stroke=0.8px #5D4E37
+```
+
+Elementos a atualizar:
+- Box frame rect
+- Showerhead ellipses
+
+### 6. RugIcon
+
+Adicionar respiro visual e outline sutil.
+
+```text
+ANTES (rx=14):            DEPOIS (rx=12):
+Sem stroke                Com stroke=#5D4E37 (sutil)
+```
+
+Elementos a atualizar:
+- Elipses concentricas (reduzir raio em ~2px)
 
 ## Arquivos a Modificar
 
 | Arquivo | Alteracao |
 |---------|-----------|
-| `src/components/game/assets/AssetIcons.tsx` | Refatorar ArmchairIcon, SofaIcon, ChairIcon, TableIcon, PlantIcon, BookshelfIcon, TvIcon |
+| `src/components/game/assets/AssetIcons.tsx` | Atualizar BedIcon, StoveIcon, SinkIcon, ToiletIcon, ShowerIcon, RugIcon |
 
 ## Detalhes Tecnicos
 
-### ArmchairIcon (Nova Estrutura)
+### Padrao de Outline
 
-```text
-viewBox 0-32 com respiro:
-+---------------------------+
-|       +-------------+     |
-|  [6]  |   POLTRONA  | [6] |  <- padding lateral 6px
-|       |             |     |
-|       +-------------+     |
-+---------------------------+
-
-Elementos:
-- Contorno: stroke="#5D4E37" stroke-width="0.8"
-- Base: x=6, width=20 (em vez de x=2, width=28)
-- Cor: bege/creme (#E8DCC8) similar a referencia
+Todos os icones usarao:
+```typescript
+stroke={OUTLINE}        // #5D4E37
+strokeWidth={OUTLINE_WIDTH}  // 0.8
 ```
 
-### SofaIcon (Nova Estrutura - 2 celulas)
+### Padding por Tipo
 
-```text
-CELULA 1 (esquerda):    CELULA 2 (direita):
-+----------------+      +----------------+
-|  +-------------|      |-------------+  |
-|  |   ALMOFADA  |------|   ALMOFADA  |  |
-|  |             |      |             |  |
-|  +-------------|      |-------------+  |
-+----------------+      +----------------+
-    braco esq                braco dir
+| Tipo | Padding Lateral | Padding Vertical |
+|------|-----------------|------------------|
+| Conectavel (Bed, Stove, Sink) | 0 quando conectado, 4px quando nao | Similar |
+| Individual (Toilet, Shower, Rug) | 4-5px fixo | 4-5px fixo |
 
-- Reduzir altura total (y=4 a y=26 em vez de y=2 a y=30)
-- Manter conexao mas com respiro nas pontas
-```
+### Implementacao
 
-### ChairIcon (Padronizada com Poltrona)
+**BedIcon**: Adicionar stroke aos rects de frame e colchao em todos os 6 casos (horizontal left/right/middle, vertical head/foot/middle, single).
 
-```text
-- Tamanho similar ao ArmchairIcon
-- Vista mais top-down
-- Contorno definido
-- Padding de ~4px em cada lado
-```
+**StoveIcon**: Atualizar left/right de 2/30 para 4/28, adicionar stroke ao body e oven.
 
-### PlantIcon, BookshelfIcon, TvIcon, TableIcon
+**SinkIcon**: Atualizar left/right de 2/30 para 4/28, adicionar stroke ao counter e cabinets.
 
-Todos receberao:
-1. Contorno sutil (`stroke="#5D4E37"`)
-2. Respiro visual (padding ~3-4px)
-3. Ajuste de perspectiva
+**ToiletIcon**: Redimensionar tank de x=10 para x=8, adicionar stroke aos elementos principais.
+
+**ShowerIcon**: Reduzir de x=1-31 para x=4-28, mudar stroke para padrao sutil.
+
+**RugIcon**: Reduzir elipses de rx=14 para rx=12, adicionar stroke sutil com opacidade 0.5.
 
 ## Validacao
 
-1. Abrir `/game` e verificar visualmente:
-   - Todos os moveis tem contorno sutil
-   - Ha respiro visual entre o movel e a borda da celula
-   - Poltrona e cadeira tem tamanhos consistentes
-   - Sofa ocupa duas celulas mas nao as preenche totalmente
+1. Abrir `/game` e verificar os moveis no quarto, cozinha e banheiro
+2. Confirmar que todos os icones tem:
+   - Contorno sutil marrom (#5D4E37)
+   - Respiro visual entre o icone e a borda da celula
+   - Consistencia visual com os moveis ja atualizados

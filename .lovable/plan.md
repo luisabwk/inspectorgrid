@@ -1,219 +1,145 @@
 
-# Correção dos Móveis para Perspectiva 85° (Top-Down com Sutil Profundidade)
+# Correção dos Móveis para Perspectiva 85° Consistente (Isométrica Sutil)
 
-## Análise da Referência
+## Problema Principal
 
-A imagem de referência mostra móveis com perspectiva quase top-down (85°), com características específicas:
+Os móveis foram incorretamente convertidos para perspectiva 90° (top-down), quando deveriam manter a perspectiva **85° isométrica** com profundidade sutil visível - similar ao estilo original mas com menos profundidade.
 
-| Elemento | Característica na Referência |
-|----------|------------------------------|
-| **Cama** | Travesseiro bege retangular arredondado, cobertor verde-oliva liso, moldura mínima |
-| **Cadeira** | Encosto em arco curvo, assento oval bege claro, pernas como pequenos pontos |
-| **Mesa** | Tampo amarelo/bege liso, pernas minúsculas nos cantos (quase invisíveis) |
-| **Planta** | Vaso azul-turquesa trapezoidal, folhas verdes alongadas |
-| **TV** | Monitor preto fino, rack/mesa preta embaixo (sem pescoço alto) |
-| **Estante** | Face única marrom, livros coloridos, SEM lado lateral visível |
-| **Sofá/Poltrona** | Formas arredondadas, braços baixos, vista quase plana |
+## Análise Visual dos Problemas
 
-## Problemas Atuais vs Referência
+| Móvel | Problema Atual | Correção Necessária |
+|-------|---------------|---------------------|
+| **Mesa** | Pernas são pequenos quadrados flutuando | Restaurar pernas trapezoidais (menores que antes) |
+| **Sofá** | Muito plano, perdeu elipses nos braços | Restaurar elipses de topo nos braços para curvatura |
+| **Poltrona** | Muito plana, sem profundidade nos braços | Restaurar elipses de topo nos braços |
+| **Cama** | Travesseiros em elipse top-down | Manter travesseiros retangulares com profundidade |
+| **Cadeira** | Arco + elipse são muito top-down | Restaurar encosto retangular com slats, assento com profundidade |
+| **Escrivaninha** | Pernas como quadrados | Restaurar pernas retangulares com altura |
 
-### Ícones com Perspectiva Exagerada (75°)
+## Perspectiva 85° Explicada
 
-| Ícone | Problema | Solução |
-|-------|----------|---------|
-| **TableIcon** | Pernas em polygon trapezoidal | Pernas como pequenos rect (2x2px) nos cantos |
-| **DeskIcon** | Perna em polygon trapezoidal | Perna como rect simples |
-| **ChairIcon** | Encosto retangular alto, pernas trapezoidais | Encosto em arco, assento oval, pernas como círculos |
-| **FridgeIcon** | Polygon lateral de profundidade (linha 641-642) | Remover polygon, manter corpo retangular |
-| **BookshelfIcon** | Polygon lateral (linha 709-710) | Remover polygon lateral |
-| **StoveIcon** | Polygon lateral (linha 462) | Remover polygon lateral |
-| **ArmchairIcon** | Elipses de topo nos braços sugerem 3D excessivo | Reduzir altura das elipses ou remover |
-| **SofaIcon** | Elipses de topo nos braços (linhas 329, 340) | Reduzir ou remover |
-
-### Cores a Ajustar
-
-A referência usa cores mais pastel/suaves:
-
-| Elemento | Cor Atual | Cor da Referência |
-|----------|-----------|-------------------|
-| Travesseiro | `#FFFFFF` branco | `#F5E8D0` bege claro |
-| Cobertor | `#6B9BD1` azul | `#8B9B68` verde-oliva |
-| Vaso da planta | `#D08050` laranja | `#78B8A8` azul-turquesa |
-| Mesa (tampo) | `#DCC8A8` | `#E8C878` amarelo claro |
-| Cadeira (assento) | `#DCC8A8` | `#E8DCC8` bege mais claro |
-
-## Transformações Detalhadas
-
-### 1. ChairIcon (Maior Mudança)
-
-A cadeira na referência tem:
-- Encosto como arco curvo fino (não retângulo)
-- Assento oval/arredondado (não retangular)
-- Pernas como 4 pequenos círculos/pontos nos cantos
+A perspectiva 85° é uma **perspectiva isométrica sutil**:
+- Não é 90° (completamente top-down/plana)
+- Não é 75° (isométrica exagerada com lados grandes)
+- É um meio-termo: **objetos mostram frente/profundidade, mas minimamente**
 
 ```text
-ATUAL:                    REFERÊNCIA (85°):
-+--------+                   \_____/      <- Arco curvo
-|  rect  |                  (       )     <- Assento oval
-+--------+                   o     o      <- Pernas circulares
+75° (muito lateral):     85° (sutil):           90° (top-down):
+   _______                  _______                _______
+  /      /|                /      /|              |       |
+ /______/ |               /______/ |              |       |
+|      | /               |______|/                |_______|
+|______|/
+  Lado grande            Lado mínimo              Sem lado
 ```
 
-Mudanças no código:
-- Substituir `<rect>` do encosto por `<path>` em arco
-- Substituir `<rect>` do assento por `<ellipse>`
-- Substituir `<polygon>` das pernas por `<circle>` pequenos
+## Solução
 
-### 2. TableIcon
+### 1. Restaurar SofaIcon com elipses nos braços
 
-Mudanças:
-- Manter tampo como está
-- Substituir `<polygon>` das pernas por `<rect width="2" height="2">`
-
-### 3. FridgeIcon
-
-Remover a linha 641-642:
 ```typescript
-// REMOVER:
-<polygon points={`${right},${top + 3} ${right + 2},${top + 1}...`} />
+{/* Left armrest - curved top for 85° depth */}
+{!connectedLeft && (
+  <>
+    <rect x={padding} y={top + 2} width="5" height="14" 
+      fill={COLORS.sofa.arm} stroke={OUTLINE} />
+    {/* Elipse de topo para curvatura */}
+    <ellipse cx={padding + 2.5} cy={top + 2} rx="2.5" ry="1.2" 
+      fill={COLORS.sofa.top} />
+  </>
+)}
 ```
 
-### 4. BookshelfIcon
+### 2. Restaurar ArmchairIcon com elipses nos braços
 
-Remover a linha 709-710:
 ```typescript
-// REMOVER:
-<polygon points={`${right},${top + 2} ${right + 1},${top + 1}...`} />
+{/* Left arm - curved */}
+<rect x={left} y={top + 2} width="5" height="14" fill={COLORS.armchair.side} />
+<ellipse cx={left + 2.5} cy={top + 2} rx="2.5" ry="1.2" 
+  fill={COLORS.armchair.top} />
 ```
 
-### 5. StoveIcon
+### 3. Restaurar TableIcon com pernas trapezoidais (menores)
 
-Remover a linha 462:
 ```typescript
-// REMOVER:
-{!connectedRight && <polygon points={...} fill={COLORS.metal.side} />}
+{/* Legs - smaller trapezoids for 85° */}
+{!connectedLeft && (
+  <>
+    {/* Trapézio menor que 75° original */}
+    <polygon points={`${padding+1},${topY+8} ${padding+4},${topY+8} ${padding+3.5},${bottomY} ${padding+1.5},${bottomY}`} 
+      fill={COLORS.wood.shadow} />
+  </>
+)}
 ```
 
-### 6. ArmchairIcon e SofaIcon
+### 4. Restaurar ChairIcon com encosto retangular
 
-Reduzir elipses de topo dos braços:
-- Mudar `ry="1.5"` para `ry="0.8"` (mais plano)
-- Ou remover completamente as elipses
-
-### 7. PlantIcon
-
-Mudar cor do vaso:
 ```typescript
-// ANTES:
-pot: '#D08050',     // Laranja
-// DEPOIS:
-pot: '#78B8A8',     // Azul-turquesa
+{/* Backrest - rectangle with depth, not arc */}
+<rect x="8" y="3" width="16" height="7" 
+  fill={COLORS.chair.back} stroke={OUTLINE} />
+<rect x="8" y="3" width="16" height="2" fill={COLORS.chair.seat} />
+
+{/* Seat - rectangle with depth */}
+<rect x="6" y="12" width="20" height="10" 
+  fill={COLORS.chair.seat} stroke={OUTLINE} />
+<rect x="6" y="12" width="20" height="2" fill="#F0E8D8" />
+
+{/* Legs - small trapezoids */}
+<polygon points="7,22 10,22 9.5,28 7.5,28" fill={COLORS.chair.legs} />
 ```
 
-### 8. BedIcon (Single)
+### 5. Restaurar BedIcon Single com travesseiros retangulares
 
-Ajustar cores:
 ```typescript
-// ANTES:
-pillow: '#FFFFFF',
-blanket: '#6B9BD1',
-// DEPOIS:
-pillow: '#F5E8D0',  // Bege
-blanket: '#8B9B68', // Verde-oliva
+{/* Pillows - rectangles with depth, not ellipses */}
+<rect x={left + 2} y="8" width="10" height="5" rx="1" 
+  fill={COLORS.bed.pillow} stroke={OUTLINE} />
+<rect x={left + 2} y="8" width="10" height="1.5" 
+  fill={COLORS.bed.pillowShade} />
 ```
+
+### 6. Restaurar DeskIcon com pernas retangulares com altura
+
+```typescript
+{/* Left legs - rectangles with height */}
+{!connectedLeft && (
+  <>
+    <rect x={padding + 1} y={topY + 5} width="3" height={bottomY - topY - 5} 
+      fill={COLORS.wood.side} />
+    <rect x={padding + 1} y={topY + 5} width="3" height="2" 
+      fill={COLORS.wood.front} />
+  </>
+)}
+```
+
+## Elementos Chave da Perspectiva 85°
+
+1. **Elipses de topo** - Braços de sofá/poltrona têm elipse curvada no topo
+2. **Pernas trapezoidais** - Mas menores que na perspectiva 75°
+3. **Faixas de highlight** - 2px de cor mais clara no topo dos elementos
+4. **Travesseiros retangulares** - Com arredondamento sutil (rx="1")
+5. **Profundidade lateral mínima** - Apenas indicação sutil, não lados grandes
 
 ## Arquivo a Modificar
 
-| Arquivo | Alterações |
-|---------|-----------|
-| `src/components/game/assets/AssetIcons.tsx` | ~12 ícones para perspectiva 85° + cores |
-
-## Detalhes Técnicos
-
-### Paleta de Cores Atualizada
-
-```typescript
-const COLORS = {
-  wood: {
-    top: '#E8C878',      // Amarelo mais claro
-    front: '#B89870',
-    side: '#8C6C48',
-    shadow: '#604428',
-  },
-  bed: {
-    pillow: '#F5E8D0',   // Bege (antes branco)
-    pillowShade: '#E8DCC0',
-    blanket: '#8B9B68',  // Verde-oliva (antes azul)
-    blanketLight: '#A0B080',
-  },
-  plant: {
-    pot: '#78B8A8',      // Azul-turquesa (antes laranja)
-    potSide: '#5A9A8A',
-  },
-  chair: {
-    seat: '#E8DCC8',     // Bege claro
-    back: '#C8B898',
-  },
-  // ... resto mantido
-};
-```
-
-### Estrutura da Nova ChairIcon
-
-```typescript
-export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
-  return (
-    <svg viewBox="0 0 32 32" className={className}>
-      {/* Encosto em arco */}
-      <path d="M8,10 Q16,4 24,10" 
-        stroke={COLORS.wood.front} strokeWidth="3" fill="none" />
-      
-      {/* Assento oval */}
-      <ellipse cx="16" cy="16" rx="9" ry="6" 
-        fill="#E8DCC8"
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Pernas como pequenos círculos */}
-      <circle cx="9" cy="22" r="1.5" fill={COLORS.wood.shadow} />
-      <circle cx="23" cy="22" r="1.5" fill={COLORS.wood.shadow} />
-      <circle cx="9" cy="12" r="1.5" fill={COLORS.wood.shadow} />
-      <circle cx="23" cy="12" r="1.5" fill={COLORS.wood.shadow} />
-    </svg>
-  );
-};
-```
-
-### Remoção de Polygons Laterais
-
-Para cada ícone com polygon de profundidade:
-
-```typescript
-// ANTES (perspectiva 75°):
-<polygon points={`${right},${top} ${right+2},${top-2} ...`} 
-  fill={COLORS.xxx.side} />
-
-// DEPOIS (perspectiva 85°):
-// Simplesmente não incluir o polygon
-// Manter apenas a face principal
-```
+| Arquivo | Mudanças |
+|---------|----------|
+| `src/components/game/assets/AssetIcons.tsx` | Restaurar ~6 ícones para perspectiva 85° isométrica |
 
 ## Ordem de Implementação
 
-1. Atualizar paleta `COLORS` com novas cores da referência
-2. **ChairIcon** - Redesenhar completamente (arco + oval + círculos)
-3. **TableIcon** - Substituir polygons por rects
-4. **DeskIcon** - Substituir polygon por rect
-5. **FridgeIcon** - Remover polygon lateral
-6. **BookshelfIcon** - Remover polygon lateral
-7. **StoveIcon** - Remover polygon lateral
-8. **ArmchairIcon** - Reduzir/remover elipses de braço
-9. **SofaIcon** - Reduzir/remover elipses de braço
-10. **PlantIcon** - Aplicar nova cor do vaso
-11. **BedIcon** - Aplicar novas cores (travesseiro/cobertor)
+1. **SofaIcon** - Adicionar elipses de volta nos braços
+2. **ArmchairIcon** - Adicionar elipses de volta nos braços
+3. **TableIcon** - Restaurar pernas trapezoidais menores
+4. **ChairIcon** - Substituir arco por retângulo com profundidade
+5. **BedIcon (Single)** - Substituir elipses por retângulos arredondados
+6. **DeskIcon** - Restaurar pernas retangulares com altura
 
 ## Validação
 
-1. Abrir `/game` e verificar todos os móveis
-2. Confirmar que nenhum móvel tem "lado" visível exagerado
-3. Verificar que as cores correspondem à referência (beges, verde-oliva, turquesa)
-4. Confirmar perspectiva 85° (sutil profundidade, mas não isométrica)
-5. Comparar visualmente com a imagem de referência fornecida
+1. Verificar que sofá e poltrona têm braços curvados (elipses no topo)
+2. Verificar que mesa e cadeira têm pernas trapezoidais
+3. Verificar que cama tem travesseiros retangulares
+4. Confirmar que todos os móveis têm profundidade sutil consistente (85°)
+5. Comparar visualmente para garantir que a perspectiva é coesa entre todos os móveis

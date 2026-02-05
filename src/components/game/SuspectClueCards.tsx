@@ -55,7 +55,7 @@ export const SuspectClueCards = ({
       {/* Suspect cards row */}
       <div 
         ref={containerRef}
-        className="flex gap-2 overflow-x-auto pb-2 pt-1 px-1 scrollbar-thin items-stretch justify-center"
+        className="flex gap-2 overflow-x-auto pb-2 pt-1 px-1 scrollbar-thin items-start justify-center"
       >
         {suspects.map((suspect) => {
           const isPlaced = placedSuspects.has(suspect.id);
@@ -77,7 +77,7 @@ export const SuspectClueCards = ({
                 // Layout vertical quando não selecionado
                 !isSelected && "flex flex-col items-center p-2 w-16 sm:w-20",
                 // Layout horizontal quando selecionado
-                isSelected && "flex flex-row gap-2 p-2 w-40 sm:w-44",
+                isSelected && "flex flex-row gap-3 p-3 w-56 sm:w-64",
                 isPlaced && "opacity-40 cursor-not-allowed",
                 isSelected && "translate-y-[-2px]",
                 isVictim && "bg-red-50 border-red-400",
@@ -93,7 +93,9 @@ export const SuspectClueCards = ({
               {/* Avatar */}
               <div 
                 className={cn(
-                  "flex-shrink-0 w-10 h-12 overflow-hidden",
+                  "flex-shrink-0 overflow-hidden",
+                  !isSelected && "w-10 h-12",
+                  isSelected && "w-12 h-14",
                   isVictim && "border-2 border-red-600"
                 )}
                 style={{ imageRendering: 'pixelated' }}
@@ -117,7 +119,7 @@ export const SuspectClueCards = ({
                 </p>
                 
                 {isSelected && suspectClue && (
-                  <p className="text-[10px] text-muted-foreground leading-tight mt-1 line-clamp-3">
+                  <p className="text-[11px] text-muted-foreground leading-snug mt-1 line-clamp-4">
                     {formatClueText(suspectClue.text, suspect.name)}
                   </p>
                 )}

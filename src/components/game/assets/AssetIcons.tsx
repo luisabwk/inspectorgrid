@@ -639,7 +639,7 @@ export const ArmchairIcon = ({ className }: AssetIconProps) => {
   const left = 4;
   const right = 28;
   const top = 5;
-  const armWidth = 5;
+ const armWidth = 3;
   
   const innerLeft = left + armWidth;
   const innerRight = right - armWidth;

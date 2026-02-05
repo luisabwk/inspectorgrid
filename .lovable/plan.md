@@ -1,132 +1,85 @@
 
-# Correção da Cama: Suporte a Conexão Horizontal E Vertical
+## Ajuste Visual da Cama Horizontal
 
-## Problema Atual (Diagnóstico Visual)
+### O que você quer (baseado na imagem de referência)
 
-No screenshot, a cama no quarto (células L1-C5 e L2-C5) aparece como **duas camas de 1 quadrado cada** em vez de uma cama conectada.
-
-### Causa raiz:
-1. No `GameGrid.tsx`, as linhas 217-218 **desabilitam** as conexões horizontais:
-   ```typescript
-   const hasBedLeft = false; // Disabled
-   const hasBedRight = false; // Disabled
-   ```
-2. O layout do testCase está com cama **vertical** (`grid[0][4]` e `grid[1][4]`)
-3. Mas o `BedIcon` só detecta `connectedTop/Bottom`, que ESTÃO sendo passados corretamente
-4. O bug visual indica que o ícone não está usando esses valores corretamente
-
-Revisando o código do `BedIcon`, vejo que a lógica de segmentos está correta, mas o problema é que **as props não estão sendo passadas ao componente** devido ao bug no GameGrid.
-
-## Solução Completa
-
-### 1. GameGrid.tsx - Reativar conexões horizontais da cama
-Alterar as linhas 217-218 para calcular corretamente:
-
-```typescript
-// ANTES (desabilitado):
-const hasBedLeft = false;
-const hasBedRight = false;
-
-// DEPOIS (ativado):
-const hasBedLeft = hasBedAsset(cell) && hasBedAsset(leftCell) && !hasWallLeft;
-const hasBedRight = hasBedAsset(cell) && hasBedAsset(rightCell) && !hasWallRight;
-```
-
-### 2. BedIcon em AssetIcons.tsx - Adicionar suporte dual-orientation
-
-Refatorar para detectar qual tipo de conexão está ativa:
+A cama horizontal deve ter:
 
 ```text
-┌─────────────────────────────────────────────────────┐
-│                  LÓGICA DE DETECÇÃO                 │
-├─────────────────────────────────────────────────────┤
-│ isHorizontal = connectedLeft || connectedRight      │
-│ isVertical = connectedTop || connectedBottom        │
-│                                                     │
-│ Se HORIZONTAL:                                      │
-│   - isLeftEnd = !connectedLeft && connectedRight    │
-│     → Cabeceira esquerda + travesseiros            │
-│   - isRightEnd = connectedLeft && !connectedRight   │
-│     → Cobertor + pé da cama                        │
-│                                                     │
-│ Se VERTICAL:                                        │
-│   - isHeadSegment = !connectedTop && connectedBottom│
-│     → Cabeceira no topo + travesseiros             │
-│   - isFootSegment = connectedTop && !connectedBottom│
-│     → Cobertor + peseira                           │
-└─────────────────────────────────────────────────────┘
+┌─────────────────────────┬─────────────────────────┐
+│   CÉLULA ESQUERDA       │   CÉLULA DIREITA        │
+│   (Cabeceira)           │   (Pé da cama)          │
+│                         │                         │
+│ ┌───┬─────────┬───────┐ │ ┌───────────────────┐  │
+│ │   │TRAVESS. │COBERTA│─┼─│    COBERTOR       │  │
+│ │CAB│ ÚNICO   │ verde │ │ │      VERDE        │  │
+│ │   │(grande) │parcial│ │ │                   │  │
+│ └───┴─────────┴───────┘ │ └───────────────────┘  │
+│                         │                         │
+└─────────────────────────┴─────────────────────────┘
 ```
 
-### 3. Ilustração Visual do Resultado Esperado
+### Mudanças no BedIcon (isLeftEnd - célula da cabeceira)
 
-**Cama Horizontal (2 células lado a lado):**
+**Arquivo:** `src/components/game/assets/AssetIcons.tsx`
+
+Alterações no bloco `isLeftEnd` (linhas 122-138):
+
+1. **Travesseiro único grande** em vez de dois separados
+   - Remover as duas elipses de travesseiro (linhas 133-136)
+   - Adicionar um único retângulo arredondado ocupando a área central
+
+2. **Adicionar porção de cobertor** no lado direito
+   - O lençol bege/creme fica da cabeceira até ~60% da célula
+   - O cobertor verde entra pelos últimos ~40% da direita
+   - Isso cria continuidade visual com a célula seguinte
+
+### Detalhes Técnicos da Implementação
+
+**Célula esquerda (isLeftEnd) - nova estrutura:**
+
 ```text
-┌──────────────────┬──────────────────┐
-│ CÉLULA ESQUERDA  │  CÉLULA DIREITA  │
-│   (isLeftEnd)    │   (isRightEnd)   │
-│                  │                  │
-│ ┌──────┬───────┐ │ ┌──────────────┐ │
-│ │CABEC │ TRAV  │─┼─│  COBERTOR    │ │
-│ │EIRA  │ ESSEI │ │ │    AZUL      │ │
-│ └──────┴───────┘ │ └──────────────┘ │
-│   FRAME LEFT     │   FRAME RIGHT    │
-└──────────────────┴──────────────────┘
+viewBox 0-32:
+x=0-5:   Cabeceira de madeira (vertical)
+x=5-20:  Lençol bege + travesseiro único
+x=20-32: Cobertor verde (porção que conecta com a próxima célula)
 ```
 
-**Cama Vertical (2 células em coluna):**
+Elementos SVG propostos:
+- Frame lateral esquerdo (cabeceira): `rect x=0 y=2 width=5`
+- Frames superior/inferior: `rect y=1 height=2` e `rect y=29 height=2`
+- Colchão base: `rect x=5 y=3 width=27`
+- Lençol bege: `rect x=6 y=4 width=14` (até x=20)
+- Cobertor verde: `rect x=18 y=4 width=14` (de x=18 até borda direita)
+- Transição suave: linha de dobra em x=18-20
+- Travesseiro único: `rect x=7 y=8 width=8 height=16 rx=3` (arredondado)
+
+### Resultado Visual Esperado
+
+Quando as duas células estiverem lado a lado, a cama formará uma unidade coesa:
+
 ```text
-┌──────────────────┐
-│ CÉLULA SUPERIOR  │
-│   (isHeadSegment)│
-│                  │
-│ ┌──────────────┐ │
-│ │ CABECEIRA    │ │
-│ │ [TRAV][TRAV] │ │
-│ │   LENÇOL     │ │
-│ └──────────────┘ │
-├──────────────────┤
-│ CÉLULA INFERIOR  │
-│   (isFootSegment)│
-│                  │
-│ ┌──────────────┐ │
-│ │  COBERTOR    │ │
-│ │    AZUL      │ │
-│ │  PESEIRA     │ │
-│ └──────────────┘ │
-└──────────────────┘
+┌─────────────────────────────────────────────────┐
+│ [CAB] [TRAVESSEIRO] [==COBERTOR VERDE=======>] │
+│       [  ÚNICO    ] [                        ] │
+│       [           ] [    (continuidade)      ] │
+└─────────────────────────────────────────────────┘
 ```
 
-### 4. Atualizar testCase.ts para testar horizontal
+O cobertor começará na metade direita da célula esquerda e continuará por toda a célula direita, criando a ilusão de uma cama única.
 
-Trocar a cama de vertical para horizontal no quarto:
-
-```typescript
-// ANTES (vertical):
-grid[0][4].asset = 'bed';  // row 0, col 4
-grid[1][4].asset = 'bed';  // row 1, col 4
-
-// DEPOIS (horizontal):
-grid[0][3].asset = 'bed';  // row 0, col 3 (cabeceira esquerda)
-grid[0][4].asset = 'bed';  // row 0, col 4 (pé direita)
-```
-
-E ajustar o solution para manter coerência:
-```typescript
-'suspect-2': { row: 0, col: 3 }, // Beatriz na cabeceira da cama
-```
-
-## Arquivos a Modificar
+### Arquivos a modificar
 
 | Arquivo | Alteração |
 |---------|-----------|
-| `src/components/game/GameGrid.tsx` | Reativar `hasBedLeft`/`hasBedRight` (linhas 217-218) |
-| `src/components/game/assets/AssetIcons.tsx` | Refatorar `BedIcon` para dual-orientation |
-| `src/data/testCase.ts` | Trocar cama para horizontal (testar a nova feature) |
+| `src/components/game/assets/AssetIcons.tsx` | Refatorar bloco `isLeftEnd` do BedIcon: travesseiro único + porção de cobertor |
 
-## Validação
+### Validação
 
-1. Abrir `/game` e verificar o quarto:
-   - A cama horizontal deve mostrar cabeceira à ESQUERDA e cobertor à DIREITA
-   - As duas células devem formar uma cama única visualmente coerente
-
-2. (Opcional) Testar cama vertical em outro layout futuro para garantir retrocompatibilidade
+1. Abrir `/game` e verificar o quarto
+2. A cama deve mostrar:
+   - Cabeceira à esquerda
+   - Travesseiro único grande (não dois separados)
+   - Lençol bege na área do travesseiro
+   - Cobertor verde começando na célula esquerda e continuando na direita
+   - Visual de "cama única" coerente

@@ -671,19 +671,19 @@ export const ArmchairIcon = ({ className }: AssetIconProps) => {
         fill={COLORS.armchair.top} />
       
       {/* Left armrest - rounded */}
-      <rect x={left} y={top + 1} width={armWidth} height="14" 
+      <rect x={left} y={top + 4} width={armWidth} height="11" 
         fill={COLORS.armchair.side}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
         rx="1" />
-      <ellipse cx={left + armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.5" 
+      <ellipse cx={left + armWidth/2} cy={top + 4} rx={armWidth/2} ry="1.5" 
         fill={COLORS.armchair.top} />
       
       {/* Right armrest - rounded */}
-      <rect x={right - armWidth} y={top + 1} width={armWidth} height="14" 
+      <rect x={right - armWidth} y={top + 4} width={armWidth} height="11" 
         fill={COLORS.armchair.side}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
         rx="1" />
-      <ellipse cx={right - armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.5" 
+      <ellipse cx={right - armWidth/2} cy={top + 4} rx={armWidth/2} ry="1.5" 
         fill={COLORS.armchair.top} />
       
       {/* Small feet */}

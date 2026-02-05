@@ -35,9 +35,9 @@ const generateTestGrid = (): Cell[][] => {
       grid[r][c].roomId = 'bedroom';
     }
   }
-  // Cama dupla vertical (2 células conectadas - topo/baixo)
-  grid[0][4].asset = 'bed';  // Head (cabeceira com travesseiros)
-  grid[1][4].asset = 'bed';  // Foot (cobertor com peseira)
+  // Cama dupla horizontal (2 células conectadas - esquerda/direita)
+  grid[0][3].asset = 'bed';  // Head (cabeceira com travesseiros à esquerda)
+  grid[0][4].asset = 'bed';  // Foot (cobertor com peseira à direita)
   grid[0][5].asset = 'window';
   
   // === BANHEIRO (middle row 2, cols 4-5) ===
@@ -109,7 +109,7 @@ export const testCase: GameCase = {
   ],
   solution: {
     'suspect-1': { row: 0, col: 0 }, // Coronel no sofá
-    'suspect-2': { row: 0, col: 4 }, // Professora na cama
+    'suspect-2': { row: 0, col: 3 }, // Professora na cabeceira da cama
     'suspect-3': { row: 2, col: 3 }, // Srta. Scarlet no corredor
     'suspect-4': { row: 3, col: 2 }, // Dr. Orchid no corredor
     'suspect-5': { row: 5, col: 2 }, // Chef no corredor perto da cozinha

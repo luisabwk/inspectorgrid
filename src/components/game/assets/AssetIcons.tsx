@@ -103,132 +103,146 @@
  // ==================== CONNECTABLE ASSETS (ISOMETRIC 75°) ====================
  
 // Bed - isometric 75° with BOTH horizontal and vertical connection support
- export const BedIcon = ({ 
-   className,
-   connectedTop = false,
-   connectedBottom = false,
-   connectedLeft = false,
-   connectedRight = false
- }: ConnectableAssetProps) => {
-  // Segment-based logic for vertical connection (only vertical supported)
-  const isSingle = !connectedTop && !connectedBottom;
-  const isHeadSegment = !connectedTop && connectedBottom;  // Top of 2-cell bed
-  const isFootSegment = connectedTop && !connectedBottom;  // Bottom of 2-cell bed
-  const isMiddleSegment = connectedTop && connectedBottom; // Middle of 3+ cell bed (rare)
+export const BedIcon = ({ 
+  className,
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableAssetProps) => {
+  // Detect orientation: horizontal vs vertical vs single
+  const isHorizontal = connectedLeft || connectedRight;
+  const isVertical = connectedTop || connectedBottom;
   
-  // ========== HEAD SEGMENT (top of multi-cell bed) ==========
-  if (isHeadSegment) {
+  // ==================== HORIZONTAL BED ====================
+  if (isHorizontal && !isVertical) {
+    const isLeftEnd = !connectedLeft && connectedRight;
+    const isRightEnd = connectedLeft && !connectedRight;
+    
+    if (isLeftEnd) {
+      return (
+        <svg viewBox="0 0 32 32" className={className}>
+          <rect x="2" y="1" width="30" height="2" fill={COLORS.bed.frame} />
+          <rect x="2" y="29" width="30" height="2" fill={COLORS.bed.frame} />
+          <rect x="0" y="2" width="5" height="28" fill={COLORS.wood.front} />
+          <rect x="0" y="2" width="2" height="28" fill={COLORS.wood.top} />
+          <rect x="1" y="5" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
+          <rect x="1" y="19" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
+          <rect x="5" y="3" width="27" height="26" fill={COLORS.bed.mattress} />
+          <rect x="6" y="4" width="26" height="24" fill={COLORS.bed.sheet} />
+          <ellipse cx="11" cy="10" rx="3.5" ry="5" fill={COLORS.bed.pillow} />
+          <ellipse cx="10" cy="10" rx="2.5" ry="4" fill={COLORS.bed.pillowShade} />
+          <ellipse cx="11" cy="22" rx="3.5" ry="5" fill={COLORS.bed.pillow} />
+          <ellipse cx="10" cy="22" rx="2.5" ry="4" fill={COLORS.bed.pillowShade} />
+        </svg>
+      );
+    }
+    
+    if (isRightEnd) {
+      return (
+        <svg viewBox="0 0 32 32" className={className}>
+          <rect x="0" y="1" width="30" height="2" fill={COLORS.bed.frame} />
+          <rect x="0" y="29" width="30" height="2" fill={COLORS.bed.frame} />
+          <rect x="27" y="3" width="3" height="26" fill={COLORS.wood.side} />
+          <rect x="27" y="3" width="1" height="26" fill={COLORS.wood.front} />
+          <rect x="0" y="3" width="27" height="26" fill={COLORS.bed.mattress} />
+          <rect x="1" y="4" width="25" height="24" fill={COLORS.bed.blanket} />
+          <rect x="1" y="4" width="2" height="24" fill={COLORS.bed.blanketLight} />
+          <line x1="8" y1="6" x2="8" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
+          <line x1="14" y1="6" x2="14" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+          <line x1="20" y1="6" x2="20" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+        </svg>
+      );
+    }
+    
     return (
       <svg viewBox="0 0 32 32" className={className}>
-        {/* Bed frame sides - extend to bottom edge for connection */}
-        <rect x="1" y="2" width="2" height="30" fill={COLORS.bed.frame} />
-        <rect x="29" y="2" width="2" height="30" fill={COLORS.bed.frame} />
-        
-        {/* Headboard at TOP */}
-        <rect x="2" y="0" width="28" height="5" fill={COLORS.wood.front} />
-        <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
-        <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-        <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-        
-        {/* Mattress - full cell height, extends to bottom */}
-        <rect x="3" y="5" width="26" height="27" fill={COLORS.bed.mattress} />
-        <rect x="4" y="6" width="24" height="26" fill={COLORS.bed.sheet} />
-        
-        {/* Sheet fold detail near bottom (transition to foot segment) */}
-        <line x1="4" y1="28" x2="28" y2="28" stroke={COLORS.bed.sheetFold} strokeWidth="1" opacity="0.3" />
-        
-        {/* Pillows at top */}
-        <ellipse cx="10" cy="11" rx="5" ry="3.5" fill={COLORS.bed.pillow} />
-        <ellipse cx="10" cy="10" rx="4" ry="2.5" fill={COLORS.bed.pillowShade} />
-        <ellipse cx="22" cy="11" rx="5" ry="3.5" fill={COLORS.bed.pillow} />
-        <ellipse cx="22" cy="10" rx="4" ry="2.5" fill={COLORS.bed.pillowShade} />
+        <rect x="0" y="1" width="32" height="2" fill={COLORS.bed.frame} />
+        <rect x="0" y="29" width="32" height="2" fill={COLORS.bed.frame} />
+        <rect x="0" y="3" width="32" height="26" fill={COLORS.bed.mattress} />
+        <rect x="1" y="4" width="30" height="24" fill={COLORS.bed.blanket} />
+        <line x1="10" y1="6" x2="10" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+        <line x1="22" y1="6" x2="22" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
       </svg>
     );
   }
   
-  // ========== FOOT SEGMENT (bottom of multi-cell bed) ==========
-  if (isFootSegment) {
+  // ==================== VERTICAL BED ====================
+  if (isVertical && !isHorizontal) {
+    const isHeadSegment = !connectedTop && connectedBottom;
+    const isFootSegment = connectedTop && !connectedBottom;
+    
+    if (isHeadSegment) {
+      return (
+        <svg viewBox="0 0 32 32" className={className}>
+          <rect x="1" y="2" width="2" height="30" fill={COLORS.bed.frame} />
+          <rect x="29" y="2" width="2" height="30" fill={COLORS.bed.frame} />
+          <rect x="2" y="0" width="28" height="5" fill={COLORS.wood.front} />
+          <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
+          <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
+          <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
+          <rect x="3" y="5" width="26" height="27" fill={COLORS.bed.mattress} />
+          <rect x="4" y="6" width="24" height="26" fill={COLORS.bed.sheet} />
+          <line x1="4" y1="28" x2="28" y2="28" stroke={COLORS.bed.sheetFold} strokeWidth="1" opacity="0.3" />
+          <ellipse cx="10" cy="11" rx="5" ry="3.5" fill={COLORS.bed.pillow} />
+          <ellipse cx="10" cy="10" rx="4" ry="2.5" fill={COLORS.bed.pillowShade} />
+          <ellipse cx="22" cy="11" rx="5" ry="3.5" fill={COLORS.bed.pillow} />
+          <ellipse cx="22" cy="10" rx="4" ry="2.5" fill={COLORS.bed.pillowShade} />
+        </svg>
+      );
+    }
+    
+    if (isFootSegment) {
+      return (
+        <svg viewBox="0 0 32 32" className={className}>
+          <rect x="1" y="0" width="2" height="30" fill={COLORS.bed.frame} />
+          <rect x="29" y="0" width="2" height="30" fill={COLORS.bed.frame} />
+          <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} />
+          <rect x="3" y="0" width="26" height="28" fill={COLORS.bed.mattress} />
+          <rect x="4" y="1" width="24" height="25" fill={COLORS.bed.blanket} />
+          <rect x="4" y="1" width="24" height="2" fill={COLORS.bed.blanketLight} />
+          <line x1="6" y1="8" x2="26" y2="8" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
+          <line x1="6" y1="14" x2="26" y2="14" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+          <line x1="6" y1="20" x2="26" y2="20" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+          <rect x="3" y="26" width="26" height="3" fill={COLORS.wood.side} />
+          <rect x="3" y="26" width="26" height="1" fill={COLORS.wood.front} />
+        </svg>
+      );
+    }
+    
     return (
       <svg viewBox="0 0 32 32" className={className}>
-        {/* Bed frame sides - extend from top edge */}
-        <rect x="1" y="0" width="2" height="30" fill={COLORS.bed.frame} />
-        <rect x="29" y="0" width="2" height="30" fill={COLORS.bed.frame} />
-        
-        {/* Frame bottom */}
-        <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} />
-        
-        {/* Mattress - extends from top edge */}
-        <rect x="3" y="0" width="26" height="28" fill={COLORS.bed.mattress} />
-        
-        {/* Blanket - covers entire cell (this is the foot portion) */}
-        <rect x="4" y="1" width="24" height="25" fill={COLORS.bed.blanket} />
-        
-        {/* Blanket top edge highlight (continuation from head) */}
-        <rect x="4" y="1" width="24" height="2" fill={COLORS.bed.blanketLight} />
-        
-        {/* Blanket fold details */}
-        <line x1="6" y1="8" x2="26" y2="8" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-        <line x1="6" y1="14" x2="26" y2="14" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-        <line x1="6" y1="20" x2="26" y2="20" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
-        
-        {/* Footboard */}
-        <rect x="3" y="26" width="26" height="3" fill={COLORS.wood.side} />
-        <rect x="3" y="26" width="26" height="1" fill={COLORS.wood.front} />
-      </svg>
-    );
-  }
-  
-  // ========== MIDDLE SEGMENT (for 3+ cell beds, rare) ==========
-  if (isMiddleSegment) {
-    return (
-      <svg viewBox="0 0 32 32" className={className}>
-        {/* Bed frame sides - full height */}
         <rect x="1" y="0" width="2" height="32" fill={COLORS.bed.frame} />
         <rect x="29" y="0" width="2" height="32" fill={COLORS.bed.frame} />
-        
-        {/* Mattress/blanket - full cell */}
         <rect x="3" y="0" width="26" height="32" fill={COLORS.bed.mattress} />
         <rect x="4" y="1" width="24" height="30" fill={COLORS.bed.blanket} />
-        
-        {/* Blanket fold details */}
         <line x1="6" y1="10" x2="26" y2="10" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
         <line x1="6" y1="22" x2="26" y2="22" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
       </svg>
     );
   }
   
-  // ========== SINGLE BED (no connections - complete bed in one cell) ==========
+  // ==================== SINGLE BED ====================
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Bed frame */}
       <rect x="1" y="2" width="2" height="28" fill={COLORS.bed.frame} />
       <rect x="29" y="2" width="2" height="28" fill={COLORS.bed.frame} />
       <rect x="1" y="2" width="30" height="2" fill={COLORS.bed.frameTop} />
       <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} />
-      
-      {/* Headboard at TOP */}
       <rect x="2" y="0" width="28" height="4" fill={COLORS.wood.front} />
       <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
       <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
       <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-      
-      {/* Mattress */}
       <rect x="3" y="5" width="26" height="23" fill={COLORS.bed.mattress} />
       <rect x="4" y="6" width="24" height="21" fill={COLORS.bed.sheet} />
-      
-      {/* Blanket - lower portion only */}
       <rect x="4" y="15" width="24" height="11" fill={COLORS.bed.blanket} />
       <rect x="4" y="15" width="24" height="2" fill={COLORS.bed.blanketLight} />
       <line x1="6" y1="19" x2="26" y2="19" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
       <line x1="6" y1="23" x2="26" y2="23" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-      
-      {/* Pillows at top */}
       <ellipse cx="10" cy="10" rx="5" ry="3" fill={COLORS.bed.pillow} />
       <ellipse cx="10" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
       <ellipse cx="22" cy="10" rx="5" ry="3" fill={COLORS.bed.pillow} />
       <ellipse cx="22" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
-      
-      {/* Footboard */}
       <rect x="3" y="27" width="26" height="2" fill={COLORS.wood.side} />
     </svg>
   );

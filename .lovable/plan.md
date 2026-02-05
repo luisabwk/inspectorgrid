@@ -1,32 +1,34 @@
 
-# Remover Poltrona da Coluna 5 no Escritório
+# Ajustar Largura dos Braços da Poltrona
 
-## Diagnóstico
+## Diagnostico
 
-O problema foi identificado no **banco de dados**, não no código. O layout armazenado na tabela `cases` possui:
+No arquivo `src/components/game/assets/AssetIcons.tsx`, o componente `ArmchairIcon` define a largura dos bracos na linha 642:
 
-| Posição | Row | Col | Asset Atual |
-|---------|-----|-----|-------------|
-| L5, C6 | 4 | 5 | `armchair` |
-| L6, C5 | 4 | 4 | `sofa` (renderiza como poltrona pois está sozinho) |
-
-A segunda poltrona em L6, C5 é causada por um `sofa` solitário que, pela lógica do jogo, é automaticamente exibido como poltrona quando não está conectado a outros sofás.
-
-## Solução
-
-Atualizar o registro no banco de dados para alterar a célula em **row 5, col 4** (L6, C5) de `sofa` para `empty`.
-
-## Alteração no Banco
-
-```sql
--- Atualizar o layout_config do caso existente
--- Mudar cells[5][4].asset de 'sofa' para 'empty'
+```tsx
+const armWidth = 5;  // Valor atual
 ```
 
-A alteração será feita via função SQL que modifica o JSON do `layout_config`, substituindo o asset da célula correspondente.
+Os bracos sao renderizados como retangulos com essa largura nas linhas 674 e 682.
 
-## Resultado Esperado
+## Alteracao Proposta
 
-- L6, C5 ficará vazia (sem móvel)
-- Apenas uma poltrona permanecerá no escritório (L5, C6)
-- O grid ficará menos carregado visualmente
+Reduzir `armWidth` de `5` para `3` pixels, tornando os bracos visivelmente mais finos mantendo a proporcao harmonica com o corpo da poltrona.
+
+### Arquivo: `src/components/game/assets/AssetIcons.tsx`
+
+**Linha 642:**
+```tsx
+// Antes
+const armWidth = 5;
+
+// Depois
+const armWidth = 3;
+```
+
+## Impacto Visual
+
+- Os bracos ficarao 40% mais finos (de 5px para 3px)
+- O assento ficara proporcionalmente mais largo (de 14px para 18px de largura interna)
+- As elipses de topo dos bracos serao automaticamente ajustadas pois usam `armWidth/2` como raio
+- O resultado sera uma poltrona com silhueta mais elegante e bracos delicados

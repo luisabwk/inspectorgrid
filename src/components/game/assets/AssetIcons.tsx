@@ -636,52 +636,54 @@ export const StoveIcon = ({
  
 // Armchair - 85° isometric perspective, unified piece (no gaps)
 export const ArmchairIcon = ({ className }: AssetIconProps) => {
-  // Match sofa proportions - less padding, wider arms
   const left = 4;
   const right = 28;
   const top = 5;
-  const armWidth = 5; // Same as sofa
+  const armWidth = 5;
   
-  // Inner area starts after left arm, ends before right arm
   const innerLeft = left + armWidth;
   const innerRight = right - armWidth;
-  const innerWidth = innerRight - innerLeft; // 14px
+  const innerWidth = innerRight - innerLeft;
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Back rest - connected to seat */}
-      <rect x={innerLeft} y={top} width={innerWidth} height="5" 
+      {/* Back rest - taller and rounded */}
+      <rect x={innerLeft} y={top} width={innerWidth} height="7" 
         fill={COLORS.armchair.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={innerLeft} y={top} width={innerWidth} height="1.5" 
-        fill={COLORS.armchair.top} />
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
+        rx="2" />
+      <rect x={innerLeft} y={top} width={innerWidth} height="2" 
+        fill={COLORS.armchair.top}
+        rx="2" />
       
-      {/* Seat cushion - directly below backrest */}
-      <rect x={innerLeft} y={top + 5} width={innerWidth} height="6" 
+      {/* Seat cushion */}
+      <rect x={innerLeft} y={top + 7} width={innerWidth} height="5" 
         fill={COLORS.armchair.cushion}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={innerLeft} y={top + 5} width={innerWidth} height="1.5" 
+      <rect x={innerLeft} y={top + 7} width={innerWidth} height="1.5" 
         fill={COLORS.armchair.top} />
       
-      {/* Base/front - directly below seat (85° depth) */}
-      <rect x={innerLeft} y={top + 11} width={innerWidth} height="5" 
+      {/* Base/front */}
+      <rect x={innerLeft} y={top + 12} width={innerWidth} height="4" 
         fill={COLORS.armchair.front} 
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={innerLeft} y={top + 11} width={innerWidth} height="1.5" 
+      <rect x={innerLeft} y={top + 12} width={innerWidth} height="1.5" 
         fill={COLORS.armchair.top} />
       
-      {/* Left armrest - full height covering back+seat */}
+      {/* Left armrest - rounded */}
       <rect x={left} y={top + 1} width={armWidth} height="14" 
         fill={COLORS.armchair.side}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx={left + armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.2" 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
+        rx="1" />
+      <ellipse cx={left + armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.5" 
         fill={COLORS.armchair.top} />
       
-      {/* Right armrest - full height */}
+      {/* Right armrest - rounded */}
       <rect x={right - armWidth} y={top + 1} width={armWidth} height="14" 
         fill={COLORS.armchair.side}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx={right - armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.2" 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
+        rx="1" />
+      <ellipse cx={right - armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.5" 
         fill={COLORS.armchair.top} />
       
       {/* Small feet */}

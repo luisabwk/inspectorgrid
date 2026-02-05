@@ -211,11 +211,11 @@ export const GameGrid = ({
     const hasTableRight = hasTableAsset(cell) && hasTableAsset(rightCell) && !hasWallRight;
 
     // Bed connections - check if adjacent cells also have beds
-    // ONLY vertical connections allowed (horizontal disabled by design)
+    // BOTH horizontal and vertical connections allowed
     const hasBedTop = hasBedAsset(cell) && hasBedAsset(topCell) && !hasWallTop;
     const hasBedBottom = hasBedAsset(cell) && hasBedAsset(bottomCell) && !hasWallBottom;
-    const hasBedLeft = false; // Disabled: beds only connect vertically
-    const hasBedRight = false; // Disabled: beds only connect vertically
+    const hasBedLeft = hasBedAsset(cell) && hasBedAsset(leftCell) && !hasWallLeft;
+    const hasBedRight = hasBedAsset(cell) && hasBedAsset(rightCell) && !hasWallRight;
 
     // Sofa connections - check if adjacent cells also have sofas
     const hasSofaTop = hasSofaAsset(cell) && hasSofaAsset(topCell) && !hasWallTop;

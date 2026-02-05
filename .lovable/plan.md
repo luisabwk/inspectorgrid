@@ -1,75 +1,93 @@
 
-# Ajustar Proporcoes entre Sofa, Poltrona e Cadeira
+# Cards de Avatares Verticais por Padrao
 
-## Diagnostico
+## Situacao Atual
 
-As proporcoes atuais estao desbalanceadas:
+Os cards dos suspeitos estao sempre em layout horizontal (`flex-row`), com avatar a esquerda e nome/pista a direita, ocupando largura fixa de 160-176px.
 
-| Elemento | Largura Total | Largura Bracos | Largura Assento |
-|----------|---------------|----------------|-----------------|
-| Sofa     | 24px          | 5px cada       | ~14px           |
-| Poltrona | 24px          | 3px cada       | 18px            |
-| Cadeira  | 20px          | -              | 20px            |
+## Alteracao Proposta
 
-O sofa tem bracos 67% mais largos que a poltrona, criando uma silhueta desproporcional.
+Mudar para layout condicional:
+- **Nao selecionado**: Layout vertical (avatar em cima, nome embaixo) - compacto
+- **Selecionado**: Layout horizontal expandido (avatar a esquerda, nome + pista a direita)
 
-## Alteracoes Propostas
+### Arquivo: `src/components/game/SuspectClueCards.tsx`
 
-### Arquivo: `src/components/game/assets/AssetIcons.tsx`
-
-#### 1. Reduzir largura dos bracos do sofa (linhas 396 e 408)
+#### Mudancas no card (linhas 74-130):
 
 ```tsx
-// Antes
-<rect x={padding} y={top + 2} width="5" height="14" ...
-
-// Depois
-<rect x={padding} y={top + 2} width="4" height="14" ...
+// Layout condicional baseado em isSelected
+className={cn(
+  "relative flex-shrink-0 transition-all duration-150 cursor-pointer",
+  "pixel-border-thin bg-card",
+  // Layout vertical quando nao selecionado
+  !isSelected && "flex flex-col items-center p-2 w-16 sm:w-20",
+  // Layout horizontal quando selecionado  
+  isSelected && "flex flex-row gap-2 p-2 w-40 sm:w-44",
+  isPlaced && "opacity-40 cursor-not-allowed",
+  isSelected && "translate-y-[-2px]",
+  isVictim && "bg-red-50 border-red-400",
+)}
 ```
 
-Mesmo ajuste para o braco direito:
-```tsx
-// Antes
-<rect x={32 - padding - 5} y={top + 2} width="5" height="14" ...
-
-// Depois
-<rect x={32 - padding - 4} y={top + 2} width="4" height="14" ...
-```
-
-#### 2. Ajustar elipses dos bracos para novo tamanho
+#### Ajustes no avatar:
 
 ```tsx
-// Antes
-<ellipse cx={padding + 2.5} cy={top + 2} rx="2.5" ry="1.2" ...
-
-// Depois
-<ellipse cx={padding + 2} cy={top + 2} rx="2" ry="1" ...
+<div 
+  className={cn(
+    "flex-shrink-0 overflow-hidden",
+    // Avatar menor quando vertical
+    !isSelected && "w-10 h-12",
+    // Avatar mesmo tamanho quando horizontal
+    isSelected && "w-10 h-12",
+    isVictim && "border-2 border-red-600"
+  )}
+>
 ```
 
-#### 3. Ajustar largura interna do assento e encosto
-
-Reduzir os offsets de 5 para 4 nas linhas 362, 364, 369, 371, 377, 379, 384, 386:
+#### Ajustes na area de texto:
 
 ```tsx
-// Antes
-x={left + (connectedLeft ? 0 : 5)}
-width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)}
-
-// Depois
-x={left + (connectedLeft ? 0 : 4)}
-width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)}
+<div className={cn(
+  "min-w-0 flex flex-col",
+  !isSelected && "items-center mt-1",
+  isSelected && "flex-1 justify-center"
+)}>
+  <p className={cn(
+    "font-bold leading-tight truncate",
+    !isSelected && "text-[10px] text-center",
+    isSelected && "text-xs",
+    isVictim ? "text-red-700" : "text-foreground"
+  )}>
+    {suspect.name.split(' ')[0]}
+  </p>
+  
+  {/* Pista so aparece quando selecionado */}
+  {isSelected && suspectClue && (
+    <p className="text-[10px] text-muted-foreground leading-tight mt-1 line-clamp-3">
+      {formatClueText(suspectClue.text, suspect.name)}
+    </p>
+  )}
+  
+  {/* Label vitima sempre visivel */}
+  {isVictim && (
+    <p className={cn(
+      "text-red-600",
+      !isSelected && "text-[8px] mt-0.5",
+      isSelected && "text-[9px] mt-1"
+    )}>
+      Vitima
+    </p>
+  )}
+</div>
 ```
 
-## Tabela de Proporcoes Finais
+## Resultado Visual
 
-| Elemento | Largura Bracos | Proporcao |
-|----------|----------------|-----------|
-| Sofa     | 4px            | Referencia base para assento amplo |
-| Poltrona | 3px            | 75% do sofa (individual, mais delicado) |
-| Cadeira  | -              | Sem bracos, assento simples |
+| Estado | Layout | Dimensoes | Conteudo |
+|--------|--------|-----------|----------|
+| Normal | Vertical | 64-80px largura | Avatar + nome centralizado |
+| Selecionado | Horizontal | 160-176px largura | Avatar + nome + pista |
+| Posicionado | Vertical + overlay | 64-80px | Avatar + nome + checkmark |
 
-## Resultado Esperado
-
-- Sofa com silhueta mais proporcional aos outros assentos
-- Harmonia visual entre sofa conectado e poltrona isolada
-- Cadeira mantida como referencia menor sem bracos
+O painel ficara mais compacto por padrao, expandindo apenas o card selecionado para mostrar a pista.

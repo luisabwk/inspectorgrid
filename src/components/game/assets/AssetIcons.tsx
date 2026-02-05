@@ -246,35 +246,38 @@ export const BedIcon = ({
   // ==================== SINGLE BED ====================
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Side frames */}
-      <rect x="2" y="3" width="1.5" height="26" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="28.5" y="3" width="1.5" height="26" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
       {/* Headboard with 85° depth */}
-      <rect x="3" y="2" width="26" height="3" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="3" y="2" width="26" height="1.5" fill={COLORS.wood.top} />
+      <rect x="4" y="4" width="24" height="4" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="4" y="4" width="24" height="2" fill={COLORS.wood.top} />
+      {/* Wood slats on headboard */}
+      <rect x="7" y="5" width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
+      <rect x="15" y="5" width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
+      <rect x="23" y="5" width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
       
-      {/* Mattress */}
-      <rect x="3.5" y="5" width="25" height="22" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Side frames with 85° depth */}
+      <rect x="3" y="7" width="2" height="18" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="3" y="7" width="2" height="1" fill={COLORS.bed.frameTop} />
+      <rect x="27" y="7" width="2" height="18" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="27" y="7" width="2" height="1" fill={COLORS.bed.frameTop} />
       
-      {/* Sheet area */}
-      <rect x="4" y="6" width="24" height="8" fill={COLORS.bed.sheet} />
+      {/* Mattress base */}
+      <rect x="5" y="8" width="22" height="16" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Pillows - rectangles with depth for 85° perspective */}
-      <rect x="6" y="7" width="8" height="5" rx="1" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="6" y="7" width="8" height="1.5" rx="1" fill={COLORS.bed.pillowShade} />
-      <rect x="18" y="7" width="8" height="5" rx="1" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="18" y="7" width="8" height="1.5" rx="1" fill={COLORS.bed.pillowShade} />
+      {/* Pillows with 85° curved top (like sofa armrests) */}
+      <rect x="7" y="9" width="7" height="4" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx="10.5" cy="9" rx="3.5" ry="1" fill={COLORS.bed.pillowShade} />
+      <rect x="18" y="9" width="7" height="4" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx="21.5" cy="9" rx="3.5" ry="1" fill={COLORS.bed.pillowShade} />
       
-      {/* Blanket with 85° depth */}
-      <rect x="4" y="14" width="24" height="12" fill={COLORS.bed.blanket} />
-      <rect x="4" y="14" width="24" height="2" fill={COLORS.bed.blanketLight} />
-      <line x1="6" y1="18" x2="26" y2="18" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-      <line x1="6" y1="22" x2="26" y2="22" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+      {/* Blanket with 85° depth highlight */}
+      <rect x="6" y="14" width="20" height="9" fill={COLORS.bed.blanket} />
+      <rect x="6" y="14" width="20" height="2" fill={COLORS.bed.blanketLight} />
+      <line x1="8" y1="17" x2="24" y2="17" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
+      <line x1="8" y1="20" x2="24" y2="20" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
       
-      {/* Footboard */}
-      <rect x="3" y="27" width="26" height="2" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="3" y="27" width="26" height="0.8" fill={COLORS.wood.front} />
+      {/* Footboard with 85° depth */}
+      <rect x="4" y="24" width="24" height="3" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="4" y="24" width="24" height="1" fill={COLORS.wood.front} />
     </svg>
   );
 };
@@ -483,7 +486,8 @@ export const BedIcon = ({
  };
  
 // Stove - 85° perspective
- export const StoveIcon = ({ 
+// Stove - 85° perspective (smaller than fridge)
+export const StoveIcon = ({ 
    className, 
    direction = 'down',
    connectedTop = false,
@@ -491,41 +495,41 @@ export const BedIcon = ({
    connectedLeft = false,
    connectedRight = false
  }: ConnectableDirectionalAssetProps) => {
-  // Padding: ~4px when not connected
-  const left = connectedLeft ? 0 : 4;
-  const right = connectedRight ? 32 : 28;
+  // Padding: ~5px when not connected (smaller than fridge)
+  const left = connectedLeft ? 0 : 5;
+  const right = connectedRight ? 32 : 27;
+  const top = 5;
+  const bottom = 27;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
        {/* Body */}
-      <rect x={left} y="4" width={right - left} height="6" 
+      <rect x={left} y={top} width={right - left} height="5" 
         fill={COLORS.metal.top} 
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left} y="8" width={right - left} height="20" 
+      <rect x={left} y={top + 4} width={right - left} height={bottom - top - 4} 
         fill={COLORS.metal.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        
-       {/* 4 Burners */}
-      <ellipse cx={(left + right) / 2 - 5} cy="6" rx="3.5" ry="2" fill={COLORS.metal.shadow} />
-      <ellipse cx={(left + right) / 2 - 5} cy="6" rx="2" ry="1.2" fill={COLORS.metal.side} />
-      <ellipse cx={(left + right) / 2 - 5} cy="6" rx="0.8" ry="0.5" fill={COLORS.metal.shadow} />
-      <ellipse cx={(left + right) / 2 + 5} cy="6" rx="3.5" ry="2" fill={COLORS.metal.shadow} />
-      <ellipse cx={(left + right) / 2 + 5} cy="6" rx="2" ry="1.2" fill={COLORS.metal.side} />
-      <ellipse cx={(left + right) / 2 + 5} cy="6" rx="0.8" ry="0.5" fill={COLORS.metal.shadow} />
+      {/* 4 Burners - smaller */}
+      <ellipse cx={(left + right) / 2 - 4} cy={top + 2} rx="3" ry="1.5" fill={COLORS.metal.shadow} />
+      <ellipse cx={(left + right) / 2 - 4} cy={top + 2} rx="1.5" ry="0.8" fill={COLORS.metal.side} />
+      <ellipse cx={(left + right) / 2 + 4} cy={top + 2} rx="3" ry="1.5" fill={COLORS.metal.shadow} />
+      <ellipse cx={(left + right) / 2 + 4} cy={top + 2} rx="1.5" ry="0.8" fill={COLORS.metal.side} />
        
-       {/* Knobs */}
-      <rect x={left + 2} y="11" width={right - left - 4} height="2.5" fill={COLORS.metal.side} />
-      <circle cx={(left + right) / 2 - 6} cy="12" r="1.2" fill={COLORS.metal.handle} />
-      <circle cx={(left + right) / 2 - 2} cy="12" r="1.2" fill={COLORS.metal.handle} />
-      <circle cx={(left + right) / 2 + 2} cy="12" r="1.2" fill={COLORS.metal.handle} />
-      <circle cx={(left + right) / 2 + 6} cy="12" r="1.2" fill={COLORS.metal.handle} />
+      {/* Knobs */}
+      <rect x={left + 1} y={top + 6} width={right - left - 2} height="2" fill={COLORS.metal.side} />
+      <circle cx={(left + right) / 2 - 5} cy={top + 7} r="1" fill={COLORS.metal.handle} />
+      <circle cx={(left + right) / 2 - 2} cy={top + 7} r="1" fill={COLORS.metal.handle} />
+      <circle cx={(left + right) / 2 + 2} cy={top + 7} r="1" fill={COLORS.metal.handle} />
+      <circle cx={(left + right) / 2 + 5} cy={top + 7} r="1" fill={COLORS.metal.handle} />
        
-       {/* Oven */}
-      <rect x={left + 2} y="15" width={right - left - 4} height="11" 
+      {/* Oven */}
+      <rect x={left + 1} y={top + 9} width={right - left - 2} height="10" 
         fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 3} y="16" width={right - left - 6} height="1.5" fill={COLORS.metal.chrome} />
-      <rect x={left + 4} y="18" width={right - left - 8} height="6" fill={COLORS.screen.display} opacity="0.5" />
+      <rect x={left + 2} y={top + 10} width={right - left - 4} height="1" fill={COLORS.metal.chrome} />
+      <rect x={left + 3} y={top + 12} width={right - left - 6} height="5" fill={COLORS.screen.display} opacity="0.5" />
      </svg>
    );
  };
@@ -581,53 +585,53 @@ export const BedIcon = ({
  
  // Armchair
 // Armchair - 85° isometric perspective with curved armrests
- export const ArmchairIcon = ({ className }: AssetIconProps) => {
-   // Padding: ~4px each side for visual breathing room
-   const left = 5;
-   const right = 27;
-   const top = 4;
-   const bottom = 26;
+export const ArmchairIcon = ({ className }: AssetIconProps) => {
+  // Padding: ~6px each side for proper proportions (smaller than sofa)
+  const left = 6;
+  const right = 26;
+  const top = 6;
+  const bottom = 26;
    
-   return (
-     <svg viewBox="0 0 32 32" className={className}>
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
        {/* Base frame */}
-       <rect x={left + 2} y="21" width={right - left - 4} height="4" 
+      <rect x={left + 2} y={bottom - 5} width={right - left - 4} height="4" 
          fill={COLORS.armchair.front} 
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 2} y="20" width={right - left - 4} height="1.5" fill={COLORS.armchair.top} />
+      <rect x={left + 2} y={bottom - 6} width={right - left - 4} height="1.5" fill={COLORS.armchair.top} />
        
-      {/* Back rest */}
-       <rect x={left + 4} y={top + 1} width={right - left - 8} height="8" 
+      {/* Back rest - smaller */}
+      <rect x={left + 3} y={top} width={right - left - 6} height="6" 
          fill={COLORS.armchair.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left + 4} y={top + 1} width={right - left - 8} height="2" fill={COLORS.armchair.top} />
+      <rect x={left + 3} y={top} width={right - left - 6} height="1.5" fill={COLORS.armchair.top} />
        
-       {/* Seat cushion */}
-       <rect x={left + 4} y={top + 9} width={right - left - 8} height="7" 
+      {/* Seat cushion */}
+      <rect x={left + 3} y={top + 6} width={right - left - 6} height="6" 
          fill={COLORS.armchair.cushion}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left + 4} y={top + 9} width={right - left - 8} height="2" fill={COLORS.armchair.top} />
+      <rect x={left + 3} y={top + 6} width={right - left - 6} height="1.5" fill={COLORS.armchair.top} />
        
-      {/* Left armrest with 85° curved top */}
-      <rect x={left} y={top + 3} width="5" height="14" 
-         fill={COLORS.armchair.side}
+      {/* Left armrest with 85° curved top - smaller */}
+      <rect x={left} y={top + 2} width="4" height="10" 
+        fill={COLORS.armchair.side}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx={left + 2.5} cy={top + 3} rx="2.5" ry="1.2" 
+      <ellipse cx={left + 2} cy={top + 2} rx="2" ry="1" 
         fill={COLORS.armchair.top} />
        
-      {/* Right armrest with 85° curved top */}
-      <rect x={right - 5} y={top + 3} width="5" height="14" 
-         fill={COLORS.armchair.side}
+      {/* Right armrest with 85° curved top - smaller */}
+      <rect x={right - 4} y={top + 2} width="4" height="10" 
+        fill={COLORS.armchair.side}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx={right - 2.5} cy={top + 3} rx="2.5" ry="1.2" 
+      <ellipse cx={right - 2} cy={top + 2} rx="2" ry="1" 
         fill={COLORS.armchair.top} />
        
-       {/* Feet */}
-       <rect x={left + 1} y={bottom} width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />
-       <rect x={right - 4} y={bottom} width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />
-     </svg>
-   );
- };
+      {/* Feet */}
+      <rect x={left + 1} y={bottom} width="2" height="2" fill={COLORS.wood.shadow} rx="0.5" />
+      <rect x={right - 3} y={bottom} width="2" height="2" fill={COLORS.wood.shadow} rx="0.5" />
+    </svg>
+  );
+};
  
  // Chair
 // Chair - 85° isometric perspective with rectangular backrest
@@ -654,37 +658,38 @@ export const BedIcon = ({
  };
  
  // Fridge
- export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
-   // Padding: ~5px each side
-   const left = 5;
-   const right = 27;
-   const top = 3;
-   const bottom = 28;
+// Fridge - larger than stove for proper proportions
+export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
+  // Padding: ~4px each side (larger than stove)
+  const left = 4;
+  const right = 28;
+  const top = 3;
+  const bottom = 28;
    
-   return (
-     <svg viewBox="0 0 32 32" className={className}>
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
        {/* Main body */}
-       <rect x={left} y={top} width={right - left} height={bottom - top} 
+      <rect x={left} y={top} width={right - left} height={bottom - top} 
          fill={COLORS.appliance.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left} y={top} width={right - left} height="3" fill={COLORS.metal.top} />
+      <rect x={left} y={top} width={right - left} height="3" fill={COLORS.metal.top} />
        
-       {/* Freezer door */}
-       <rect x={left + 1} y={top + 1} width={right - left - 2} height="8" fill={COLORS.appliance.top} />
-       <rect x={right - 5} y={top + 3} width="2" height="4" fill={COLORS.metal.handle} rx="0.5" />
+      {/* Freezer door */}
+      <rect x={left + 1} y={top + 1} width={right - left - 2} height="8" fill={COLORS.appliance.top} />
+      <rect x={right - 5} y={top + 3} width="2" height="4" fill={COLORS.metal.handle} rx="0.5" />
        
-       {/* Divider */}
-       <rect x={left + 1} y={top + 9} width={right - left - 2} height="1" fill={COLORS.metal.shadow} />
+      {/* Divider */}
+      <rect x={left + 1} y={top + 9} width={right - left - 2} height="1" fill={COLORS.metal.shadow} />
        
-       {/* Fridge door */}
-       <rect x={left + 1} y={top + 10} width={right - left - 2} height="13" fill={COLORS.appliance.top} />
-       <rect x={right - 5} y={top + 13} width="2" height="7" fill={COLORS.metal.handle} rx="0.5" />
+      {/* Fridge door */}
+      <rect x={left + 1} y={top + 10} width={right - left - 2} height="14" fill={COLORS.appliance.top} />
+      <rect x={right - 5} y={top + 14} width="2" height="7" fill={COLORS.metal.handle} rx="0.5" />
        
-       {/* Ice maker detail */}
-       <rect x={left + 3} y={top + 13} width="7" height="5" fill={COLORS.metal.side} rx="1" />
-     </svg>
-   );
- };
+      {/* Ice maker detail */}
+      <rect x={left + 3} y={top + 14} width="8" height="5" fill={COLORS.metal.side} rx="1" />
+    </svg>
+  );
+};
  
  // TV
  export const TvIcon = ({ className }: AssetIconProps) => {

@@ -246,30 +246,41 @@ export const BedIcon = ({
   // ==================== SINGLE BED ====================
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      <rect x="1" y="2" width="2" height="28" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="29" y="2" width="2" height="28" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="1" y="2" width="30" height="2" fill={COLORS.bed.frameTop} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="2" y="0" width="28" height="4" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
-      <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-      <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-      <rect x="3" y="5" width="26" height="23" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="4" y="6" width="24" height="21" fill={COLORS.bed.sheet} />
-      <rect x="4" y="15" width="24" height="11" fill={COLORS.bed.blanket} />
-      <rect x="4" y="15" width="24" height="2" fill={COLORS.bed.blanketLight} />
-      <line x1="6" y1="19" x2="26" y2="19" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-      <line x1="6" y1="23" x2="26" y2="23" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-      <ellipse cx="10" cy="10" rx="5" ry="3" fill={COLORS.bed.pillow} />
-      <ellipse cx="10" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
-      <ellipse cx="22" cy="10" rx="5" ry="3" fill={COLORS.bed.pillow} />
-      <ellipse cx="22" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
+      {/* Side frames */}
+      <rect x="2" y="3" width="1.5" height="26" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="28.5" y="3" width="1.5" height="26" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Headboard with 85° depth */}
+      <rect x="3" y="2" width="26" height="3" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="3" y="2" width="26" height="1.5" fill={COLORS.wood.top} />
+      
+      {/* Mattress */}
+      <rect x="3.5" y="5" width="25" height="22" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Sheet area */}
+      <rect x="4" y="6" width="24" height="8" fill={COLORS.bed.sheet} />
+      
+      {/* Pillows - rectangles with depth for 85° perspective */}
+      <rect x="6" y="7" width="8" height="5" rx="1" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="6" y="7" width="8" height="1.5" rx="1" fill={COLORS.bed.pillowShade} />
+      <rect x="18" y="7" width="8" height="5" rx="1" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="18" y="7" width="8" height="1.5" rx="1" fill={COLORS.bed.pillowShade} />
+      
+      {/* Blanket with 85° depth */}
+      <rect x="4" y="14" width="24" height="12" fill={COLORS.bed.blanket} />
+      <rect x="4" y="14" width="24" height="2" fill={COLORS.bed.blanketLight} />
+      <line x1="6" y1="18" x2="26" y2="18" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
+      <line x1="6" y1="22" x2="26" y2="22" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+      
+      {/* Footboard */}
       <rect x="3" y="27" width="26" height="2" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="3" y="27" width="26" height="0.8" fill={COLORS.wood.front} />
     </svg>
   );
 };
  
  // Sofa - isometric 75° with horizontal connection (left-right)
+// Sofa - 85° isometric perspective with curved armrests
  export const SofaIcon = ({ 
    className,
    connectedTop = false,
@@ -290,20 +301,20 @@ export const BedIcon = ({
        <rect x={left} y={bottom - 4} width={right - left} height="5" 
          fill={COLORS.sofa.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left} y={bottom - 5} width={right - left} height="1" fill={COLORS.sofa.top} />
+      <rect x={left} y={bottom - 5} width={right - left} height="1.5" fill={COLORS.sofa.top} />
        
        {/* Back cushion */}
        <rect 
-         x={left + (connectedLeft ? 0 : 4)} 
+        x={left + (connectedLeft ? 0 : 5)} 
          y={top} 
-         width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+        width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
          height="7" 
          fill={COLORS.sofa.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        <rect 
-         x={left + (connectedLeft ? 0 : 4)} 
+        x={left + (connectedLeft ? 0 : 5)} 
          y={top} 
-         width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+        width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
          height="2" 
          fill={COLORS.sofa.top} />
        
@@ -328,20 +339,24 @@ export const BedIcon = ({
        {/* Left armrest */}
        {!connectedLeft && (
          <>
-          <rect x={padding} y={top + 2} width="4" height="12" 
+          <rect x={padding} y={top + 2} width="5" height="14" 
              fill={COLORS.sofa.arm}
-            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-            rx="1" />
+            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          {/* Curved top ellipse for 85° depth */}
+          <ellipse cx={padding + 2.5} cy={top + 2} rx="2.5" ry="1.2" 
+            fill={COLORS.sofa.top} />
          </>
        )}
        
        {/* Right armrest */}
        {!connectedRight && (
          <>
-          <rect x={32 - padding - 4} y={top + 2} width="4" height="12" 
+          <rect x={32 - padding - 5} y={top + 2} width="5" height="14" 
              fill={COLORS.sofa.arm}
-            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-            rx="1" />
+            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          {/* Curved top ellipse for 85° depth */}
+          <ellipse cx={32 - padding - 2.5} cy={top + 2} rx="2.5" ry="1.2" 
+            fill={COLORS.sofa.top} />
          </>
        )}
        
@@ -353,6 +368,7 @@ export const BedIcon = ({
  };
  
 // Table - 85° perspective
+// Table - 85° isometric perspective with trapezoid legs
  export const TableIcon = ({ 
    className, 
    connectedTop = false, 
@@ -383,24 +399,41 @@ export const BedIcon = ({
        {/* Apron */}
        <rect x={left + 2} y={topY + 5} width={right - left - 4} height="3" fill={COLORS.wood.side} />
        
-      {/* Legs - small rectangles for 85° perspective */}
+      {/* Legs - small trapezoids for 85° isometric */}
        {!connectedLeft && (
-        <>
-          <rect x={padding + 1} y={topY + 9} width="2" height="2" fill={COLORS.wood.shadow} />
-          <rect x={padding + 1} y={bottomY - 2} width="2" height="2" fill={COLORS.wood.shadow} />
-        </>
+          <>
+            {/* Front-left leg */}
+            <polygon 
+              points={`${padding + 1},${topY + 8} ${padding + 4},${topY + 8} ${padding + 3.5},${bottomY} ${padding + 1.5},${bottomY}`} 
+              fill={COLORS.wood.shadow} 
+              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+            {/* Back-left leg */}
+            <polygon 
+              points={`${padding + 1},${bottomY - 8} ${padding + 4},${bottomY - 8} ${padding + 3.5},${bottomY} ${padding + 1.5},${bottomY}`} 
+              fill={COLORS.wood.side} 
+              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+          </>
        )}
        {!connectedRight && (
-        <>
-          <rect x={32 - padding - 3} y={topY + 9} width="2" height="2" fill={COLORS.wood.shadow} />
-          <rect x={32 - padding - 3} y={bottomY - 2} width="2" height="2" fill={COLORS.wood.shadow} />
-        </>
+          <>
+            {/* Front-right leg */}
+            <polygon 
+              points={`${32 - padding - 4},${topY + 8} ${32 - padding - 1},${topY + 8} ${32 - padding - 1.5},${bottomY} ${32 - padding - 3.5},${bottomY}`} 
+              fill={COLORS.wood.shadow} 
+              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+            {/* Back-right leg */}
+            <polygon 
+              points={`${32 - padding - 4},${bottomY - 8} ${32 - padding - 1},${bottomY - 8} ${32 - padding - 1.5},${bottomY} ${32 - padding - 3.5},${bottomY}`} 
+              fill={COLORS.wood.side} 
+              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+          </>
        )}
      </svg>
    );
  };
  
 // Desk - 85° perspective
+// Desk - 85° isometric perspective with rectangular legs
  export const DeskIcon = ({
    className,
    connectedTop = false,
@@ -435,12 +468,15 @@ export const BedIcon = ({
        <rect x={right - 11} y={topY + 14} width="9" height="6" fill={COLORS.wood.top} />
        <rect x={right - 8} y={topY + 16} width="3" height="1.5" fill={COLORS.metal.handle} rx="0.5" />
        
-      {/* Left legs - small rectangles for 85° perspective */}
+      {/* Left legs - rectangles with height for 85° perspective */}
        {!connectedLeft && (
-        <>
-          <rect x={padding + 1} y={topY + 5} width="2" height="2" fill={COLORS.wood.shadow} />
-          <rect x={padding + 1} y={bottomY - 2} width="2" height="2" fill={COLORS.wood.shadow} />
-        </>
+          <>
+            <rect x={padding + 1} y={topY + 5} width="3" height={bottomY - topY - 5} 
+              fill={COLORS.wood.side} 
+              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+            <rect x={padding + 1} y={topY + 5} width="3" height="2" 
+              fill={COLORS.wood.front} />
+          </>
        )}
      </svg>
    );
@@ -544,6 +580,7 @@ export const BedIcon = ({
  // ==================== SINGLE ASSETS (ISOMETRIC 75°) ====================
  
  // Armchair
+// Armchair - 85° isometric perspective with curved armrests
  export const ArmchairIcon = ({ className }: AssetIconProps) => {
    // Padding: ~4px each side for visual breathing room
    const left = 5;
@@ -557,9 +594,9 @@ export const BedIcon = ({
        <rect x={left + 2} y="21" width={right - left - 4} height="4" 
          fill={COLORS.armchair.front} 
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 2} y="20" width={right - left - 4} height="1" fill={COLORS.armchair.top} />
+      <rect x={left + 2} y="20" width={right - left - 4} height="1.5" fill={COLORS.armchair.top} />
        
-       {/* Back rest - more top-down view */}
+      {/* Back rest */}
        <rect x={left + 4} y={top + 1} width={right - left - 8} height="8" 
          fill={COLORS.armchair.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
@@ -571,17 +608,19 @@ export const BedIcon = ({
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        <rect x={left + 4} y={top + 9} width={right - left - 8} height="2" fill={COLORS.armchair.top} />
        
-      {/* Left armrest - simplified for 85° */}
-      <rect x={left} y={top + 3} width="4" height="12" 
+      {/* Left armrest with 85° curved top */}
+      <rect x={left} y={top + 3} width="5" height="14" 
          fill={COLORS.armchair.side}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-        rx="1" />
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx={left + 2.5} cy={top + 3} rx="2.5" ry="1.2" 
+        fill={COLORS.armchair.top} />
        
-      {/* Right armrest - simplified for 85° */}
-      <rect x={right - 4} y={top + 3} width="4" height="12" 
+      {/* Right armrest with 85° curved top */}
+      <rect x={right - 5} y={top + 3} width="5" height="14" 
          fill={COLORS.armchair.side}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-        rx="1" />
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx={right - 2.5} cy={top + 3} rx="2.5" ry="1.2" 
+        fill={COLORS.armchair.top} />
        
        {/* Feet */}
        <rect x={left + 1} y={bottom} width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />
@@ -591,39 +630,25 @@ export const BedIcon = ({
  };
  
  // Chair
+// Chair - 85° isometric perspective with rectangular backrest
  export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
    return (
      <svg viewBox="0 0 32 32" className={className}>
-      {/* Legs as small circles at corners (85° perspective) */}
-      <circle cx="9" cy="9" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <circle cx="23" cy="9" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <circle cx="9" cy="24" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <circle cx="23" cy="24" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Backrest - rectangle with depth */}
+      <rect x="8" y="4" width="16" height="7" 
+        fill={COLORS.chair.back} 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="8" y="4" width="16" height="2" fill={COLORS.chair.seat} />
       
-      {/* Chair back as curved arc */}
-      <path
-        d="M8,10 Q16,4 24,10"
-        stroke={COLORS.chair.back}
-        strokeWidth="3"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8,10 Q16,4 24,10"
-        stroke={OUTLINE}
-        strokeWidth={OUTLINE_WIDTH}
-        fill="none"
-        strokeLinecap="round"
-      />
+      {/* Seat - rectangle with depth */}
+      <rect x="6" y="12" width="20" height="10" 
+        fill={COLORS.chair.seat} 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="6" y="12" width="20" height="2" fill="#F0E8D8" />
       
-      {/* Chair seat as oval */}
-      <ellipse
-        cx="16"
-        cy="17"
-        rx="9"
-        ry="7"
-        fill={COLORS.chair.seat}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Legs - small trapezoids for 85° */}
+      <polygon points="7,22 10,22 9.5,28 7.5,28" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <polygon points="22,22 25,22 24.5,28 22.5,28" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
      </svg>
    );
  };

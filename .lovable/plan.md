@@ -1,19 +1,32 @@
 
-# Aplicar Perspectiva 85° à Estante e TV
 
-## Diagnóstico dos Problemas Atuais
+# Corrigir Proporção Geladeira vs Fogão
 
-### TvIcon (linhas 791-819)
-- Moldura da tela completamente frontal
-- Sem lateral esquerda indicando profundidade
-- Pescoço do suporte muito fino e centralizado
-- Base do suporte sem perspectiva lateral
+## Problema Atual
 
-### BookshelfIcon (linhas 822-865)
-- Caixa retangular sem indicador de profundidade lateral
-- Prateleiras completamente planas
-- Livros sem indicador de volume/espessura
-- Apenas faixa de topo, falta lateral esquerda
+| Asset | Dimensões Atuais | Altura Calculada |
+|-------|------------------|------------------|
+| Geladeira | top=3, bottom=29 | 26px |
+| Fogão | top=4, bottom=28 | 24px |
+| **Diferença** | | **Apenas 2px** |
+
+A diferença de apenas 2px não representa a escala real onde a geladeira é praticamente o dobro da altura do fogão.
+
+---
+
+## Proporções Corrigidas
+
+Para refletir a escala real:
+- Geladeira real: ~170-180cm de altura
+- Fogão real: ~90-100cm de altura (bancada)
+
+### Novas Dimensões
+
+| Asset | Dimensões Novas | Altura Calculada |
+|-------|-----------------|------------------|
+| Geladeira | top=2, bottom=30 | **28px** (máximo) |
+| Fogão | top=8, bottom=28 | **20px** |
+| **Diferença** | | **8px (40% menor)** |
 
 ---
 
@@ -23,147 +36,108 @@
 
 ---
 
-## 1. TvIcon - Correções
+## 1. FridgeIcon - Aumentar Altura
 
-### Problemas
-- Moldura sem lateral esquerda de profundidade
-- Base do suporte sem perspectiva 85°
-- Pescoço muito fino
-
-### Código Corrigido
+Aumentar a altura máxima da geladeira para ocupar quase toda a célula verticalmente.
 
 ```tsx
-// TV - 85° perspective with depth
-export const TvIcon = ({ className }: AssetIconProps) => {
-  const left = 4;
-  const right = 28;
-  const top = 5;
+// Fridge - 85° perspective (taller than stove)
+export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
+  const left = 5;
+  const right = 27;
+  const top = 2;      // Mais alto (era 3)
+  const bottom = 30;  // Mais baixo (era 29)
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
       {/* Left side depth (85°) */}
-      <rect x={left} y={top} width="2" height="14" fill={COLORS.metal.shadow} />
+      <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
       
-      {/* Screen frame */}
-      <rect x={left + 2} y={top} width={right - left - 2} height="14" 
-        fill={COLORS.screen.frame}
+      {/* Main body */}
+      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
+        fill={COLORS.appliance.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
       {/* Top surface (85° depth indicator) */}
-      <rect x={left} y={top} width={right - left} height="2" fill={COLORS.metal.side} />
+      <rect x={left} y={top} width={right - left} height="2.5" fill={COLORS.metal.top} />
       
-      {/* Display */}
-      <rect x={left + 3} y={top + 2.5} width={right - left - 5} height="10" fill={COLORS.screen.display} />
-      {/* Screen reflection */}
-      <rect x={left + 4} y={top + 3.5} width="7" height="2.5" fill={COLORS.screen.glow} opacity="0.25" />
+      {/* Freezer compartment - slightly taller */}
+      <rect x={left + 4} y={top + 4} width={right - left - 6} height="8" fill={COLORS.appliance.top} />
+      <rect x={right - 5} y={top + 6} width="1.5" height="4" fill={COLORS.metal.handle} rx="0.3" />
       
-      {/* Stand neck - thicker */}
-      <rect x="13" y={top + 14} width="6" height="3" fill={COLORS.metal.shadow} />
-      <rect x="13" y={top + 14} width="1.5" height="3" fill={COLORS.metal.side} opacity="0.5" />
+      {/* Divider line */}
+      <rect x={left + 4} y={top + 12.5} width={right - left - 6} height="1" fill={COLORS.metal.shadow} />
       
-      {/* Stand base with 85° depth */}
-      <rect x="10" y={top + 17} width="1.5" height="4" fill={COLORS.metal.side} />
-      <rect x="11.5" y={top + 17} width="10" height="4" 
+      {/* Fridge compartment - larger */}
+      <rect x={left + 4} y={top + 14} width={right - left - 6} height="13" fill={COLORS.appliance.top} />
+      <rect x={right - 5} y={top + 18} width="1.5" height="5" fill={COLORS.metal.handle} rx="0.3" />
+    </svg>
+  );
+};
+```
+
+---
+
+## 2. StoveIcon - Reduzir Altura (Estilo Bancada)
+
+Representar o fogão como um equipamento de bancada, mais baixo.
+
+```tsx
+// Stove - 85° perspective (counter-height, shorter than fridge)
+export const StoveIcon = ({ 
+  className, 
+  direction = 'down',
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableDirectionalAssetProps) => {
+  const left = connectedLeft ? 0 : 5;
+  const right = connectedRight ? 32 : 27;
+  const top = 8;      // Mais baixo (era 4)
+  const bottom = 28;  // Mantém (bancada termina antes)
+  const center = (left + right) / 2;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      {!connectedLeft && (
+        <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+      )}
+      
+      {/* Cooktop surface */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="5" 
+        fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* 4 Burners - adjusted for new height */}
+      <ellipse cx={center - 5} cy={top + 2.5} rx="3" ry="1.2" fill={COLORS.metal.shadow} />
+      <ellipse cx={center - 5} cy={top + 2.5} rx="1.8" ry="0.7" fill={COLORS.metal.side} />
+      <ellipse cx={center + 5} cy={top + 2.5} rx="3" ry="1.2" fill={COLORS.metal.shadow} />
+      <ellipse cx={center + 5} cy={top + 2.5} rx="1.8" ry="0.7" fill={COLORS.metal.side} />
+      
+      {/* Body */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 5} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 5} 
         fill={COLORS.metal.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="10" y={top + 17} width="11.5" height="1.5" fill={COLORS.metal.top} />
-    </svg>
-  );
-};
-```
-
----
-
-## 2. BookshelfIcon - Correções
-
-### Problemas
-- Sem lateral esquerda de profundidade
-- Prateleiras sem volume
-- Livros todos completamente frontais
-
-### Código Corrigido
-
-```tsx
-// Bookshelf - 85° perspective with depth
-export const BookshelfIcon = ({ className }: AssetIconProps) => {
-  const left = 4;
-  const right = 28;
-  const top = 4;
-  const bottom = 28;
-  
-  return (
-    <svg viewBox="0 0 32 32" className={className}>
-      {/* Left side depth (85°) */}
-      <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.wood.side} />
       
-      {/* Main frame */}
-      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
-        fill={COLORS.wood.front}
+      {/* Control panel with knobs */}
+      <rect x={left + (connectedLeft ? 1 : 3)} y={top + 6} width={right - left - (connectedLeft ? 2 : 4)} height="2.5" 
+        fill={COLORS.metal.side} />
+      <circle cx={center - 5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+      <circle cx={center - 1.5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+      <circle cx={center + 1.5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+      <circle cx={center + 5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+      
+      {/* Oven door */}
+      <rect x={left + (connectedLeft ? 2 : 4)} y={top + 9.5} width={right - left - (connectedLeft ? 4 : 6)} height="7" 
+        fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Top surface (85° depth indicator) */}
-      <rect x={left} y={top} width={right - left} height="2" fill={COLORS.wood.top} />
-      
-      {/* Shelves with depth */}
-      <rect x={left + 2} y={top + 8} width={right - left - 3} height="2" fill={COLORS.wood.shadow} />
-      <rect x={left + 2} y={top + 8} width={right - left - 3} height="0.8" fill={COLORS.wood.side} />
-      
-      <rect x={left + 2} y={top + 15} width={right - left - 3} height="2" fill={COLORS.wood.shadow} />
-      <rect x={left + 2} y={top + 15} width={right - left - 3} height="0.8" fill={COLORS.wood.side} />
-      
-      {/* Top shelf books - with slight 3D effect */}
-      <rect x={left + 3} y={top + 2} width="2.5" height="5.5" fill="#C86868" />
-      <rect x={left + 3} y={top + 2} width="0.6" height="5.5" fill="#A85050" />
-      
-      <rect x={left + 5.5} y={top + 2.5} width="3" height="5" fill="#6888B8" />
-      <rect x={left + 5.5} y={top + 2.5} width="0.6" height="5" fill="#4868A0" />
-      
-      <rect x={left + 8.5} y={top + 2} width="2.5" height="5.5" fill="#68B888" />
-      <rect x={left + 8.5} y={top + 2} width="0.6" height="5.5" fill="#48A868" />
-      
-      <rect x={left + 11} y={top + 2.5} width="3.5" height="5" fill="#B8A868" />
-      <rect x={left + 11} y={top + 2.5} width="0.6" height="5" fill="#A89050" />
-      
-      <rect x={left + 14.5} y={top + 2} width="2.5" height="5.5" fill="#8868B8" />
-      <rect x={left + 14.5} y={top + 2} width="0.6" height="5.5" fill="#6850A0" />
-      
-      <rect x={left + 17} y={top + 2.5} width="3.5" height="5" fill="#B86888" />
-      <rect x={left + 17} y={top + 2.5} width="0.6" height="5" fill="#A05068" />
-      
-      <rect x={left + 20.5} y={top + 2} width="2" height="5.5" fill="#689898" />
-      <rect x={left + 20.5} y={top + 2} width="0.5" height="5.5" fill="#508080" />
-      
-      {/* Middle shelf books */}
-      <rect x={left + 3} y={top + 10.5} width="4" height="4" fill="#6B8B9B" />
-      <rect x={left + 3} y={top + 10.5} width="0.7" height="4" fill="#4B6B7B" />
-      
-      <rect x={left + 7} y={top + 11} width="3" height="3.5" fill="#9B6B6B" />
-      <rect x={left + 7} y={top + 11} width="0.6" height="3.5" fill="#7B4B4B" />
-      
-      <rect x={left + 10} y={top + 10.5} width="4.5" height="4" fill="#6B9B6B" />
-      <rect x={left + 10} y={top + 10.5} width="0.7" height="4" fill="#4B7B4B" />
-      
-      <rect x={left + 14.5} y={top + 11} width="3" height="3.5" fill="#9B9B6B" />
-      <rect x={left + 14.5} y={top + 11} width="0.6" height="3.5" fill="#7B7B4B" />
-      
-      <rect x={left + 17.5} y={top + 10.5} width="4" height="4" fill="#6B6B9B" />
-      <rect x={left + 17.5} y={top + 10.5} width="0.7" height="4" fill="#4B4B7B" />
-      
-      {/* Bottom shelf books */}
-      <rect x={left + 3} y={top + 17.5} width="4.5" height="5" fill="#8B6B8B" />
-      <rect x={left + 3} y={top + 17.5} width="0.8" height="5" fill="#6B4B6B" />
-      
-      <rect x={left + 7.5} y={top + 18} width="3.5" height="4.5" fill="#6B8B8B" />
-      <rect x={left + 7.5} y={top + 18} width="0.6" height="4.5" fill="#4B6B6B" />
-      
-      <rect x={left + 11} y={top + 17.5} width="3" height="5" fill="#8B8B6B" />
-      <rect x={left + 11} y={top + 17.5} width="0.6" height="5" fill="#6B6B4B" />
-      
-      <rect x={left + 14} y={top + 18} width="3.5" height="4.5" fill="#6B6B8B" />
-      <rect x={left + 14} y={top + 18} width="0.6" height="4.5" fill="#4B4B6B" />
-      
-      <rect x={left + 17.5} y={top + 17.5} width="4" height="5" fill="#8B6B6B" />
-      <rect x={left + 17.5} y={top + 17.5} width="0.7" height="5" fill="#6B4B4B" />
+      {/* Oven handle */}
+      <rect x={left + (connectedLeft ? 3 : 5)} y={top + 10.5} width={right - left - (connectedLeft ? 6 : 8)} height="1.2" 
+        fill={COLORS.metal.chrome} rx="0.5" />
+      {/* Oven window */}
+      <rect x={left + (connectedLeft ? 4 : 6)} y={top + 12.5} width={right - left - (connectedLeft ? 8 : 10)} height="3" 
+        fill={COLORS.screen.display} opacity="0.4" />
     </svg>
   );
 };
@@ -171,27 +145,61 @@ export const BookshelfIcon = ({ className }: AssetIconProps) => {
 
 ---
 
-## Resumo das Correções
+## Comparação Visual
 
-| Asset | Problemas Corrigidos |
-|-------|---------------------|
-| TV | Lateral esquerda na moldura, base com profundidade, pescoço mais robusto, reflexo de tela |
-| Estante | Lateral esquerda de 2px, prateleiras com topo visível, livros com faixa de lombada escura |
+```text
+ANTES (proporção errada):
+┌──────────────────┐
+│   ┌──────────┐   │  Geladeira: 26px altura
+│   │ Geladeira│   │  
+│   │          │   │  
+│   │          │   │  
+│   └──────────┘   │
+└──────────────────┘
+
+┌──────────────────┐
+│   ┌──────────┐   │  Fogão: 24px altura
+│   │  Fogão   │   │  (quase igual!)
+│   │          │   │  
+│   │          │   │  
+│   └──────────┘   │
+└──────────────────┘
+
+DEPOIS (proporção corrigida):
+┌──────────────────┐
+│ ┌──────────────┐ │  Geladeira: 28px altura
+│ │              │ │  (ocupa quase tudo)
+│ │  Geladeira   │ │  
+│ │              │ │  
+│ │              │ │  
+│ └──────────────┘ │
+└──────────────────┘
+
+┌──────────────────┐
+│                  │  
+│                  │  (espaço vazio acima)
+│   ┌──────────┐   │  Fogão: 20px altura
+│   │  Fogão   │   │  (estilo bancada)
+│   └──────────┘   │
+└──────────────────┘
+```
 
 ---
 
 ## Seção Técnica
 
-### Padrões de Perspectiva 85° Aplicados
+### Hierarquia de Escala Final
 
-1. **Lateral esquerda**: 2px de largura, cor `*.side` ou `*.shadow`
-2. **Faixa de topo**: 1.5-2px de altura, cor `*.top`
-3. **Livros 3D**: Faixa escura de 0.5-0.8px na esquerda de cada livro (lombada)
-4. **Prateleiras**: Linha de topo mais clara para indicar superfície
+| Asset | Altura (px) | Proporção Real |
+|-------|-------------|----------------|
+| Geladeira | 28px | ~175cm |
+| Pia | 24px | ~115cm (com gabinete) |
+| Fogão | 20px | ~95cm |
 
-### Cores Utilizadas
+### Ajustes Internos do Fogão
 
-- `COLORS.wood.side` / `COLORS.wood.top` - para estrutura de madeira da estante
-- `COLORS.metal.side` / `COLORS.metal.shadow` - para partes metálicas da TV
-- `COLORS.screen.frame` / `COLORS.screen.display` - para tela da TV
-- Cores dos livros com variante escura (`-20 hex` por canal RGB) para lombada
+- Cooktop reduzido de 7px → 5px
+- Knobs menores (r=1.2 → r=1.0)
+- Forno menor (9px → 7px)
+- Janela do forno menor (4px → 3px)
+

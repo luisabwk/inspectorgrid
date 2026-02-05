@@ -109,28 +109,33 @@ export const SuspectClueCards = ({
                 !isSelected && "items-center mt-1",
                 isSelected && "flex-1 justify-center"
               )}>
-                <p className={cn(
-                  "font-bold leading-tight truncate",
-                  !isSelected && "text-[10px] text-center",
-                  isSelected && "text-xs",
-                  isVictim ? "text-red-700" : "text-foreground"
+                <div className={cn(
+                  "flex items-center gap-1.5",
+                  !isSelected && "flex-col gap-0.5"
                 )}>
-                  {suspect.name.split(' ')[0]}
-                </p>
+                  <p className={cn(
+                    "font-bold leading-tight truncate",
+                    !isSelected && "text-[10px] text-center",
+                    isSelected && "text-xs",
+                    isVictim ? "text-red-700" : "text-foreground"
+                  )}>
+                    {suspect.name.split(' ')[0]}
+                  </p>
+                  
+                  {isVictim && (
+                    <span className={cn(
+                      "text-red-600 font-medium",
+                      !isSelected && "text-[8px]",
+                      isSelected && "text-[9px]"
+                    )}>
+                      (Vítima)
+                    </span>
+                  )}
+                </div>
                 
                 {isSelected && suspectClue && (
                   <p className="text-[11px] text-muted-foreground leading-snug mt-1 line-clamp-4">
                     {formatClueText(suspectClue.text, suspect.name)}
-                  </p>
-                )}
-                
-                {isVictim && (
-                  <p className={cn(
-                    "text-red-600",
-                    !isSelected && "text-[8px] mt-0.5",
-                    isSelected && "text-[9px] mt-1"
-                  )}>
-                    Vítima
                   </p>
                 )}
               </div>

@@ -1,133 +1,118 @@
 
-# Contorno e Respiro Visual para Moveis Pendentes
+# Correção dos Ângulos de Perspectiva dos Móveis
 
-## Icones a Atualizar
+## Análise da Referência vs. Atual
 
-| Icone | Status Atual | Problema |
-|-------|-------------|----------|
-| BedIcon | Sem outline, preenche ate a borda | Falta stroke e padding interno |
-| StoveIcon | Sem outline, sem padding | Conectavel mas falta stroke |
-| SinkIcon | Sem outline, sem padding | Conectavel mas falta stroke |
-| ToiletIcon | Sem outline, preenche ate x=6 | Falta stroke e mais respiro |
-| ShowerIcon | Borda de 2px mas sem padrao | Falta padding e stroke sutil |
-| RugIcon | Sem outline, elipse vai ate x=2 | Falta stroke sutil |
-
-## Solucao Proposta
-
-### 1. BedIcon
-
-Adicionar `stroke={OUTLINE}` nas formas principais (frames e colchao). O BedIcon e conectavel, entao o padding ja e tratado pelas extremidades.
-
-Elementos a adicionar stroke:
-- Frames superior/inferior
-- Cabeceira/pe da cama
-- Colchao base
-
-### 2. StoveIcon
-
-Adicionar outline e padding nas extremidades quando nao conectado.
+A imagem de referência mostra móveis com perspectiva **quase completamente top-down (90°)**, enquanto os ícones atuais usam uma perspectiva **isométrica de 75°** com profundidade lateral visível.
 
 ```text
-ANTES:                    DEPOIS:
-x=2 a x=30                x=4 a x=28 (quando nao conectado)
-Sem stroke                Com stroke=#5D4E37
+REFERÊNCIA (90°):           ATUAL (75°):
++------------------+        +------------------+
+|                  |        |                 /|
+|  [MESA VISTA     |        |  [MESA COM     / |
+|   DE CIMA]       |        |   LADO        /  |
+|                  |        |   VISÍVEL]   /   |
++------------------+        +--------------+---+
+   Vista plana               Perspectiva lateral
 ```
 
-Elementos a atualizar:
-- Body rect (principal)
-- Oven rect
+## Problemas Específicos por Ícone
 
-### 3. SinkIcon
+| Ícone | Problema | Correção Necessária |
+|-------|----------|---------------------|
+| **TableIcon** | Tem `polygon` com pernas em ângulo | Pernas retas verticais, sem trapézio |
+| **DeskIcon** | Pernas em ângulo isométrico | Pernas retangulares verticais |
+| **ChairIcon** | Pernas em trapézio, encosto com profundidade | Formas retangulares simples |
+| **SofaIcon** | Base frame tem altura excessiva | Reduzir altura do frame base |
+| **ArmchairIcon** | Braços muito altos lateralmente | Braços mais curtos e planos |
+| **BookshelfIcon** | Tem `polygon` de profundidade lateral | Remover polígono lateral |
+| **FridgeIcon** | Tem polígono lateral visível | Remover profundidade lateral |
+| **TvIcon** | Stand com perspectiva | Simplificar para retângulos |
+| **StoveIcon** | Tem polígono lateral no corpo | Remover lado visível |
+| **BedIcon** | Frame tem profundidade visível | Manter retangular sem ângulo |
 
-Adicionar outline e padding nas extremidades.
+## Solução Proposta
 
-Elementos a atualizar:
-- Counter rect
-- Cabinet rects
-- Basin ellipses
+### Princípios da Nova Perspectiva (90° Top-Down)
 
-### 4. ToiletIcon
+1. **Eliminar polígonos laterais** - Todos os `<polygon>` que criam efeito de profundidade devem ser removidos
+2. **Pernas retangulares** - Em vez de trapézios, usar `<rect>` simples
+3. **Sem inclinação** - Nenhuma forma deve ter inclinação lateral
+4. **Altura mínima de "front"** - A face frontal deve ser apenas uma linha fina (1-2px)
 
-Adicionar padding (~4px) e outline nas formas principais.
+### Transformações por Ícone
 
+#### TableIcon (Mesa)
 ```text
-ANTES (x=6-26):           DEPOIS (x=7-25):
-Sem stroke                Com stroke=#5D4E37
-                          Respiro de ~5px
+ANTES:                      DEPOIS:
+Pernas em trapézio          Pernas em retângulo
+<polygon points="...">      <rect x="..." width="2" />
 ```
 
-Elementos a atualizar:
-- Tank rect (fundo)
-- Seat ellipses
-- Base ellipse
+#### ChairIcon (Cadeira)
+- Remover trapézio das pernas
+- Encosto apenas 2px de altura de "frente"
+- Assento completamente plano
 
-### 5. ShowerIcon
+#### BookshelfIcon (Estante)
+- Remover o `<polygon>` de profundidade lateral
+- Manter apenas face frontal retangular
 
-Adicionar padding e mudar o stroke atual para o padrao sutil.
+#### FridgeIcon (Geladeira)
+- Remover o polígono lateral (`points="${right},${top + 3}..."`)
+- Corpo puramente retangular
 
-```text
-ANTES:                    DEPOIS:
-x=1 a x=31                x=4 a x=28
-stroke=2px chrome         stroke=0.8px #5D4E37
-```
+#### TvIcon
+- Stand simplificado sem perspectiva
+- Apenas retângulos
 
-Elementos a atualizar:
-- Box frame rect
-- Showerhead ellipses
+#### ArmchairIcon e SofaIcon
+- Reduzir altura dos braços
+- Eliminar elipses de "topo curvo" que sugerem profundidade
+- Base mais fina (2-3px em vez de 4-5px)
 
-### 6. RugIcon
-
-Adicionar respiro visual e outline sutil.
-
-```text
-ANTES (rx=14):            DEPOIS (rx=12):
-Sem stroke                Com stroke=#5D4E37 (sutil)
-```
-
-Elementos a atualizar:
-- Elipses concentricas (reduzir raio em ~2px)
+#### StoveIcon
+- Remover polígono lateral do corpo
 
 ## Arquivos a Modificar
 
-| Arquivo | Alteracao |
-|---------|-----------|
-| `src/components/game/assets/AssetIcons.tsx` | Atualizar BedIcon, StoveIcon, SinkIcon, ToiletIcon, ShowerIcon, RugIcon |
+| Arquivo | Alterações |
+|---------|------------|
+| `src/components/game/assets/AssetIcons.tsx` | Refatorar ~12 ícones para perspectiva 90° |
 
-## Detalhes Tecnicos
+## Detalhes Técnicos
 
-### Padrao de Outline
+### Padrão de Estrutura (Nova)
 
-Todos os icones usarao:
 ```typescript
-stroke={OUTLINE}        // #5D4E37
-strokeWidth={OUTLINE_WIDTH}  // 0.8
+// ANTES (75° isométrico):
+<polygon points={`${left},${top} ${left+2},${top-2} ${left+2},${bottom} ${left},${bottom+2}`} 
+  fill={COLORS.wood.side} />
+
+// DEPOIS (90° top-down):
+// Simplesmente remover polígonos laterais
+// Usar apenas <rect> para todas as formas
 ```
 
-### Padding por Tipo
+### Proporções da Referência
 
-| Tipo | Padding Lateral | Padding Vertical |
-|------|-----------------|------------------|
-| Conectavel (Bed, Stove, Sink) | 0 quando conectado, 4px quando nao | Similar |
-| Individual (Toilet, Shower, Rug) | 4-5px fixo | 4-5px fixo |
+Baseado na imagem de referência:
+- **Cama**: Vista completamente de cima, travesseiro em elipse achatada
+- **Cadeira**: Encosto fino (2px), assento quadrado arredondado
+- **Mesa**: Tampa plana, pernas como pequenos retângulos nos cantos
+- **Planta**: Vaso trapezoidal, folhas como elipses alongadas
+- **TV**: Monitor retangular, base simples
+- **Estante**: Face única, prateleiras horizontais
 
-### Implementacao
+### Cores de Sombra
 
-**BedIcon**: Adicionar stroke aos rects de frame e colchao em todos os 6 casos (horizontal left/right/middle, vertical head/foot/middle, single).
+Em vez de faces laterais, usar apenas:
+- Linha de sombra na base (1-2px mais escura)
+- Highlight no topo (1px mais claro)
 
-**StoveIcon**: Atualizar left/right de 2/30 para 4/28, adicionar stroke ao body e oven.
+## Validação
 
-**SinkIcon**: Atualizar left/right de 2/30 para 4/28, adicionar stroke ao counter e cabinets.
-
-**ToiletIcon**: Redimensionar tank de x=10 para x=8, adicionar stroke aos elementos principais.
-
-**ShowerIcon**: Reduzir de x=1-31 para x=4-28, mudar stroke para padrao sutil.
-
-**RugIcon**: Reduzir elipses de rx=14 para rx=12, adicionar stroke sutil com opacidade 0.5.
-
-## Validacao
-
-1. Abrir `/game` e verificar os moveis no quarto, cozinha e banheiro
-2. Confirmar que todos os icones tem:
-   - Contorno sutil marrom (#5D4E37)
-   - Respiro visual entre o icone e a borda da celula
-   - Consistencia visual com os moveis ja atualizados
+1. Abrir `/game` e verificar todos os móveis
+2. Confirmar que nenhum móvel tem "lado" visível
+3. Verificar que a perspectiva é consistentemente top-down
+4. Comparar com a imagem de referência fornecida

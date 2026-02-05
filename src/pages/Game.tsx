@@ -208,16 +208,6 @@ const Game = () => {
 
         {/* Grid */}
         <div className="flex-1 flex flex-col items-center gap-3 min-h-0">
-          {/* Selected suspect indicator */}
-          {selectedSuspect && (
-            <p className="font-pixel text-xs text-muted-foreground text-center">
-              Toque em uma célula para posicionar{' '}
-              <span className="font-bold text-foreground">
-                {gameCase.suspects.find(s => s.id === selectedSuspect)?.name}
-              </span>
-            </p>
-          )}
-
           <div className="w-full max-w-[90vw] sm:max-w-[420px] lg:max-w-[480px] mx-auto p-2">
             <GameGrid
               cells={gameCase.layoutConfig.cells}

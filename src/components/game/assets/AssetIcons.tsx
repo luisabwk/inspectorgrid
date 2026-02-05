@@ -787,40 +787,46 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
   );
 };
  
- // TV
+ // TV - 85° perspective with depth
  export const TvIcon = ({ className }: AssetIconProps) => {
-   // Padding: ~4px each side
    const left = 4;
    const right = 28;
    const top = 5;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
+       {/* Left side depth (85°) */}
+       <rect x={left} y={top} width="2" height="14" fill={COLORS.metal.shadow} />
+       
        {/* Screen frame */}
-       <rect x={left} y={top} width={right - left} height="14" 
+       <rect x={left + 2} y={top} width={right - left - 2} height="14" 
          fill={COLORS.screen.frame}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left} y={top} width={right - left} height="2" fill={COLORS.metal.shadow} />
+       
+       {/* Top surface (85° depth indicator) */}
+       <rect x={left} y={top} width={right - left} height="2" fill={COLORS.metal.side} />
        
        {/* Display */}
-       <rect x={left + 1} y={top + 2} width={right - left - 2} height="11" fill={COLORS.screen.display} />
-       <rect x={left + 3} y={top + 3} width="8" height="3" fill={COLORS.screen.glow} opacity="0.3" />
+       <rect x={left + 3} y={top + 2.5} width={right - left - 5} height="10" fill={COLORS.screen.display} />
+       {/* Screen reflection */}
+       <rect x={left + 4} y={top + 3.5} width="7" height="2.5" fill={COLORS.screen.glow} opacity="0.25" />
        
-       {/* Stand neck */}
-       <rect x="14" y={top + 15} width="4" height="3" fill={COLORS.metal.shadow} />
+       {/* Stand neck - thicker */}
+       <rect x="13" y={top + 14} width="6" height="3" fill={COLORS.metal.shadow} />
+       <rect x="13" y={top + 14} width="1.5" height="3" fill={COLORS.metal.side} opacity="0.5" />
        
-       {/* Stand base */}
-       <rect x="11" y={top + 18} width="10" height="3" 
+       {/* Stand base with 85° depth */}
+       <rect x="10" y={top + 17} width="1.5" height="4" fill={COLORS.metal.side} />
+       <rect x="11.5" y={top + 17} width="10" height="4" 
          fill={COLORS.metal.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x="11" y={top + 18} width="10" height="1" fill={COLORS.metal.top} />
+       <rect x="10" y={top + 17} width="11.5" height="1.5" fill={COLORS.metal.top} />
      </svg>
    );
  };
  
- // Bookshelf
+ // Bookshelf - 85° perspective with depth
  export const BookshelfIcon = ({ className }: AssetIconProps) => {
-   // Padding: ~4px each side
    const left = 4;
    const right = 28;
    const top = 4;
@@ -828,38 +834,77 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
+       {/* Left side depth (85°) */}
+       <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.wood.side} />
+       
        {/* Main frame */}
-       <rect x={left} y={top} width={right - left} height={bottom - top} 
+       <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
          fill={COLORS.wood.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       
+       {/* Top surface (85° depth indicator) */}
        <rect x={left} y={top} width={right - left} height="2" fill={COLORS.wood.top} />
        
-       {/* Shelves */}
-       <rect x={left + 1} y={top + 9} width={right - left - 2} height="1.5" fill={COLORS.wood.shadow} />
-       <rect x={left + 1} y={top + 16} width={right - left - 2} height="1.5" fill={COLORS.wood.shadow} />
+       {/* Shelves with depth */}
+       <rect x={left + 2} y={top + 8} width={right - left - 3} height="2" fill={COLORS.wood.shadow} />
+       <rect x={left + 2} y={top + 8} width={right - left - 3} height="0.8" fill={COLORS.wood.side} />
        
-       {/* Top shelf books */}
-       <rect x={left + 2} y={top + 1} width="2.5" height="6" fill="#C86868" />
-       <rect x={left + 4.5} y={top + 2} width="3" height="5" fill="#6888B8" />
-       <rect x={left + 7.5} y={top + 1} width="2.5" height="6" fill="#68B888" />
-       <rect x={left + 10} y={top + 2} width="4" height="5" fill="#B8A868" />
-       <rect x={left + 14} y={top + 1} width="2.5" height="6" fill="#8868B8" />
-       <rect x={left + 16.5} y={top + 2} width="4" height="5" fill="#B86888" />
-       <rect x={left + 20.5} y={top + 1} width="2" height="6" fill="#689898" />
+       <rect x={left + 2} y={top + 15} width={right - left - 3} height="2" fill={COLORS.wood.shadow} />
+       <rect x={left + 2} y={top + 15} width={right - left - 3} height="0.8" fill={COLORS.wood.side} />
+       
+       {/* Top shelf books - with slight 3D effect */}
+       <rect x={left + 3} y={top + 2} width="2.5" height="5.5" fill="#C86868" />
+       <rect x={left + 3} y={top + 2} width="0.6" height="5.5" fill="#A85050" />
+       
+       <rect x={left + 5.5} y={top + 2.5} width="3" height="5" fill="#6888B8" />
+       <rect x={left + 5.5} y={top + 2.5} width="0.6" height="5" fill="#4868A0" />
+       
+       <rect x={left + 8.5} y={top + 2} width="2.5" height="5.5" fill="#68B888" />
+       <rect x={left + 8.5} y={top + 2} width="0.6" height="5.5" fill="#48A868" />
+       
+       <rect x={left + 11} y={top + 2.5} width="3.5" height="5" fill="#B8A868" />
+       <rect x={left + 11} y={top + 2.5} width="0.6" height="5" fill="#A89050" />
+       
+       <rect x={left + 14.5} y={top + 2} width="2.5" height="5.5" fill="#8868B8" />
+       <rect x={left + 14.5} y={top + 2} width="0.6" height="5.5" fill="#6850A0" />
+       
+       <rect x={left + 17} y={top + 2.5} width="3.5" height="5" fill="#B86888" />
+       <rect x={left + 17} y={top + 2.5} width="0.6" height="5" fill="#A05068" />
+       
+       <rect x={left + 20.5} y={top + 2} width="2" height="5.5" fill="#689898" />
+       <rect x={left + 20.5} y={top + 2} width="0.5" height="5.5" fill="#508080" />
        
        {/* Middle shelf books */}
-       <rect x={left + 2} y={top + 11} width="4" height="5" fill="#6B8B9B" />
-       <rect x={left + 6} y={top + 12} width="3" height="4" fill="#9B6B6B" />
-       <rect x={left + 9} y={top + 11} width="5" height="5" fill="#6B9B6B" />
-       <rect x={left + 14} y={top + 12} width="3" height="4" fill="#9B9B6B" />
-       <rect x={left + 17} y={top + 11} width="4" height="5" fill="#6B6B9B" />
+       <rect x={left + 3} y={top + 10.5} width="4" height="4" fill="#6B8B9B" />
+       <rect x={left + 3} y={top + 10.5} width="0.7" height="4" fill="#4B6B7B" />
+       
+       <rect x={left + 7} y={top + 11} width="3" height="3.5" fill="#9B6B6B" />
+       <rect x={left + 7} y={top + 11} width="0.6" height="3.5" fill="#7B4B4B" />
+       
+       <rect x={left + 10} y={top + 10.5} width="4.5" height="4" fill="#6B9B6B" />
+       <rect x={left + 10} y={top + 10.5} width="0.7" height="4" fill="#4B7B4B" />
+       
+       <rect x={left + 14.5} y={top + 11} width="3" height="3.5" fill="#9B9B6B" />
+       <rect x={left + 14.5} y={top + 11} width="0.6" height="3.5" fill="#7B7B4B" />
+       
+       <rect x={left + 17.5} y={top + 10.5} width="4" height="4" fill="#6B6B9B" />
+       <rect x={left + 17.5} y={top + 10.5} width="0.7" height="4" fill="#4B4B7B" />
        
        {/* Bottom shelf books */}
-       <rect x={left + 2} y={top + 18} width="5" height="5" fill="#8B6B8B" />
-       <rect x={left + 7} y={top + 19} width="4" height="4" fill="#6B8B8B" />
-       <rect x={left + 11} y={top + 18} width="3" height="5" fill="#8B8B6B" />
-       <rect x={left + 14} y={top + 19} width="4" height="4" fill="#6B6B8B" />
-       <rect x={left + 18} y={top + 18} width="4" height="5" fill="#8B6B6B" />
+       <rect x={left + 3} y={top + 17.5} width="4.5" height="5" fill="#8B6B8B" />
+       <rect x={left + 3} y={top + 17.5} width="0.8" height="5" fill="#6B4B6B" />
+       
+       <rect x={left + 7.5} y={top + 18} width="3.5" height="4.5" fill="#6B8B8B" />
+       <rect x={left + 7.5} y={top + 18} width="0.6" height="4.5" fill="#4B6B6B" />
+       
+       <rect x={left + 11} y={top + 17.5} width="3" height="5" fill="#8B8B6B" />
+       <rect x={left + 11} y={top + 17.5} width="0.6" height="5" fill="#6B6B4B" />
+       
+       <rect x={left + 14} y={top + 18} width="3.5" height="4.5" fill="#6B6B8B" />
+       <rect x={left + 14} y={top + 18} width="0.6" height="4.5" fill="#4B4B6B" />
+       
+       <rect x={left + 17.5} y={top + 17.5} width="4" height="5" fill="#8B6B6B" />
+       <rect x={left + 17.5} y={top + 17.5} width="0.7" height="5" fill="#6B4B4B" />
      </svg>
    );
  };

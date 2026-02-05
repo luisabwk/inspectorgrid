@@ -1,192 +1,219 @@
 
-# Correção da Perspectiva 85° dos Móveis
+# Correção dos Móveis para Perspectiva 85° (Top-Down com Sutil Profundidade)
 
-## Análise Visual dos Problemas Atuais
+## Análise da Referência
 
-Baseado na verificação visual do jogo e comparação com a imagem de referência, identifiquei os seguintes problemas específicos:
+A imagem de referência mostra móveis com perspectiva quase top-down (85°), com características específicas:
 
-### 1. Mesa (TableIcon) - PROBLEMA CRÍTICO
-**Problema**: As pernas aparecem como pequenos quadrados flutuando no meio da célula, muito distantes dos cantos do tampo.
-**Esperado na Ref**: Pernas devem estar nos 4 cantos do tampo, quase invisíveis (apenas 2px cada).
+| Elemento | Característica na Referência |
+|----------|------------------------------|
+| **Cama** | Travesseiro bege retangular arredondado, cobertor verde-oliva liso, moldura mínima |
+| **Cadeira** | Encosto em arco curvo, assento oval bege claro, pernas como pequenos pontos |
+| **Mesa** | Tampo amarelo/bege liso, pernas minúsculas nos cantos (quase invisíveis) |
+| **Planta** | Vaso azul-turquesa trapezoidal, folhas verdes alongadas |
+| **TV** | Monitor preto fino, rack/mesa preta embaixo (sem pescoço alto) |
+| **Estante** | Face única marrom, livros coloridos, SEM lado lateral visível |
+| **Sofá/Poltrona** | Formas arredondadas, braços baixos, vista quase plana |
 
-| Atual | Esperado |
-|-------|----------|
-| Pernas desconectadas do tampo | Pernas nos 4 cantos |
-| Pernas y="topY + 9" muito abaixo | Pernas imediatamente abaixo do tampo |
+## Problemas Atuais vs Referência
 
-**Correção**: Mover as pernas para ficarem diretamente abaixo dos cantos do tampo (não no meio).
+### Ícones com Perspectiva Exagerada (75°)
 
-### 2. Sofá (SofaIcon) - PROBLEMA MODERADO
-**Problema**: A estrutura está muito "plana" e os elementos estão separados visualmente - braços, encosto e assento não formam uma unidade coesa.
-**Esperado na Ref**: Sofá deve parecer uma única peça arredondada vista de cima.
+| Ícone | Problema | Solução |
+|-------|----------|---------|
+| **TableIcon** | Pernas em polygon trapezoidal | Pernas como pequenos rect (2x2px) nos cantos |
+| **DeskIcon** | Perna em polygon trapezoidal | Perna como rect simples |
+| **ChairIcon** | Encosto retangular alto, pernas trapezoidais | Encosto em arco, assento oval, pernas como círculos |
+| **FridgeIcon** | Polygon lateral de profundidade (linha 641-642) | Remover polygon, manter corpo retangular |
+| **BookshelfIcon** | Polygon lateral (linha 709-710) | Remover polygon lateral |
+| **StoveIcon** | Polygon lateral (linha 462) | Remover polygon lateral |
+| **ArmchairIcon** | Elipses de topo nos braços sugerem 3D excessivo | Reduzir altura das elipses ou remover |
+| **SofaIcon** | Elipses de topo nos braços (linhas 329, 340) | Reduzir ou remover |
 
-**Correção**: 
-- Unificar encosto + assento como uma forma contínua
-- Braços como extensões arredondadas nas laterais
-- Reduzir altura total para parecer mais top-down
+### Cores a Ajustar
 
-### 3. Cama (BedIcon - Single) - PROBLEMA MODERADO
-**Problema**: A cabeceira de madeira está muito visível e detalhada, e a moldura lateral é excessiva.
-**Esperado na Ref**: Vista de cima com travesseiro e cobertor dominando, cabeceira mínima.
+A referência usa cores mais pastel/suaves:
 
-**Correção**:
-- Reduzir altura da cabeceira de madeira (de 4px para 2px)
-- Tornar frames laterais mais sutis
-- Travesseiros mais proeminentes (elipses maiores)
-- Cobertor ocupando mais espaço visual
+| Elemento | Cor Atual | Cor da Referência |
+|----------|-----------|-------------------|
+| Travesseiro | `#FFFFFF` branco | `#F5E8D0` bege claro |
+| Cobertor | `#6B9BD1` azul | `#8B9B68` verde-oliva |
+| Vaso da planta | `#D08050` laranja | `#78B8A8` azul-turquesa |
+| Mesa (tampo) | `#DCC8A8` | `#E8C878` amarelo claro |
+| Cadeira (assento) | `#DCC8A8` | `#E8DCC8` bege mais claro |
 
-### 4. Cadeira (ChairIcon) - OK com ajuste
-**Problema**: O arco do encosto está muito longe do assento.
-**Esperado**: Arco mais próximo do assento oval.
+## Transformações Detalhadas
 
-**Correção**: Ajustar posição Y do arco para ficar mais integrado ao assento.
+### 1. ChairIcon (Maior Mudança)
 
-### 5. Poltrona (ArmchairIcon) - PROBLEMA MODERADO
-**Problema**: Estrutura muito retangular, não parece vista de cima.
-**Esperado na Ref**: Forma mais arredondada vista de cima.
+A cadeira na referência tem:
+- Encosto como arco curvo fino (não retângulo)
+- Assento oval/arredondado (não retangular)
+- Pernas como 4 pequenos círculos/pontos nos cantos
 
-**Correção**: 
-- Usar formas arredondadas (ellipse) em vez de rect para assento
-- Braços como arcos laterais
-
-## Detalhes Técnicos das Correções
-
-### TableIcon (Linhas 356-401)
-
-```typescript
-// ANTES: Pernas flutuando no meio
-<rect x={padding + 1} y={topY + 9} width="2" height="2" ... />
-<rect x={padding + 1} y={bottomY - 2} width="2" height="2" ... />
-
-// DEPOIS: Pernas nos cantos do tampo, conectadas
-{!connectedLeft && !connectedTop && (
-  <rect x={left + 1} y={topY + 5} width="2" height="2" fill={COLORS.wood.shadow} />
-)}
-{!connectedLeft && !connectedBottom && (
-  <rect x={left + 1} y={bottomY - 3} width="2" height="2" fill={COLORS.wood.shadow} />
-)}
-{!connectedRight && !connectedTop && (
-  <rect x={right - 3} y={topY + 5} width="2" height="2" fill={COLORS.wood.shadow} />
-)}
-{!connectedRight && !connectedBottom && (
-  <rect x={right - 3} y={bottomY - 3} width="2" height="2" fill={COLORS.wood.shadow} />
-)}
+```text
+ATUAL:                    REFERÊNCIA (85°):
++--------+                   \_____/      <- Arco curvo
+|  rect  |                  (       )     <- Assento oval
++--------+                   o     o      <- Pernas circulares
 ```
 
-### SofaIcon (Linhas 273-353)
+Mudanças no código:
+- Substituir `<rect>` do encosto por `<path>` em arco
+- Substituir `<rect>` do assento por `<ellipse>`
+- Substituir `<polygon>` das pernas por `<circle>` pequenos
 
-Redesenhar para perspectiva 85° mais coesa:
+### 2. TableIcon
 
+Mudanças:
+- Manter tampo como está
+- Substituir `<polygon>` das pernas por `<rect width="2" height="2">`
+
+### 3. FridgeIcon
+
+Remover a linha 641-642:
 ```typescript
-// Nova estrutura:
-// 1. Base arredondada única (não separar encosto/assento)
-// 2. Almofada central oval
-// 3. Braços como extensões arredondadas
-
-<svg viewBox="0 0 32 32">
-  {/* Base do sofá - retângulo arredondado */}
-  <rect x={left} y={top} width={right - left} height="16" 
-    fill={COLORS.sofa.front}
-    rx="3" ry="3"
-    stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-  
-  {/* Topo mais claro */}
-  <rect x={left} y={top} width={right - left} height="3" 
-    fill={COLORS.sofa.top} rx="3" ry="0" />
-  
-  {/* Almofadas */}
-  <ellipse cx="12" cy={top + 9} rx="5" ry="4" fill={COLORS.sofa.cushionTop} />
-  <ellipse cx="20" cy={top + 9} rx="5" ry="4" fill={COLORS.sofa.cushionTop} />
-  
-  {/* Braços arredondados */}
-  {!connectedLeft && (
-    <ellipse cx={left + 2} cy={top + 8} rx="2" ry="6" fill={COLORS.sofa.arm} />
-  )}
-  {!connectedRight && (
-    <ellipse cx={right - 2} cy={top + 8} rx="2" ry="6" fill={COLORS.sofa.arm} />
-  )}
-</svg>
+// REMOVER:
+<polygon points={`${right},${top + 3} ${right + 2},${top + 1}...`} />
 ```
 
-### BedIcon Single (Linhas 247-270)
+### 4. BookshelfIcon
 
-Ajustes para perspectiva 85°:
-
+Remover a linha 709-710:
 ```typescript
-// Reduzir cabeceira de 4px para 2px
-<rect x="2" y="0" width="28" height="2" fill={COLORS.wood.front} ... />
-
-// Frames laterais mais finos (de 2px para 1.5px)
-<rect x="1" y="2" width="1.5" height="28" fill={COLORS.bed.frame} ... />
-<rect x="29.5" y="2" width="1.5" height="28" fill={COLORS.bed.frame} ... />
-
-// Travesseiros maiores
-<ellipse cx="10" cy="8" rx="6" ry="4" fill={COLORS.bed.pillow} />
-<ellipse cx="22" cy="8" rx="6" ry="4" fill={COLORS.bed.pillow} />
-
-// Cobertor começando mais cedo
-<rect x="4" y="12" width="24" height="14" fill={COLORS.bed.blanket} />
+// REMOVER:
+<polygon points={`${right},${top + 2} ${right + 1},${top + 1}...`} />
 ```
 
-### ChairIcon (Linhas 594-629)
+### 5. StoveIcon
 
-Ajustar posicionamento do arco:
-
+Remover a linha 462:
 ```typescript
-// Arco mais próximo do assento
-<path d="M9,12 Q16,6 23,12" ... />
-
-// Assento um pouco mais alto
-<ellipse cx="16" cy="18" rx="8" ry="6" ... />
-
-// Pernas reposicionadas
-<circle cx="10" cy="24" r="1.2" ... />
-<circle cx="22" cy="24" r="1.2" ... />
+// REMOVER:
+{!connectedRight && <polygon points={...} fill={COLORS.metal.side} />}
 ```
 
-### ArmchairIcon (Linhas 547-591)
+### 6. ArmchairIcon e SofaIcon
 
-Redesenhar com formas arredondadas:
+Reduzir elipses de topo dos braços:
+- Mudar `ry="1.5"` para `ry="0.8"` (mais plano)
+- Ou remover completamente as elipses
 
+### 7. PlantIcon
+
+Mudar cor do vaso:
 ```typescript
-<svg viewBox="0 0 32 32">
-  {/* Assento oval */}
-  <ellipse cx="16" cy="16" rx="10" ry="8" 
-    fill={COLORS.armchair.cushion}
-    stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-  
-  {/* Encosto como arco */}
-  <path d="M7,10 Q16,2 25,10" 
-    stroke={COLORS.armchair.front} strokeWidth="4" fill="none" />
-  
-  {/* Braços arredondados nas laterais */}
-  <ellipse cx="7" cy="14" rx="2" ry="5" fill={COLORS.armchair.side} />
-  <ellipse cx="25" cy="14" rx="2" ry="5" fill={COLORS.armchair.side} />
-  
-  {/* Pés pequenos */}
-  <circle cx="8" cy="24" r="1.5" fill={COLORS.wood.shadow} />
-  <circle cx="24" cy="24" r="1.5" fill={COLORS.wood.shadow} />
-</svg>
+// ANTES:
+pot: '#D08050',     // Laranja
+// DEPOIS:
+pot: '#78B8A8',     // Azul-turquesa
+```
+
+### 8. BedIcon (Single)
+
+Ajustar cores:
+```typescript
+// ANTES:
+pillow: '#FFFFFF',
+blanket: '#6B9BD1',
+// DEPOIS:
+pillow: '#F5E8D0',  // Bege
+blanket: '#8B9B68', // Verde-oliva
 ```
 
 ## Arquivo a Modificar
 
 | Arquivo | Alterações |
 |---------|-----------|
-| `src/components/game/assets/AssetIcons.tsx` | Ajustar TableIcon, SofaIcon, BedIcon, ChairIcon, ArmchairIcon |
+| `src/components/game/assets/AssetIcons.tsx` | ~12 ícones para perspectiva 85° + cores |
+
+## Detalhes Técnicos
+
+### Paleta de Cores Atualizada
+
+```typescript
+const COLORS = {
+  wood: {
+    top: '#E8C878',      // Amarelo mais claro
+    front: '#B89870',
+    side: '#8C6C48',
+    shadow: '#604428',
+  },
+  bed: {
+    pillow: '#F5E8D0',   // Bege (antes branco)
+    pillowShade: '#E8DCC0',
+    blanket: '#8B9B68',  // Verde-oliva (antes azul)
+    blanketLight: '#A0B080',
+  },
+  plant: {
+    pot: '#78B8A8',      // Azul-turquesa (antes laranja)
+    potSide: '#5A9A8A',
+  },
+  chair: {
+    seat: '#E8DCC8',     // Bege claro
+    back: '#C8B898',
+  },
+  // ... resto mantido
+};
+```
+
+### Estrutura da Nova ChairIcon
+
+```typescript
+export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Encosto em arco */}
+      <path d="M8,10 Q16,4 24,10" 
+        stroke={COLORS.wood.front} strokeWidth="3" fill="none" />
+      
+      {/* Assento oval */}
+      <ellipse cx="16" cy="16" rx="9" ry="6" 
+        fill="#E8DCC8"
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Pernas como pequenos círculos */}
+      <circle cx="9" cy="22" r="1.5" fill={COLORS.wood.shadow} />
+      <circle cx="23" cy="22" r="1.5" fill={COLORS.wood.shadow} />
+      <circle cx="9" cy="12" r="1.5" fill={COLORS.wood.shadow} />
+      <circle cx="23" cy="12" r="1.5" fill={COLORS.wood.shadow} />
+    </svg>
+  );
+};
+```
+
+### Remoção de Polygons Laterais
+
+Para cada ícone com polygon de profundidade:
+
+```typescript
+// ANTES (perspectiva 75°):
+<polygon points={`${right},${top} ${right+2},${top-2} ...`} 
+  fill={COLORS.xxx.side} />
+
+// DEPOIS (perspectiva 85°):
+// Simplesmente não incluir o polygon
+// Manter apenas a face principal
+```
 
 ## Ordem de Implementação
 
-1. **TableIcon** - Corrigir posição das pernas para os cantos
-2. **SofaIcon** - Redesenhar com formas mais arredondadas e coesas
-3. **BedIcon (Single)** - Reduzir cabeceira e frames, aumentar travesseiros
-4. **ChairIcon** - Reposicionar arco mais próximo do assento
-5. **ArmchairIcon** - Redesenhar com assento oval e braços arredondados
+1. Atualizar paleta `COLORS` com novas cores da referência
+2. **ChairIcon** - Redesenhar completamente (arco + oval + círculos)
+3. **TableIcon** - Substituir polygons por rects
+4. **DeskIcon** - Substituir polygon por rect
+5. **FridgeIcon** - Remover polygon lateral
+6. **BookshelfIcon** - Remover polygon lateral
+7. **StoveIcon** - Remover polygon lateral
+8. **ArmchairIcon** - Reduzir/remover elipses de braço
+9. **SofaIcon** - Reduzir/remover elipses de braço
+10. **PlantIcon** - Aplicar nova cor do vaso
+11. **BedIcon** - Aplicar novas cores (travesseiro/cobertor)
 
 ## Validação
 
-1. Verificar que a mesa tem pernas nos 4 cantos do tampo
-2. Confirmar que o sofá parece uma peça única arredondada
-3. Verificar que a cama tem vista top-down com travesseiros proeminentes
-4. Confirmar que a cadeira tem arco integrado ao assento
-5. Verificar que a poltrona tem forma arredondada
+1. Abrir `/game` e verificar todos os móveis
+2. Confirmar que nenhum móvel tem "lado" visível exagerado
+3. Verificar que as cores correspondem à referência (beges, verde-oliva, turquesa)
+4. Confirmar perspectiva 85° (sutil profundidade, mas não isométrica)
+5. Comparar visualmente com a imagem de referência fornecida

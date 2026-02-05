@@ -122,18 +122,26 @@ export const BedIcon = ({
     if (isLeftEnd) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
+          {/* Frame superior/inferior */}
           <rect x="2" y="1" width="30" height="2" fill={COLORS.bed.frame} />
           <rect x="2" y="29" width="30" height="2" fill={COLORS.bed.frame} />
+          {/* Cabeceira de madeira (vertical) */}
           <rect x="0" y="2" width="5" height="28" fill={COLORS.wood.front} />
           <rect x="0" y="2" width="2" height="28" fill={COLORS.wood.top} />
           <rect x="1" y="5" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
           <rect x="1" y="19" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
+          {/* Colchão base */}
           <rect x="5" y="3" width="27" height="26" fill={COLORS.bed.mattress} />
-          <rect x="6" y="4" width="26" height="24" fill={COLORS.bed.sheet} />
-          <ellipse cx="11" cy="10" rx="3.5" ry="5" fill={COLORS.bed.pillow} />
-          <ellipse cx="10" cy="10" rx="2.5" ry="4" fill={COLORS.bed.pillowShade} />
-          <ellipse cx="11" cy="22" rx="3.5" ry="5" fill={COLORS.bed.pillow} />
-          <ellipse cx="10" cy="22" rx="2.5" ry="4" fill={COLORS.bed.pillowShade} />
+          {/* Lençol bege (área do travesseiro) */}
+          <rect x="6" y="4" width="14" height="24" fill={COLORS.bed.sheet} />
+          {/* Cobertor verde (porção que conecta com a próxima célula) */}
+          <rect x="18" y="4" width="14" height="24" fill={COLORS.bed.blanket} />
+          <rect x="18" y="4" width="2" height="24" fill={COLORS.bed.blanketLight} />
+          {/* Linha de transição */}
+          <line x1="20" y1="6" x2="20" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
+          {/* Travesseiro único grande (retângulo arredondado) */}
+          <rect x="7" y="6" width="9" height="20" rx="3" fill={COLORS.bed.pillow} />
+          <rect x="8" y="7" width="7" height="18" rx="2" fill={COLORS.bed.pillowShade} />
         </svg>
       );
     }

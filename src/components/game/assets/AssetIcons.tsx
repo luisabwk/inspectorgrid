@@ -527,7 +527,7 @@ export const BedIcon = ({
  };
  
 // Stove - 85° perspective
-// Stove - 85° perspective with depth (smaller than fridge)
+// Stove - 85° perspective (counter-height, shorter than fridge)
 export const StoveIcon = ({ 
    className, 
    direction = 'down',
@@ -538,7 +538,7 @@ export const StoveIcon = ({
  }: ConnectableDirectionalAssetProps) => {
   const left = connectedLeft ? 0 : 5;
   const right = connectedRight ? 32 : 27;
-  const top = 4;
+  const top = 8;      // Counter-height (shorter than fridge)
   const bottom = 28;
   const center = (left + right) / 2;
    
@@ -549,38 +549,38 @@ export const StoveIcon = ({
           <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
         )}
         
-       {/* Cooktop surface - thicker for 85° */}
-      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="7" 
+       {/* Cooktop surface */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="5" 
          fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
         
-       {/* 4 Burners - larger and properly spaced */}
-       <ellipse cx={center - 5} cy={top + 3.5} rx="3.5" ry="1.5" fill={COLORS.metal.shadow} />
-       <ellipse cx={center - 5} cy={top + 3.5} rx="2" ry="0.8" fill={COLORS.metal.side} />
-       <ellipse cx={center + 5} cy={top + 3.5} rx="3.5" ry="1.5" fill={COLORS.metal.shadow} />
-       <ellipse cx={center + 5} cy={top + 3.5} rx="2" ry="0.8" fill={COLORS.metal.side} />
+       {/* 4 Burners - adjusted for shorter height */}
+       <ellipse cx={center - 5} cy={top + 2.5} rx="3" ry="1.2" fill={COLORS.metal.shadow} />
+       <ellipse cx={center - 5} cy={top + 2.5} rx="1.8" ry="0.7" fill={COLORS.metal.side} />
+       <ellipse cx={center + 5} cy={top + 2.5} rx="3" ry="1.2" fill={COLORS.metal.shadow} />
+       <ellipse cx={center + 5} cy={top + 2.5} rx="1.8" ry="0.7" fill={COLORS.metal.side} />
        
         {/* Body */}
-      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 7} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 7} 
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 5} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 5} 
         fill={COLORS.metal.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        
-       {/* Control panel with knobs - lower position */}
-       <rect x={left + (connectedLeft ? 1 : 3)} y={top + 8} width={right - left - (connectedLeft ? 2 : 4)} height="3" 
+       {/* Control panel with knobs */}
+       <rect x={left + (connectedLeft ? 1 : 3)} y={top + 6} width={right - left - (connectedLeft ? 2 : 4)} height="2.5" 
          fill={COLORS.metal.side} />
-       <circle cx={center - 6} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
-       <circle cx={center - 2} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
-       <circle cx={center + 2} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
-       <circle cx={center + 6} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
+       <circle cx={center - 5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+       <circle cx={center - 1.5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+       <circle cx={center + 1.5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
+       <circle cx={center + 5} cy={top + 7.2} r="1" fill={COLORS.metal.handle} />
        
-       {/* Oven door - smaller */}
-       <rect x={left + (connectedLeft ? 2 : 4)} y={top + 12} width={right - left - (connectedLeft ? 4 : 6)} height="9" 
+       {/* Oven door */}
+       <rect x={left + (connectedLeft ? 2 : 4)} y={top + 9.5} width={right - left - (connectedLeft ? 4 : 6)} height="7" 
         fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        {/* Oven handle */}
-       <rect x={left + (connectedLeft ? 3 : 5)} y={top + 13} width={right - left - (connectedLeft ? 6 : 8)} height="1.5" 
+       <rect x={left + (connectedLeft ? 3 : 5)} y={top + 10.5} width={right - left - (connectedLeft ? 6 : 8)} height="1.2" 
          fill={COLORS.metal.chrome} rx="0.5" />
        {/* Oven window */}
-       <rect x={left + (connectedLeft ? 4 : 6)} y={top + 15.5} width={right - left - (connectedLeft ? 8 : 10)} height="4" 
+       <rect x={left + (connectedLeft ? 4 : 6)} y={top + 12.5} width={right - left - (connectedLeft ? 8 : 10)} height="3" 
          fill={COLORS.screen.display} opacity="0.4" />
      </svg>
    );
@@ -753,12 +753,12 @@ export const ArmchairIcon = ({ className }: AssetIconProps) => {
  };
  
  // Fridge
-// Fridge - 85° perspective with left side depth
+// Fridge - 85° perspective (taller than stove)
 export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
   const left = 5;
   const right = 27;
-  const top = 3;
-  const bottom = 29;
+  const top = 2;      // Maximum height
+  const bottom = 30;  // Maximum height
    
   return (
     <svg viewBox="0 0 32 32" className={className}>
@@ -771,18 +771,18 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        
        {/* Top surface (85° depth indicator) */}
-       <rect x={left} y={top} width={right - left} height="2.5" fill={COLORS.metal.top} />
+       <rect x={left} y={top} width={right - left} height="2" fill={COLORS.metal.top} />
        
-       {/* Freezer compartment */}
-       <rect x={left + 4} y={top + 4} width={right - left - 6} height="7" fill={COLORS.appliance.top} />
-       <rect x={right - 5} y={top + 6} width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
+       {/* Freezer compartment - taller */}
+       <rect x={left + 4} y={top + 4} width={right - left - 6} height="8" fill={COLORS.appliance.top} />
+       <rect x={right - 5} y={top + 6} width="1.5" height="4" fill={COLORS.metal.handle} rx="0.3" />
        
        {/* Divider line */}
-       <rect x={left + 4} y={top + 11.5} width={right - left - 6} height="1" fill={COLORS.metal.shadow} />
+       <rect x={left + 4} y={top + 12.5} width={right - left - 6} height="1" fill={COLORS.metal.shadow} />
        
-       {/* Fridge compartment */}
-       <rect x={left + 4} y={top + 13} width={right - left - 6} height="12" fill={COLORS.appliance.top} />
-       <rect x={right - 5} y={top + 17} width="1.5" height="4" fill={COLORS.metal.handle} rx="0.3" />
+       {/* Fridge compartment - larger */}
+       <rect x={left + 4} y={top + 14} width={right - left - 6} height="13" fill={COLORS.appliance.top} />
+       <rect x={right - 5} y={top + 18} width="1.5" height="5" fill={COLORS.metal.handle} rx="0.3" />
     </svg>
   );
 };

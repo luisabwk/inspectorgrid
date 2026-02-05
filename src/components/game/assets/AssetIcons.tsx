@@ -528,62 +528,62 @@ export const BedIcon = ({
  
  // Stove - 85° perspective (narrower, aligned with sink)
 export const StoveIcon = ({ 
-   className, 
-   direction = 'down',
-   connectedTop = false,
-   connectedBottom = false,
-   connectedLeft = false,
-   connectedRight = false
- }: ConnectableDirectionalAssetProps) => {
-  // Mais estreito (18px) e mais baixo que pia (top=8)
+  className, 
+  direction = 'down',
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableDirectionalAssetProps) => {
+  // Mais estreito (18px) e mesma altura que pia (top=4)
   const left = connectedLeft ? 0 : 7;
   const right = connectedRight ? 32 : 25;
-  const top = 8;      // Mais baixo (era 4)
+  const top = 4;      // Igual à pia para alinhar bancada
   const bottom = 28;
   const center = (left + right) / 2;
-   
-   return (
-     <svg viewBox="0 0 32 32" className={className}>
-        {/* Left side depth (85°) */}
-        {!connectedLeft && (
-          <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
-        )}
-        
-       {/* Cooktop surface */}
-      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="5" 
-         fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        
-       {/* 2 Burners */}
-       <ellipse cx={center - 3.5} cy={top + 2.5} rx="2.5" ry="1.2" fill={COLORS.metal.shadow} />
-       <ellipse cx={center - 3.5} cy={top + 2.5} rx="1.5" ry="0.7" fill={COLORS.metal.side} />
-       <ellipse cx={center + 3.5} cy={top + 2.5} rx="2.5" ry="1.2" fill={COLORS.metal.shadow} />
-       <ellipse cx={center + 3.5} cy={top + 2.5} rx="1.5" ry="0.7" fill={COLORS.metal.side} />
-       
-        {/* Body */}
-      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 5} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 5} 
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      {!connectedLeft && (
+        <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+      )}
+      
+      {/* Cooktop surface */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="6" 
+        fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* 2 Burners */}
+      <ellipse cx={center - 3.5} cy={top + 3} rx="2.5" ry="1.2" fill={COLORS.metal.shadow} />
+      <ellipse cx={center - 3.5} cy={top + 3} rx="1.5" ry="0.7" fill={COLORS.metal.side} />
+      <ellipse cx={center + 3.5} cy={top + 3} rx="2.5" ry="1.2" fill={COLORS.metal.shadow} />
+      <ellipse cx={center + 3.5} cy={top + 3} rx="1.5" ry="0.7" fill={COLORS.metal.side} />
+      
+      {/* Body */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 6} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 6} 
         fill={COLORS.metal.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       
-       {/* Control panel with knobs */}
-       <rect x={left + (connectedLeft ? 1 : 3)} y={top + 6} width={right - left - (connectedLeft ? 2 : 4)} height="2" 
-         fill={COLORS.metal.side} />
-       <circle cx={center - 3} cy={top + 7} r="0.8" fill={COLORS.metal.handle} />
-       <circle cx={center} cy={top + 7} r="0.8" fill={COLORS.metal.handle} />
-       <circle cx={center + 3} cy={top + 7} r="0.8" fill={COLORS.metal.handle} />
-       
-       {/* Oven door */}
-       <rect x={left + (connectedLeft ? 2 : 4)} y={top + 9} width={right - left - (connectedLeft ? 4 : 6)} height="7" 
+      
+      {/* Control panel with knobs */}
+      <rect x={left + (connectedLeft ? 1 : 3)} y={top + 7} width={right - left - (connectedLeft ? 2 : 4)} height="2.5" 
+        fill={COLORS.metal.side} />
+      <circle cx={center - 3} cy={top + 8.2} r="0.9" fill={COLORS.metal.handle} />
+      <circle cx={center} cy={top + 8.2} r="0.9" fill={COLORS.metal.handle} />
+      <circle cx={center + 3} cy={top + 8.2} r="0.9" fill={COLORS.metal.handle} />
+      
+      {/* Oven door */}
+      <rect x={left + (connectedLeft ? 2 : 4)} y={top + 10.5} width={right - left - (connectedLeft ? 4 : 6)} height="8" 
         fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       {/* Oven handle */}
-       <rect x={left + (connectedLeft ? 3 : 5)} y={top + 10} width={right - left - (connectedLeft ? 6 : 8)} height="1" 
-         fill={COLORS.metal.chrome} rx="0.5" />
-       {/* Oven window */}
-       <rect x={left + (connectedLeft ? 4 : 6)} y={top + 12} width={right - left - (connectedLeft ? 8 : 10)} height="3" 
-         fill={COLORS.screen.display} opacity="0.4" />
-     </svg>
-   );
- };
+      {/* Oven handle */}
+      <rect x={left + (connectedLeft ? 3 : 5)} y={top + 11.5} width={right - left - (connectedLeft ? 6 : 8)} height="1.2" 
+        fill={COLORS.metal.chrome} rx="0.5" />
+      {/* Oven window */}
+      <rect x={left + (connectedLeft ? 4 : 6)} y={top + 13.5} width={right - left - (connectedLeft ? 8 : 10)} height="4" 
+        fill={COLORS.screen.display} opacity="0.4" />
+    </svg>
+  );
+};
  
   // Sink - 85° perspective with rectangular basin (kitchen style)
  export const SinkIcon = ({ 

@@ -112,6 +112,7 @@
  // ==================== CONNECTABLE ASSETS (ISOMETRIC 75°) ====================
  
 // Bed - isometric 75° with BOTH horizontal and vertical connection support
+// Bed - 85° isometric perspective with frontal base (like sofa)
 export const BedIcon = ({ 
   className,
   connectedTop = false,
@@ -123,6 +124,13 @@ export const BedIcon = ({
   const isHorizontal = connectedLeft || connectedRight;
   const isVertical = connectedTop || connectedBottom;
   
+  // Constants for consistent 85° perspective (matching sofa)
+  const PAD = 4;        // Visual padding from cell edges
+  const TOP = 5;        // Top edge of bed content
+  const BOTTOM = 26;    // Bottom edge before base
+  const BASE_H = 4;     // Height of frontal base (depth indicator)
+  const TOP_STRIP = 1.5; // Highlight strip height
+  
   // ==================== HORIZONTAL BED ====================
   if (isHorizontal && !isVertical) {
     const isLeftEnd = !connectedLeft && connectedRight;
@@ -131,26 +139,31 @@ export const BedIcon = ({
     if (isLeftEnd) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
-          {/* Frame superior/inferior */}
-          <rect x="2" y="1" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="2" y="29" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          {/* Cabeceira de madeira (vertical) */}
-          <rect x="0" y="2" width="5" height="28" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="0" y="2" width="2" height="28" fill={COLORS.wood.top} />
-          <rect x="1" y="5" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
-          <rect x="1" y="19" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
-          {/* Colchão base */}
-          <rect x="5" y="3" width="27" height="26" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          {/* Lençol bege (área do travesseiro) */}
-          <rect x="6" y="4" width="14" height="24" fill={COLORS.bed.sheet} />
-          {/* Cobertor verde (porção que conecta com a próxima célula) */}
-          <rect x="18" y="4" width="14" height="24" fill={COLORS.bed.blanket} />
-          <rect x="18" y="4" width="2" height="24" fill={COLORS.bed.blanketLight} />
-          {/* Linha de transição */}
-          <line x1="20" y1="6" x2="20" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-          {/* Travesseiro único grande (retângulo arredondado) */}
-          <rect x="7" y="6" width="9" height="20" rx="3" fill={COLORS.bed.pillow} />
-          <rect x="8" y="7" width="7" height="18" rx="2" fill={COLORS.bed.pillowShade} />
+          {/* Headboard (vertical, at left) - with depth */}
+          <rect x={PAD} y={TOP} width="5" height={BOTTOM - TOP + BASE_H} fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD} y={TOP} width="5" height={TOP_STRIP} fill={COLORS.wood.top} />
+          {/* Wood slats on headboard */}
+          <rect x={PAD + 1} y={TOP + 3} width="3" height="6" fill={COLORS.wood.side} rx="0.5" />
+          <rect x={PAD + 1} y={TOP + 12} width="3" height="6" fill={COLORS.wood.side} rx="0.5" />
+          
+          {/* Mattress area */}
+          <rect x={PAD + 5} y={TOP} width={32 - PAD - 5} height={BOTTOM - TOP} fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD + 5} y={TOP} width={32 - PAD - 5} height={TOP_STRIP} fill="#F8F4EC" />
+          
+          {/* Sheet (pillow area) */}
+          <rect x={PAD + 6} y={TOP + 2} width="10" height={BOTTOM - TOP - 4} fill={COLORS.bed.sheet} />
+          
+          {/* Blanket (continues to next cell) */}
+          <rect x={PAD + 16} y={TOP + 2} width={32 - PAD - 16} height={BOTTOM - TOP - 4} fill={COLORS.bed.blanket} />
+          <rect x={PAD + 16} y={TOP + 2} width="2" height={BOTTOM - TOP - 4} fill={COLORS.bed.blanketLight} />
+          
+          {/* Large single pillow (rounded rect with top highlight) */}
+          <rect x={PAD + 7} y={TOP + 4} width="8" height={BOTTOM - TOP - 8} rx="2" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+          <rect x={PAD + 7} y={TOP + 4} width="8" height={TOP_STRIP} rx="2" fill={COLORS.bed.pillowShade} />
+          
+          {/* FRONTAL BASE - 85° depth indicator (like sofa) */}
+          <rect x={PAD} y={BOTTOM} width={32 - PAD} height={BASE_H} fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD} y={BOTTOM} width={32 - PAD} height={TOP_STRIP} fill={COLORS.bed.frameTop} />
         </svg>
       );
     }
@@ -158,32 +171,47 @@ export const BedIcon = ({
     if (isRightEnd) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
-          {/* Frame superior/inferior */}
-          <rect x="0" y="1" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="0" y="29" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          {/* Pé da cama (madeira) */}
-          <rect x="27" y="3" width="3" height="26" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="27" y="3" width="1" height="26" fill={COLORS.wood.front} />
-          {/* Colchão base */}
-          <rect x="0" y="3" width="27" height="26" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          {/* Cobertor verde (continuidade da célula esquerda) */}
-          <rect x="0" y="4" width="26" height="24" fill={COLORS.bed.blanket} />
-          {/* Dobras do cobertor */}
-          <line x1="7" y1="6" x2="7" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-          <line x1="14" y1="6" x2="14" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
-          <line x1="21" y1="6" x2="21" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.2" />
+          {/* Footboard (vertical, at right) - with depth */}
+          <rect x={32 - PAD - 3} y={TOP} width="3" height={BOTTOM - TOP + BASE_H} fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={32 - PAD - 3} y={TOP} width="3" height={TOP_STRIP} fill={COLORS.wood.front} />
+          
+          {/* Mattress area */}
+          <rect x="0" y={TOP} width={32 - PAD - 3} height={BOTTOM - TOP} fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="0" y={TOP} width={32 - PAD - 3} height={TOP_STRIP} fill="#F8F4EC" />
+          
+          {/* Blanket (continuation from left cell) */}
+          <rect x="1" y={TOP + 2} width={32 - PAD - 5} height={BOTTOM - TOP - 4} fill={COLORS.bed.blanket} />
+          <rect x="1" y={TOP + 2} width={32 - PAD - 5} height="2" fill={COLORS.bed.blanketLight} />
+          
+          {/* Blanket fold lines for texture */}
+          <line x1="8" y1={TOP + 6} x2="8" y2={BOTTOM - 4} stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+          <line x1="16" y1={TOP + 6} x2="16" y2={BOTTOM - 4} stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.25" />
+          
+          {/* FRONTAL BASE - 85° depth indicator (like sofa) */}
+          <rect x="0" y={BOTTOM} width={32 - PAD} height={BASE_H} fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="0" y={BOTTOM} width={32 - PAD} height={TOP_STRIP} fill={COLORS.bed.frameTop} />
         </svg>
       );
     }
     
+    // Middle segment (horizontal)
     return (
       <svg viewBox="0 0 32 32" className={className}>
-        <rect x="0" y="1" width="32" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <rect x="0" y="29" width="32" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <rect x="0" y="3" width="32" height="26" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <rect x="1" y="4" width="30" height="24" fill={COLORS.bed.blanket} />
-        <line x1="10" y1="6" x2="10" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-        <line x1="22" y1="6" x2="22" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+        {/* Mattress area */}
+        <rect x="0" y={TOP} width="32" height={BOTTOM - TOP} fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x="0" y={TOP} width="32" height={TOP_STRIP} fill="#F8F4EC" />
+        
+        {/* Blanket (continuous) */}
+        <rect x="1" y={TOP + 2} width="30" height={BOTTOM - TOP - 4} fill={COLORS.bed.blanket} />
+        <rect x="1" y={TOP + 2} width="30" height="2" fill={COLORS.bed.blanketLight} />
+        
+        {/* Fold lines */}
+        <line x1="10" y1={TOP + 6} x2="10" y2={BOTTOM - 4} stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+        <line x1="22" y1={TOP + 6} x2="22" y2={BOTTOM - 4} stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+        
+        {/* FRONTAL BASE - 85° depth indicator */}
+        <rect x="0" y={BOTTOM} width="32" height={BASE_H} fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x="0" y={BOTTOM} width="32" height={TOP_STRIP} fill={COLORS.bed.frameTop} />
       </svg>
     );
   }
@@ -196,19 +224,29 @@ export const BedIcon = ({
     if (isHeadSegment) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
-          <rect x="1" y="2" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="29" y="2" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="2" y="0" width="28" height="5" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
-          <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-          <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-          <rect x="3" y="5" width="26" height="27" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="4" y="6" width="24" height="26" fill={COLORS.bed.sheet} />
-          <line x1="4" y1="28" x2="28" y2="28" stroke={COLORS.bed.sheetFold} strokeWidth="1" opacity="0.3" />
-          <ellipse cx="10" cy="11" rx="5" ry="3.5" fill={COLORS.bed.pillow} />
-          <ellipse cx="10" cy="10" rx="4" ry="2.5" fill={COLORS.bed.pillowShade} />
-          <ellipse cx="22" cy="11" rx="5" ry="3.5" fill={COLORS.bed.pillow} />
-          <ellipse cx="22" cy="10" rx="4" ry="2.5" fill={COLORS.bed.pillowShade} />
+          {/* Headboard (horizontal, at top) - with depth */}
+          <rect x={PAD} y={PAD} width={32 - PAD * 2} height="5" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD} y={PAD} width={32 - PAD * 2} height={TOP_STRIP} fill={COLORS.wood.top} />
+          {/* Wood slats */}
+          <rect x={PAD + 3} y={PAD + 1} width="6" height="2" fill={COLORS.wood.side} rx="0.5" />
+          <rect x={32 - PAD - 9} y={PAD + 1} width="6" height="2" fill={COLORS.wood.side} rx="0.5" />
+          
+          {/* Mattress area */}
+          <rect x={PAD} y={PAD + 5} width={32 - PAD * 2} height={32 - PAD - 5} fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD} y={PAD + 5} width={32 - PAD * 2} height={TOP_STRIP} fill="#F8F4EC" />
+          
+          {/* Sheet area */}
+          <rect x={PAD + 1} y={PAD + 7} width={32 - PAD * 2 - 2} height="8" fill={COLORS.bed.sheet} />
+          
+          {/* Pillows (rounded rects with top highlight, not ellipses) */}
+          <rect x={PAD + 2} y={PAD + 8} width="9" height="5" rx="1.5" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+          <rect x={PAD + 2} y={PAD + 8} width="9" height={TOP_STRIP} rx="1.5" fill={COLORS.bed.pillowShade} />
+          <rect x={32 - PAD - 11} y={PAD + 8} width="9" height="5" rx="1.5" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+          <rect x={32 - PAD - 11} y={PAD + 8} width="9" height={TOP_STRIP} rx="1.5" fill={COLORS.bed.pillowShade} />
+          
+          {/* Blanket (continues to next cell) */}
+          <rect x={PAD + 1} y={PAD + 16} width={32 - PAD * 2 - 2} height={32 - PAD - 16} fill={COLORS.bed.blanket} />
+          <rect x={PAD + 1} y={PAD + 16} width={32 - PAD * 2 - 2} height="2" fill={COLORS.bed.blanketLight} />
         </svg>
       );
     }
@@ -216,29 +254,47 @@ export const BedIcon = ({
     if (isFootSegment) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
-          <rect x="1" y="0" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="29" y="0" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="3" y="0" width="26" height="28" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="4" y="1" width="24" height="25" fill={COLORS.bed.blanket} />
-          <rect x="4" y="1" width="24" height="2" fill={COLORS.bed.blanketLight} />
-          <line x1="6" y1="8" x2="26" y2="8" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-          <line x1="6" y1="14" x2="26" y2="14" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-          <line x1="6" y1="20" x2="26" y2="20" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
-          <rect x="3" y="26" width="26" height="3" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          <rect x="3" y="26" width="26" height="1" fill={COLORS.wood.front} />
+          {/* Mattress area */}
+          <rect x={PAD} y="0" width={32 - PAD * 2} height={BOTTOM - PAD} fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD} y="0" width={32 - PAD * 2} height={TOP_STRIP} fill="#F8F4EC" />
+          
+          {/* Blanket (continuation from head cell) */}
+          <rect x={PAD + 1} y="2" width={32 - PAD * 2 - 2} height={BOTTOM - PAD - 4} fill={COLORS.bed.blanket} />
+          <rect x={PAD + 1} y="2" width={32 - PAD * 2 - 2} height="2" fill={COLORS.bed.blanketLight} />
+          
+          {/* Fold lines */}
+          <line x1={PAD + 3} y1="8" x2={32 - PAD - 3} y2="8" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+          <line x1={PAD + 3} y1="14" x2={32 - PAD - 3} y2="14" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.25" />
+          
+          {/* Footboard - with depth */}
+          <rect x={PAD} y={BOTTOM - PAD} width={32 - PAD * 2} height="4" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD} y={BOTTOM - PAD} width={32 - PAD * 2} height={TOP_STRIP} fill={COLORS.wood.front} />
+          
+          {/* FRONTAL BASE - 85° depth indicator */}
+          <rect x={PAD} y={BOTTOM} width={32 - PAD * 2} height={BASE_H} fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x={PAD} y={BOTTOM} width={32 - PAD * 2} height={TOP_STRIP} fill={COLORS.bed.frameTop} />
         </svg>
       );
     }
     
+    // Middle segment (vertical)
     return (
       <svg viewBox="0 0 32 32" className={className}>
-        <rect x="1" y="0" width="2" height="32" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <rect x="29" y="0" width="2" height="32" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <rect x="3" y="0" width="26" height="32" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <rect x="4" y="1" width="24" height="30" fill={COLORS.bed.blanket} />
-        <line x1="6" y1="10" x2="26" y2="10" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-        <line x1="6" y1="22" x2="26" y2="22" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+        {/* Mattress area */}
+        <rect x={PAD} y="0" width={32 - PAD * 2} height={BOTTOM} fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x={PAD} y="0" width={32 - PAD * 2} height={TOP_STRIP} fill="#F8F4EC" />
+        
+        {/* Blanket (continuous) */}
+        <rect x={PAD + 1} y="2" width={32 - PAD * 2 - 2} height={BOTTOM - 4} fill={COLORS.bed.blanket} />
+        <rect x={PAD + 1} y="2" width={32 - PAD * 2 - 2} height="2" fill={COLORS.bed.blanketLight} />
+        
+        {/* Fold lines */}
+        <line x1={PAD + 3} y1="10" x2={32 - PAD - 3} y2="10" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+        <line x1={PAD + 3} y1="18" x2={32 - PAD - 3} y2="18" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
+        
+        {/* FRONTAL BASE - 85° depth indicator */}
+        <rect x={PAD} y={BOTTOM} width={32 - PAD * 2} height={BASE_H} fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x={PAD} y={BOTTOM} width={32 - PAD * 2} height={TOP_STRIP} fill={COLORS.bed.frameTop} />
       </svg>
     );
   }
@@ -246,38 +302,33 @@ export const BedIcon = ({
   // ==================== SINGLE BED ====================
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Headboard with 85° depth */}
-      <rect x="4" y="4" width="24" height="4" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="4" y="4" width="24" height="2" fill={COLORS.wood.top} />
+      {/* Headboard with 85° depth (at top) */}
+      <rect x={PAD} y={PAD} width={32 - PAD * 2} height="4" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={PAD} y={PAD} width={32 - PAD * 2} height={TOP_STRIP} fill={COLORS.wood.top} />
       {/* Wood slats on headboard */}
-      <rect x="7" y="5" width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
-      <rect x="15" y="5" width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
-      <rect x="23" y="5" width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
-      
-      {/* Side frames with 85° depth */}
-      <rect x="3" y="7" width="2" height="18" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="3" y="7" width="2" height="1" fill={COLORS.bed.frameTop} />
-      <rect x="27" y="7" width="2" height="18" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="27" y="7" width="2" height="1" fill={COLORS.bed.frameTop} />
+      <rect x={PAD + 3} y={PAD + 1} width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
+      <rect x="15" y={PAD + 1} width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
+      <rect x={32 - PAD - 5} y={PAD + 1} width="2" height="2" fill={COLORS.wood.side} rx="0.3" />
       
       {/* Mattress base */}
-      <rect x="5" y="8" width="22" height="16" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={PAD} y={PAD + 4} width={32 - PAD * 2} height={BOTTOM - PAD - 4} fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={PAD} y={PAD + 4} width={32 - PAD * 2} height={TOP_STRIP} fill="#F8F4EC" />
       
-      {/* Pillows with 85° curved top (like sofa armrests) */}
-      <rect x="7" y="9" width="7" height="4" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx="10.5" cy="9" rx="3.5" ry="1" fill={COLORS.bed.pillowShade} />
-      <rect x="18" y="9" width="7" height="4" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx="21.5" cy="9" rx="3.5" ry="1" fill={COLORS.bed.pillowShade} />
+      {/* Pillows (rounded rects with top highlight) */}
+      <rect x={PAD + 2} y={PAD + 6} width="8" height="4" rx="1" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={PAD + 2} y={PAD + 6} width="8" height={TOP_STRIP} rx="1" fill={COLORS.bed.pillowShade} />
+      <rect x={32 - PAD - 10} y={PAD + 6} width="8" height="4" rx="1" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={32 - PAD - 10} y={PAD + 6} width="8" height={TOP_STRIP} rx="1" fill={COLORS.bed.pillowShade} />
       
       {/* Blanket with 85° depth highlight */}
-      <rect x="6" y="14" width="20" height="9" fill={COLORS.bed.blanket} />
-      <rect x="6" y="14" width="20" height="2" fill={COLORS.bed.blanketLight} />
-      <line x1="8" y1="17" x2="24" y2="17" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-      <line x1="8" y1="20" x2="24" y2="20" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+      <rect x={PAD + 1} y={PAD + 11} width={32 - PAD * 2 - 2} height={BOTTOM - PAD - 12} fill={COLORS.bed.blanket} />
+      <rect x={PAD + 1} y={PAD + 11} width={32 - PAD * 2 - 2} height="2" fill={COLORS.bed.blanketLight} />
+      <line x1={PAD + 3} y1={PAD + 15} x2={32 - PAD - 3} y2={PAD + 15} stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+      <line x1={PAD + 3} y1={PAD + 18} x2={32 - PAD - 3} y2={PAD + 18} stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
       
-      {/* Footboard with 85° depth */}
-      <rect x="4" y="24" width="24" height="3" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="4" y="24" width="24" height="1" fill={COLORS.wood.front} />
+      {/* FRONTAL BASE - 85° depth indicator (like sofa) */}
+      <rect x={PAD} y={BOTTOM} width={32 - PAD * 2} height={BASE_H} fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={PAD} y={BOTTOM} width={32 - PAD * 2} height={TOP_STRIP} fill={COLORS.bed.frameTop} />
     </svg>
   );
 };

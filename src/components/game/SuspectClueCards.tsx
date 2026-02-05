@@ -108,7 +108,7 @@ export const SuspectClueCards = ({
                   {suspect.name.split(' ')[0]}
                 </p>
                 
-                {suspectClue && (
+                {isSelected && suspectClue && (
                   <p className="text-[10px] text-muted-foreground leading-tight mt-1 line-clamp-3">
                     {formatClueText(suspectClue.text, suspect.name)}
                   </p>

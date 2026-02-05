@@ -1,143 +1,134 @@
 
-# Correção da Poltrona (ArmchairIcon)
+# Correção da Poltrona - Proporções mais Amplas
 
 ## Problema Identificado
 
-Visualmente, a poltrona tem o **assento desconectado do restante** porque:
+A poltrona está visualmente "apertada" e difícil de reconhecer porque:
 
-1. **Gap visual** entre o encosto (y: 6-12) e o assento (y: 12-18) e a base (y: 21-25)
-2. Os elementos estão empilhados verticalmente com espaços entre eles
-3. O assento flutua no meio, sem conexão visual com a base abaixo
+1. **Padding lateral excessivo**: `left=6`, `right=26` deixa apenas 20px de largura total
+2. **Área interna muito estreita**: `width = right - left - 4 = 16px` para encosto/assento
+3. **Braços muito finos**: apenas 4px de largura vs 5px do sofá
+4. **Proporções não harmônicas**: elementos comprimidos demais
 
-### Estrutura Atual (Problemática)
+### Comparação com o Sofá (referência)
 
-```text
-┌─────────────────┐  y=6   ← Encosto
-│   Back rest     │
-└─────────────────┘  y=12
-                     ← GAP VISUAL
-┌─────────────────┐  y=12  ← Assento
-│  Seat cushion   │
-└─────────────────┘  y=18
-                     ← GAP VISUAL (3px)
-┌─────────────────┐  y=21  ← Base
-│   Base frame    │
-└─────────────────┘  y=25
-```
+| Elemento | Sofá | Poltrona Atual | Problema |
+|----------|------|----------------|----------|
+| Padding lateral | 4px | 6px | Muito grande |
+| Largura braços | 5px | 4px | Muito fino |
+| Área interna | ~18px | ~12px | Muito estreita |
+| Proporção geral | Equilibrada | Apertada | Sem respiro interno |
 
 ## Solução
 
-Unificar a poltrona como uma **peça contínua**, seguindo a linguagem do sofá:
+Reduzir o padding lateral e aumentar a largura dos elementos para a poltrona parecer mais "aberta" e reconhecível:
 
-1. **Encosto + assento conectados** - sem gap entre eles
-2. **Base estendida** - subir a base para tocar o assento
-3. **Braços mais longos** - estender para conectar encosto ao assento
-4. **Proporções integradas** - tudo como uma única peça de mobiliário
-
-### Nova Estrutura (Corrigida)
+### Novas Proporções
 
 ```text
-┌─────────────────┐  y=5   ← Encosto
-│   Back rest     │
-├─────────────────┤  y=10  ← Conexão direta
-│  Seat cushion   │
-├─────────────────┤  y=16  ← Conexão direta
-│   Base/Front    │
-└─────────────────┘  y=22
-      ▼▼            y=24  ← Pés pequenos
+Antes (apertado):          Depois (amplo):
+┌──────────────────┐       ┌────────────────────────┐
+│ ▌  ▄▄▄▄▄▄▄▄  ▐ │       │ ▌    ▄▄▄▄▄▄▄▄▄▄▄▄   ▐ │
+│ ▌  █████████  ▐ │       │ ▌    ██████████████   ▐ │
+│ ▌  █████████  ▐ │   →   │ ▌    ██████████████   ▐ │
+│ ▌  ▀▀▀▀▀▀▀▀▀  ▐ │       │ ▌    ▀▀▀▀▀▀▀▀▀▀▀▀   ▐ │
+└──────────────────┘       └────────────────────────┘
+   left=6, right=26           left=4, right=28
+   braços=4px                  braços=5px
 ```
 
 ## Detalhes Técnicos
 
 ### Arquivo a Modificar
-`src/components/game/assets/AssetIcons.tsx` - linhas 637-685 (ArmchairIcon)
+`src/components/game/assets/AssetIcons.tsx` - linhas 637-686 (ArmchairIcon)
 
 ### Mudanças Específicas
 
-1. **Remover gaps entre elementos**
+1. **Reduzir padding lateral** (como o sofá)
+   - `left = 4` (antes: 6)
+   - `right = 28` (antes: 26)
+   - Largura total: 24px (antes: 20px)
+
+2. **Aumentar largura dos braços**
+   - Braços: `width="5"` (antes: 4) - igual ao sofá
+   - Altura dos braços: manter 14px
+
+3. **Ajustar área interna**
+   - Área de encosto/assento/base: `width = right - left - 10 = 14px` (5px cada braço)
+   - Proporção mais equilibrada entre braços e corpo
+
+4. **Manter estrutura vertical unificada**
    - Encosto: y=5 até y=10 (5px altura)
-   - Assento: y=10 até y=16 (6px altura, conectado ao encosto)
-   - Base frontal: y=16 até y=22 (6px altura, conectada ao assento)
-
-2. **Estender braços para cobrir toda a altura**
-   - Braços: y=6 até y=18 (12px, cobrindo encosto + assento)
-   - Elipses de topo mantidas para curvatura 85°
-
-3. **Ajustar pés**
-   - Pés: y=22 até y=24 (2px, pequenos sob a base)
-
-4. **Manter proporções gerais**
-   - Padding lateral: 6px cada lado (left=6, right=26)
-   - Largura total: 20px (adequada para célula 32x32)
+   - Assento: y=10 até y=16 (6px altura)
+   - Base: y=16 até y=21 (5px altura)
+   - Pés: y=21 até y=23 (2px)
 
 ### Código Corrigido
 
 ```typescript
 export const ArmchairIcon = ({ className }: AssetIconProps) => {
-  const left = 6;
-  const right = 26;
+  // Match sofa proportions - less padding, wider arms
+  const left = 4;
+  const right = 28;
   const top = 5;
+  const armWidth = 5; // Same as sofa
+  
+  // Inner area starts after left arm, ends before right arm
+  const innerLeft = left + armWidth;
+  const innerRight = right - armWidth;
+  const innerWidth = innerRight - innerLeft; // 14px
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
       {/* Back rest - connected to seat */}
-      <rect x={left + 2} y={top} width={right - left - 4} height="5" 
+      <rect x={innerLeft} y={top} width={innerWidth} height="5" 
         fill={COLORS.armchair.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 2} y={top} width={right - left - 4} height="1.5" 
+      <rect x={innerLeft} y={top} width={innerWidth} height="1.5" 
         fill={COLORS.armchair.top} />
       
       {/* Seat cushion - directly below backrest */}
-      <rect x={left + 2} y={top + 5} width={right - left - 4} height="6" 
+      <rect x={innerLeft} y={top + 5} width={innerWidth} height="6" 
         fill={COLORS.armchair.cushion}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 2} y={top + 5} width={right - left - 4} height="1.5" 
+      <rect x={innerLeft} y={top + 5} width={innerWidth} height="1.5" 
         fill={COLORS.armchair.top} />
       
       {/* Base/front - directly below seat (85° depth) */}
-      <rect x={left + 2} y={top + 11} width={right - left - 4} height="5" 
+      <rect x={innerLeft} y={top + 11} width={innerWidth} height="5" 
         fill={COLORS.armchair.front} 
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 2} y={top + 11} width={right - left - 4} height="1.5" 
+      <rect x={innerLeft} y={top + 11} width={innerWidth} height="1.5" 
         fill={COLORS.armchair.top} />
       
       {/* Left armrest - full height covering back+seat */}
-      <rect x={left} y={top + 1} width="4" height="14" 
+      <rect x={left} y={top + 1} width={armWidth} height="14" 
         fill={COLORS.armchair.side}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx={left + 2} cy={top + 1} rx="2" ry="1" 
+      <ellipse cx={left + armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.2" 
         fill={COLORS.armchair.top} />
       
       {/* Right armrest - full height */}
-      <rect x={right - 4} y={top + 1} width="4" height="14" 
+      <rect x={right - armWidth} y={top + 1} width={armWidth} height="14" 
         fill={COLORS.armchair.side}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx={right - 2} cy={top + 1} rx="2" ry="1" 
+      <ellipse cx={right - armWidth/2} cy={top + 1} rx={armWidth/2} ry="1.2" 
         fill={COLORS.armchair.top} />
       
       {/* Small feet */}
-      <rect x={left + 2} y={top + 16} width="2" height="2" 
+      <rect x={innerLeft} y={top + 16} width="2" height="2" 
         fill={COLORS.wood.shadow} rx="0.5" />
-      <rect x={right - 4} y={top + 16} width="2" height="2" 
+      <rect x={innerRight - 2} y={top + 16} width="2" height="2" 
         fill={COLORS.wood.shadow} rx="0.5" />
     </svg>
   );
 };
 ```
 
-## Comparação Visual
-
-| Antes | Depois |
-|-------|--------|
-| Encosto separado do assento | Encosto conectado ao assento |
-| Assento flutuando | Assento apoiado na base |
-| Base desconectada | Base como continuação do assento |
-| Braços curtos | Braços cobrindo toda a altura |
-
 ## Validação
 
-1. A poltrona deve parecer uma **peça única** como o sofá
-2. Não deve haver gaps visíveis entre encosto, assento e base
-3. Os braços devem conectar visualmente o encosto ao assento
-4. A perspectiva 85° deve ser mantida (elipses no topo dos braços)
-5. Proporções adequadas para a célula (não muito grande/pequena)
+1. A poltrona deve parecer mais "aberta" e reconhecível
+2. Proporções similares ao sofá (braços de 5px, menos padding)
+3. Estrutura unificada mantida (sem gaps entre elementos)
+4. Perspectiva 85° preservada (elipses no topo dos braços)
+5. Não deve preencher a célula toda - ainda tem respiro de 4px nas laterais

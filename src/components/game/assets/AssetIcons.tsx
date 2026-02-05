@@ -357,62 +357,62 @@ export const BedIcon = ({
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       <rect x={left} y={bottom - 5} width={right - left} height="1.5" fill={COLORS.sofa.top} />
        
-       {/* Back cushion */}
-       <rect 
-        x={left + (connectedLeft ? 0 : 5)} 
-         y={top} 
-        width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
-         height="7" 
-         fill={COLORS.sofa.front}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect 
-        x={left + (connectedLeft ? 0 : 5)} 
-         y={top} 
-        width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
-         height="2" 
-         fill={COLORS.sofa.top} />
-       
-       {/* Seat cushion */}
-       <rect 
-         x={left + (connectedLeft ? 0 : 5)} 
-         y={top + 7} 
-         width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
-         height="9" 
-         fill={COLORS.sofa.cushion}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect 
-         x={left + (connectedLeft ? 0 : 5)} 
-         y={top + 7} 
-         width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
-         height="2" 
-         fill={COLORS.sofa.cushionTop} />
-       
-       {/* Cushion divider line */}
-       <line x1="16" y1={top + 8} x2="16" y2={top + 15} stroke={COLORS.sofa.front} strokeWidth="0.8" opacity="0.5" />
-       
-       {/* Left armrest */}
-       {!connectedLeft && (
-         <>
-          <rect x={padding} y={top + 2} width="5" height="14" 
-             fill={COLORS.sofa.arm}
-            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          {/* Curved top ellipse for 85° depth */}
-          <ellipse cx={padding + 2.5} cy={top + 2} rx="2.5" ry="1.2" 
-            fill={COLORS.sofa.top} />
-         </>
-       )}
-       
-       {/* Right armrest */}
-       {!connectedRight && (
-         <>
-          <rect x={32 - padding - 5} y={top + 2} width="5" height="14" 
-             fill={COLORS.sofa.arm}
-            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-          {/* Curved top ellipse for 85° depth */}
-          <ellipse cx={32 - padding - 2.5} cy={top + 2} rx="2.5" ry="1.2" 
-            fill={COLORS.sofa.top} />
-         </>
-       )}
+      {/* Back cushion */}
+      <rect 
+       x={left + (connectedLeft ? 0 : 4)} 
+        y={top} 
+       width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+        height="7" 
+        fill={COLORS.sofa.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect 
+       x={left + (connectedLeft ? 0 : 4)} 
+        y={top} 
+       width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+        height="2" 
+        fill={COLORS.sofa.top} />
+      
+      {/* Seat cushion */}
+      <rect 
+        x={left + (connectedLeft ? 0 : 4)} 
+        y={top + 7} 
+        width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+        height="9" 
+        fill={COLORS.sofa.cushion}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect 
+        x={left + (connectedLeft ? 0 : 4)} 
+        y={top + 7} 
+        width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+        height="2" 
+        fill={COLORS.sofa.cushionTop} />
+      
+      {/* Cushion divider line */}
+      <line x1="16" y1={top + 8} x2="16" y2={top + 15} stroke={COLORS.sofa.front} strokeWidth="0.8" opacity="0.5" />
+      
+      {/* Left armrest */}
+      {!connectedLeft && (
+        <>
+         <rect x={padding} y={top + 2} width="4" height="14" 
+            fill={COLORS.sofa.arm}
+           stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+         {/* Curved top ellipse for 85° depth */}
+         <ellipse cx={padding + 2} cy={top + 2} rx="2" ry="1" 
+           fill={COLORS.sofa.top} />
+        </>
+      )}
+      
+      {/* Right armrest */}
+      {!connectedRight && (
+        <>
+         <rect x={32 - padding - 4} y={top + 2} width="4" height="14" 
+            fill={COLORS.sofa.arm}
+           stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+         {/* Curved top ellipse for 85° depth */}
+         <ellipse cx={32 - padding - 2} cy={top + 2} rx="2" ry="1" 
+           fill={COLORS.sofa.top} />
+        </>
+      )}
        
        {/* Feet */}
        {!connectedLeft && <rect x={padding + 1} y={bottom} width="2.5" height="2" fill={COLORS.wood.shadow} rx="0.5" />}

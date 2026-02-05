@@ -1,85 +1,133 @@
 
-## Ajuste Visual da Cama Horizontal
+# Padronizacao Visual dos Moveis
 
-### O que você quer (baseado na imagem de referência)
+## Analise da Referencia
 
-A cama horizontal deve ter:
-
-```text
-┌─────────────────────────┬─────────────────────────┐
-│   CÉLULA ESQUERDA       │   CÉLULA DIREITA        │
-│   (Cabeceira)           │   (Pé da cama)          │
-│                         │                         │
-│ ┌───┬─────────┬───────┐ │ ┌───────────────────┐  │
-│ │   │TRAVESS. │COBERTA│─┼─│    COBERTOR       │  │
-│ │CAB│ ÚNICO   │ verde │ │ │      VERDE        │  │
-│ │   │(grande) │parcial│ │ │                   │  │
-│ └───┴─────────┴───────┘ │ └───────────────────┘  │
-│                         │                         │
-└─────────────────────────┴─────────────────────────┘
-```
-
-### Mudanças no BedIcon (isLeftEnd - célula da cabeceira)
-
-**Arquivo:** `src/components/game/assets/AssetIcons.tsx`
-
-Alterações no bloco `isLeftEnd` (linhas 122-138):
-
-1. **Travesseiro único grande** em vez de dois separados
-   - Remover as duas elipses de travesseiro (linhas 133-136)
-   - Adicionar um único retângulo arredondado ocupando a área central
-
-2. **Adicionar porção de cobertor** no lado direito
-   - O lençol bege/creme fica da cabeceira até ~60% da célula
-   - O cobertor verde entra pelos últimos ~40% da direita
-   - Isso cria continuidade visual com a célula seguinte
-
-### Detalhes Técnicos da Implementação
-
-**Célula esquerda (isLeftEnd) - nova estrutura:**
+A imagem de referencia mostra um estilo visual especifico:
 
 ```text
-viewBox 0-32:
-x=0-5:   Cabeceira de madeira (vertical)
-x=5-20:  Lençol bege + travesseiro único
-x=20-32: Cobertor verde (porção que conecta com a próxima célula)
+CARACTERISTICAS-CHAVE:
++----------------------------------+
+| 1. Contorno sutil marrom/cinza   |
+|    (stroke ~1px, cor escura)     |
+|                                  |
+| 2. Vista mais top-down (~85-90°) |
+|    (menos perspectiva lateral)   |
+|                                  |
+| 3. Respiro visual (~15-20%)      |
+|    (padding interno na celula)   |
+|                                  |
+| 4. Proporcoes consistentes       |
+|    (poltrona = cadeira em escala)|
+|                                  |
+| 5. Cores pastel suaves           |
+|    (bege, verde musgo, azul)     |
++----------------------------------+
 ```
 
-Elementos SVG propostos:
-- Frame lateral esquerdo (cabeceira): `rect x=0 y=2 width=5`
-- Frames superior/inferior: `rect y=1 height=2` e `rect y=29 height=2`
-- Colchão base: `rect x=5 y=3 width=27`
-- Lençol bege: `rect x=6 y=4 width=14` (até x=20)
-- Cobertor verde: `rect x=18 y=4 width=14` (de x=18 até borda direita)
-- Transição suave: linha de dobra em x=18-20
-- Travesseiro único: `rect x=7 y=8 width=8 height=16 rx=3` (arredondado)
+## Problemas Atuais
 
-### Resultado Visual Esperado
+| Movel | Problema |
+|-------|----------|
+| ArmchairIcon | Preenche 100% da celula (x=2 a x=30), sem respiro |
+| SofaIcon | Muito grande, preenche toda a celula |
+| ChairIcon | Tamanho diferente da poltrona |
+| Todos | Sem contorno/stroke definido |
+| Todos | Perspectiva muito isometrica (75°) |
 
-Quando as duas células estiverem lado a lado, a cama formará uma unidade coesa:
+## Solucao Proposta
+
+### 1. Adicionar contorno sutil a todos os moveis
+
+Cada SVG tera um stroke sutil na cor `#5D4E37` (marrom escuro) com `stroke-width="0.8"` nas formas principais.
+
+### 2. Ajustar proporcoes com respiro visual
 
 ```text
-┌─────────────────────────────────────────────────┐
-│ [CAB] [TRAVESSEIRO] [==COBERTOR VERDE=======>] │
-│       [  ÚNICO    ] [                        ] │
-│       [           ] [    (continuidade)      ] │
-└─────────────────────────────────────────────────┘
+ANTES (sem respiro):           DEPOIS (com respiro):
++------------------------+     +------------------------+
+|                        |     |    +--------------+    |
+|  [MOVEL PREENCHE TUDO] |     |    |    MOVEL     |    |
+|                        |     |    |   (~75-80%)  |    |
+|                        |     |    +--------------+    |
++------------------------+     +------------------------+
+      viewBox 0-32                 padding ~3-4px
 ```
 
-O cobertor começará na metade direita da célula esquerda e continuará por toda a célula direita, criando a ilusão de uma cama única.
+Ajustes especificos:
+- **ArmchairIcon**: De (x=2-30) para (x=6-26) = ~62% da largura
+- **SofaIcon**: Reduzir altura e largura, deixar margens de ~3px
+- **ChairIcon**: Proporcao similar a poltrona
 
-### Arquivos a modificar
+### 3. Atualizar perspectiva para ~85-90°
 
-| Arquivo | Alteração |
+Reduzir elementos laterais/profundidade. Os moveis serao mais "achatados" verticalmente, com enfase na vista de cima.
+
+### 4. Padronizar cores
+
+Manter paleta existente mas aplicar de forma mais consistente.
+
+## Arquivos a Modificar
+
+| Arquivo | Alteracao |
 |---------|-----------|
-| `src/components/game/assets/AssetIcons.tsx` | Refatorar bloco `isLeftEnd` do BedIcon: travesseiro único + porção de cobertor |
+| `src/components/game/assets/AssetIcons.tsx` | Refatorar ArmchairIcon, SofaIcon, ChairIcon, TableIcon, PlantIcon, BookshelfIcon, TvIcon |
 
-### Validação
+## Detalhes Tecnicos
 
-1. Abrir `/game` e verificar o quarto
-2. A cama deve mostrar:
-   - Cabeceira à esquerda
-   - Travesseiro único grande (não dois separados)
-   - Lençol bege na área do travesseiro
-   - Cobertor verde começando na célula esquerda e continuando na direita
-   - Visual de "cama única" coerente
+### ArmchairIcon (Nova Estrutura)
+
+```text
+viewBox 0-32 com respiro:
++---------------------------+
+|       +-------------+     |
+|  [6]  |   POLTRONA  | [6] |  <- padding lateral 6px
+|       |             |     |
+|       +-------------+     |
++---------------------------+
+
+Elementos:
+- Contorno: stroke="#5D4E37" stroke-width="0.8"
+- Base: x=6, width=20 (em vez de x=2, width=28)
+- Cor: bege/creme (#E8DCC8) similar a referencia
+```
+
+### SofaIcon (Nova Estrutura - 2 celulas)
+
+```text
+CELULA 1 (esquerda):    CELULA 2 (direita):
++----------------+      +----------------+
+|  +-------------|      |-------------+  |
+|  |   ALMOFADA  |------|   ALMOFADA  |  |
+|  |             |      |             |  |
+|  +-------------|      |-------------+  |
++----------------+      +----------------+
+    braco esq                braco dir
+
+- Reduzir altura total (y=4 a y=26 em vez de y=2 a y=30)
+- Manter conexao mas com respiro nas pontas
+```
+
+### ChairIcon (Padronizada com Poltrona)
+
+```text
+- Tamanho similar ao ArmchairIcon
+- Vista mais top-down
+- Contorno definido
+- Padding de ~4px em cada lado
+```
+
+### PlantIcon, BookshelfIcon, TvIcon, TableIcon
+
+Todos receberao:
+1. Contorno sutil (`stroke="#5D4E37"`)
+2. Respiro visual (padding ~3-4px)
+3. Ajuste de perspectiva
+
+## Validacao
+
+1. Abrir `/game` e verificar visualmente:
+   - Todos os moveis tem contorno sutil
+   - Ha respiro visual entre o movel e a borda da celula
+   - Poltrona e cadeira tem tamanhos consistentes
+   - Sofa ocupa duas celulas mas nao as preenche totalmente

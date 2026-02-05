@@ -249,18 +249,23 @@ export const GameCell = ({
           className="absolute top-0 left-0 right-0 z-20" 
           style={{ height: WALL_WIDTH, backgroundColor: WALL_COLOR }}
         >
-          {/* Window marking in wall */}
+          {/* Window marking - framed glass panes */}
           {hasWindowTop && (
-            <div className="absolute inset-x-1/4 inset-y-0 flex gap-0.5 justify-center">
-              <div className="w-1 h-full bg-blue-300" />
-              <div className="w-1 h-full bg-blue-200" />
-              <div className="w-1 h-full bg-blue-300" />
+            <div className="absolute inset-x-[15%] inset-y-0 flex items-center justify-center">
+              <div className="w-full h-full bg-amber-800 flex items-center justify-center" style={{ padding: '0.5px' }}>
+                <div className="w-full h-full flex gap-[1px]">
+                  <div className="flex-1 bg-sky-300" />
+                  <div className="flex-1 bg-sky-200" />
+                </div>
+              </div>
             </div>
           )}
-          {/* Door marking in wall */}
+          {/* Door marking - framed with handle */}
           {hasDoorTop && (
-            <div className="absolute inset-x-1/4 inset-y-0 flex justify-center items-center">
-              <div className="w-[40%] h-full bg-amber-700" />
+            <div className="absolute inset-x-[20%] inset-y-0">
+              <div className="w-full h-full bg-amber-900 border-x border-amber-950 flex items-center justify-end" style={{ paddingRight: '1px' }}>
+                <div className="w-[2px] h-[35%] bg-yellow-500 rounded-sm" />
+              </div>
             </div>
           )}
         </div>
@@ -270,17 +275,23 @@ export const GameCell = ({
           className="absolute bottom-0 left-0 right-0 z-20" 
           style={{ height: WALL_WIDTH, backgroundColor: WALL_COLOR }}
         >
+          {/* Window marking - framed glass panes */}
           {hasWindowBottom && (
-            <div className="absolute inset-x-1/4 inset-y-0 flex gap-0.5 justify-center">
-              <div className="w-1 h-full bg-blue-300" />
-              <div className="w-1 h-full bg-blue-200" />
-              <div className="w-1 h-full bg-blue-300" />
+            <div className="absolute inset-x-[15%] inset-y-0 flex items-center justify-center">
+              <div className="w-full h-full bg-amber-800 flex items-center justify-center" style={{ padding: '0.5px' }}>
+                <div className="w-full h-full flex gap-[1px]">
+                  <div className="flex-1 bg-sky-300" />
+                  <div className="flex-1 bg-sky-200" />
+                </div>
+              </div>
             </div>
           )}
-          {/* Door marking in wall */}
+          {/* Door marking - framed with handle */}
           {hasDoorBottom && (
-            <div className="absolute inset-x-1/4 inset-y-0 flex justify-center items-center">
-              <div className="w-[40%] h-full bg-amber-700" />
+            <div className="absolute inset-x-[20%] inset-y-0">
+              <div className="w-full h-full bg-amber-900 border-x border-amber-950 flex items-center justify-end" style={{ paddingRight: '1px' }}>
+                <div className="w-[2px] h-[35%] bg-yellow-500 rounded-sm" />
+              </div>
             </div>
           )}
         </div>
@@ -290,17 +301,23 @@ export const GameCell = ({
           className="absolute top-0 left-0 bottom-0 z-20" 
           style={{ width: WALL_WIDTH, backgroundColor: WALL_COLOR }}
         >
+          {/* Window marking - framed glass panes */}
           {hasWindowLeft && (
-            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col gap-0.5 justify-center">
-              <div className="h-1 w-full bg-blue-300" />
-              <div className="h-1 w-full bg-blue-200" />
-              <div className="h-1 w-full bg-blue-300" />
+            <div className="absolute inset-y-[15%] inset-x-0 flex items-center justify-center">
+              <div className="w-full h-full bg-amber-800 flex flex-col items-center justify-center" style={{ padding: '0.5px' }}>
+                <div className="w-full h-full flex flex-col gap-[1px]">
+                  <div className="flex-1 bg-sky-300" />
+                  <div className="flex-1 bg-sky-200" />
+                </div>
+              </div>
             </div>
           )}
-          {/* Door marking in wall */}
+          {/* Door marking - framed with handle */}
           {hasDoorLeft && (
-            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col justify-center items-center">
-              <div className="h-[40%] w-full bg-amber-700" />
+            <div className="absolute inset-y-[20%] inset-x-0">
+              <div className="w-full h-full bg-amber-900 border-y border-amber-950 flex flex-col items-end justify-center" style={{ paddingBottom: '1px' }}>
+                <div className="h-[2px] w-[35%] bg-yellow-500 rounded-sm" />
+              </div>
             </div>
           )}
         </div>
@@ -310,17 +327,23 @@ export const GameCell = ({
           className="absolute top-0 right-0 bottom-0 z-20" 
           style={{ width: WALL_WIDTH, backgroundColor: WALL_COLOR }}
         >
+          {/* Window marking - framed glass panes */}
           {hasWindowRight && (
-            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col gap-0.5 justify-center">
-              <div className="h-1 w-full bg-blue-300" />
-              <div className="h-1 w-full bg-blue-200" />
-              <div className="h-1 w-full bg-blue-300" />
+            <div className="absolute inset-y-[15%] inset-x-0 flex items-center justify-center">
+              <div className="w-full h-full bg-amber-800 flex flex-col items-center justify-center" style={{ padding: '0.5px' }}>
+                <div className="w-full h-full flex flex-col gap-[1px]">
+                  <div className="flex-1 bg-sky-300" />
+                  <div className="flex-1 bg-sky-200" />
+                </div>
+              </div>
             </div>
           )}
-          {/* Door marking in wall */}
+          {/* Door marking - framed with handle */}
           {hasDoorRight && (
-            <div className="absolute inset-y-1/4 inset-x-0 flex flex-col justify-center items-center">
-              <div className="h-[40%] w-full bg-amber-700" />
+            <div className="absolute inset-y-[20%] inset-x-0">
+              <div className="w-full h-full bg-amber-900 border-y border-amber-950 flex flex-col items-end justify-center" style={{ paddingBottom: '1px' }}>
+                <div className="h-[2px] w-[35%] bg-yellow-500 rounded-sm" />
+              </div>
             </div>
           )}
         </div>

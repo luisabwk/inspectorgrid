@@ -100,6 +100,10 @@
    },
  };
  
+ // Outline color for visual clarity (subtle dark brown)
+ const OUTLINE = '#5D4E37';
+ const OUTLINE_WIDTH = 0.8;
+ 
  // ==================== CONNECTABLE ASSETS (ISOMETRIC 75°) ====================
  
 // Bed - isometric 75° with BOTH horizontal and vertical connection support
@@ -268,47 +272,79 @@ export const BedIcon = ({
    connectedLeft = false,
    connectedRight = false
  }: ConnectableAssetProps) => {
-   const left = connectedLeft ? 0 : 2;
-   const right = connectedRight ? 32 : 30;
+   // Padding for visual breathing room (~4px on ends)
+   const padding = 4;
+   const left = connectedLeft ? 0 : padding;
+   const right = connectedRight ? 32 : 32 - padding;
+   const top = 5; // top padding
+   const bottom = 26; // bottom padding
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Base */}
-       <rect x={left} y="24" width={right - left} height="6" fill={COLORS.sofa.front} />
-       <rect x={left} y="22" width={right - left} height="2" fill={COLORS.sofa.top} />
+       {/* Base frame */}
+       <rect x={left} y={bottom - 4} width={right - left} height="5" 
+         fill={COLORS.sofa.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left} y={bottom - 6} width={right - left} height="2" fill={COLORS.sofa.top} />
        
        {/* Back cushion */}
-       <rect x={left + (connectedLeft ? 0 : 4)} y="2" width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} height="8" fill={COLORS.sofa.front} />
-       <rect x={left + (connectedLeft ? 0 : 4)} y="2" width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} height="3" fill={COLORS.sofa.top} />
-       <line x1={left + 12} y1="3" x2={left + 12} y2="9" stroke={COLORS.sofa.side} strokeWidth="0.8" opacity="0.5" />
-       <line x1="16" y1="3" x2="16" y2="9" stroke={COLORS.sofa.side} strokeWidth="0.8" opacity="0.5" />
-       <line x1={right - 12} y1="3" x2={right - 12} y2="9" stroke={COLORS.sofa.side} strokeWidth="0.8" opacity="0.5" />
+       <rect 
+         x={left + (connectedLeft ? 0 : 4)} 
+         y={top} 
+         width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+         height="7" 
+         fill={COLORS.sofa.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect 
+         x={left + (connectedLeft ? 0 : 4)} 
+         y={top} 
+         width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
+         height="2" 
+         fill={COLORS.sofa.top} />
        
-       {/* Seat cushions */}
-       <rect x={left + (connectedLeft ? 0 : 6)} y="10" width={right - left - (connectedLeft ? 0 : 6) - (connectedRight ? 0 : 6)} height="12" fill={COLORS.sofa.cushion} />
-       <rect x={left + (connectedLeft ? 0 : 6)} y="10" width={right - left - (connectedLeft ? 0 : 6) - (connectedRight ? 0 : 6)} height="3" fill={COLORS.sofa.cushionTop} />
-       <line x1={left + 10} y1="11" x2={left + 10} y2="21" stroke={COLORS.sofa.front} strokeWidth="0.8" opacity="0.6" />
-       <line x1={right - 10} y1="11" x2={right - 10} y2="21" stroke={COLORS.sofa.front} strokeWidth="0.8" opacity="0.6" />
+       {/* Seat cushion */}
+       <rect 
+         x={left + (connectedLeft ? 0 : 5)} 
+         y={top + 7} 
+         width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
+         height="9" 
+         fill={COLORS.sofa.cushion}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect 
+         x={left + (connectedLeft ? 0 : 5)} 
+         y={top + 7} 
+         width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
+         height="2" 
+         fill={COLORS.sofa.cushionTop} />
        
-       {/* Armrests */}
+       {/* Cushion divider line */}
+       <line x1="16" y1={top + 8} x2="16" y2={top + 15} stroke={COLORS.sofa.front} strokeWidth="0.8" opacity="0.5" />
+       
+       {/* Left armrest */}
        {!connectedLeft && (
          <>
-           <rect x="2" y="4" width="6" height="20" fill={COLORS.sofa.arm} />
-           <ellipse cx="5" cy="4" rx="3" ry="2" fill={COLORS.sofa.top} />
-           <rect x="2" y="4" width="6" height="3" fill={COLORS.sofa.top} />
+           <rect x={padding} y={top + 2} width="5" height="14" 
+             fill={COLORS.sofa.arm}
+             stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+           <ellipse cx={padding + 2.5} cy={top + 2} rx="2.5" ry="1.5" fill={COLORS.sofa.top} />
+           <rect x={padding} y={top + 2} width="5" height="2" fill={COLORS.sofa.top} />
          </>
        )}
+       
+       {/* Right armrest */}
        {!connectedRight && (
          <>
-           <rect x="24" y="4" width="6" height="20" fill={COLORS.sofa.arm} />
-           <ellipse cx="27" cy="4" rx="3" ry="2" fill={COLORS.sofa.top} />
-           <rect x="24" y="4" width="6" height="3" fill={COLORS.sofa.top} />
+           <rect x={32 - padding - 5} y={top + 2} width="5" height="14" 
+             fill={COLORS.sofa.arm}
+             stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+           <ellipse cx={32 - padding - 2.5} cy={top + 2} rx="2.5" ry="1.5" fill={COLORS.sofa.top} />
+           <rect x={32 - padding - 5} y={top + 2} width="5" height="2" fill={COLORS.sofa.top} />
          </>
        )}
        
        {/* Feet */}
-       {!connectedLeft && <rect x="3" y="28" width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />}
-       {!connectedRight && <rect x="26" y="28" width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />}
+       {!connectedLeft && <rect x={padding + 1} y={bottom} width="2.5" height="2" fill={COLORS.wood.shadow} rx="0.5" />}
+       {!connectedRight && <rect x={32 - padding - 3.5} y={bottom} width="2.5" height="2" fill={COLORS.wood.shadow} rx="0.5" />}
      </svg>
    );
  };
@@ -321,28 +357,38 @@ export const BedIcon = ({
    connectedLeft = false, 
    connectedRight = false 
  }: ConnectableAssetProps) => {
-   const left = connectedLeft ? 0 : 2;
-   const right = connectedRight ? 32 : 30;
-   const top = connectedTop ? 0 : 4;
+   // Padding for visual breathing room
+   const padding = 4;
+   const left = connectedLeft ? 0 : padding;
+   const right = connectedRight ? 32 : 32 - padding;
+   const topY = connectedTop ? 0 : 5;
+   const bottomY = 26;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
        {/* Tabletop */}
-       <rect x={left} y={top} width={right - left} height="6" fill={COLORS.wood.top} />
-       <rect x={left} y={top + 4} width={right - left} height="2" fill={COLORS.wood.front} />
+       <rect x={left} y={topY} width={right - left} height="5" 
+         fill={COLORS.wood.top}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left} y={topY + 4} width={right - left} height="1.5" fill={COLORS.wood.front} />
        
-       {/* Wood grain */}
-       <line x1={left + 4} y1={top + 1} x2={left + 4} y2={top + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
-       <line x1={left + 10} y1={top + 1} x2={left + 10} y2={top + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.3" />
-       <line x1={left + 16} y1={top + 1} x2={left + 16} y2={top + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
-       <line x1={right - 8} y1={top + 1} x2={right - 8} y2={top + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.3" />
+       {/* Wood grain details */}
+       <line x1={left + 4} y1={topY + 1} x2={left + 4} y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
+       <line x1="16" y1={topY + 1} x2="16" y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.3" />
+       <line x1={right - 4} y1={topY + 1} x2={right - 4} y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
        
        {/* Apron */}
-       <rect x={left + 2} y={top + 6} width={right - left - 4} height="4" fill={COLORS.wood.side} />
+       <rect x={left + 2} y={topY + 5} width={right - left - 4} height="3" fill={COLORS.wood.side} />
        
        {/* Legs */}
-       {!connectedLeft && <polygon points="4,12 8,12 7,28 5,28" fill={COLORS.wood.shadow} />}
-       {!connectedRight && <polygon points="24,12 28,12 27,28 25,28" fill={COLORS.wood.shadow} />}
+       {!connectedLeft && (
+         <polygon points={`${padding + 1},${topY + 9} ${padding + 3},${topY + 9} ${padding + 2.5},${bottomY} ${padding + 1.5},${bottomY}`} 
+           fill={COLORS.wood.shadow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       )}
+       {!connectedRight && (
+         <polygon points={`${32 - padding - 3},${topY + 9} ${32 - padding - 1},${topY + 9} ${32 - padding - 1.5},${bottomY} ${32 - padding - 2.5},${bottomY}`} 
+           fill={COLORS.wood.shadow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       )}
      </svg>
    );
  };
@@ -355,26 +401,38 @@ export const BedIcon = ({
    connectedLeft = false,
    connectedRight = false
  }: ConnectableAssetProps) => {
-   const left = connectedLeft ? 0 : 2;
-   const right = connectedRight ? 32 : 30;
-   const top = connectedTop ? 0 : 4;
+   // Padding for visual breathing room
+   const padding = 4;
+   const left = connectedLeft ? 0 : padding;
+   const right = connectedRight ? 32 : 32 - padding;
+   const topY = connectedTop ? 0 : 5;
+   const bottomY = 26;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Desktop */}
-       <rect x={left} y={top} width={right - left} height="4" fill={COLORS.wood.top} />
-       <rect x={left} y={top + 3} width={right - left} height="2" fill={COLORS.wood.front} />
+       {/* Desktop surface */}
+       <rect x={left} y={topY} width={right - left} height="4" 
+         fill={COLORS.wood.top}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left} y={topY + 3} width={right - left} height="1.5" fill={COLORS.wood.front} />
        
        {/* Drawer pedestal */}
-       <rect x="18" y={top + 5} width="12" height="23" fill={COLORS.wood.front} />
-       <rect x="18" y={top + 5} width="12" height="2" fill={COLORS.wood.top} />
-       <rect x="19" y={top + 8} width="10" height="8" fill={COLORS.wood.top} />
-       <rect x="22" y={top + 11} width="4" height="2" fill={COLORS.metal.handle} rx="0.5" />
-       <rect x="19" y={top + 18} width="10" height="8" fill={COLORS.wood.top} />
-       <rect x="22" y={top + 21} width="4" height="2" fill={COLORS.metal.handle} rx="0.5" />
+       <rect x={right - 12} y={topY + 4} width="11" height={bottomY - topY - 4} 
+         fill={COLORS.wood.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={right - 12} y={topY + 4} width="11" height="2" fill={COLORS.wood.top} />
+       {/* Top drawer */}
+       <rect x={right - 11} y={topY + 7} width="9" height="6" fill={COLORS.wood.top} />
+       <rect x={right - 8} y={topY + 9} width="3" height="1.5" fill={COLORS.metal.handle} rx="0.5" />
+       {/* Bottom drawer */}
+       <rect x={right - 11} y={topY + 14} width="9" height="6" fill={COLORS.wood.top} />
+       <rect x={right - 8} y={topY + 16} width="3" height="1.5" fill={COLORS.metal.handle} rx="0.5" />
        
        {/* Left leg */}
-       {!connectedLeft && <polygon points="4,10 8,10 7,28 5,28" fill={COLORS.wood.shadow} />}
+       {!connectedLeft && (
+         <polygon points={`${padding + 1},${topY + 5} ${padding + 3},${topY + 5} ${padding + 2.5},${bottomY} ${padding + 1.5},${bottomY}`} 
+           fill={COLORS.wood.shadow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       )}
      </svg>
    );
  };
@@ -462,111 +520,250 @@ export const BedIcon = ({
  // ==================== SINGLE ASSETS (ISOMETRIC 75°) ====================
  
  // Armchair
- export const ArmchairIcon = ({ className }: AssetIconProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <rect x="4" y="24" width="24" height="4" fill={COLORS.armchair.front} />
-     <rect x="4" y="22" width="24" height="2" fill={COLORS.armchair.top} />
-     <rect x="8" y="4" width="16" height="10" fill={COLORS.armchair.front} />
-     <rect x="8" y="4" width="16" height="3" fill={COLORS.armchair.top} />
-     <rect x="8" y="14" width="16" height="8" fill={COLORS.armchair.cushion} />
-     <rect x="8" y="14" width="16" height="2" fill={COLORS.armchair.top} />
-     <rect x="2" y="6" width="6" height="18" fill={COLORS.armchair.side} />
-     <ellipse cx="5" cy="6" rx="3" ry="2" fill={COLORS.armchair.top} />
-     <rect x="24" y="6" width="6" height="18" fill={COLORS.armchair.side} />
-     <ellipse cx="27" cy="6" rx="3" ry="2" fill={COLORS.armchair.top} />
-     <rect x="5" y="28" width="4" height="2" fill={COLORS.wood.shadow} rx="0.5" />
-     <rect x="23" y="28" width="4" height="2" fill={COLORS.wood.shadow} rx="0.5" />
-   </svg>
- );
+ export const ArmchairIcon = ({ className }: AssetIconProps) => {
+   // Padding: ~4px each side for visual breathing room
+   const left = 5;
+   const right = 27;
+   const top = 4;
+   const bottom = 26;
+   
+   return (
+     <svg viewBox="0 0 32 32" className={className}>
+       {/* Base frame */}
+       <rect x={left + 2} y="21" width={right - left - 4} height="4" 
+         fill={COLORS.armchair.front} 
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left + 2} y="19" width={right - left - 4} height="2" fill={COLORS.armchair.top} />
+       
+       {/* Back rest - more top-down view */}
+       <rect x={left + 4} y={top + 1} width={right - left - 8} height="8" 
+         fill={COLORS.armchair.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left + 4} y={top + 1} width={right - left - 8} height="2" fill={COLORS.armchair.top} />
+       
+       {/* Seat cushion */}
+       <rect x={left + 4} y={top + 9} width={right - left - 8} height="7" 
+         fill={COLORS.armchair.cushion}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left + 4} y={top + 9} width={right - left - 8} height="2" fill={COLORS.armchair.top} />
+       
+       {/* Left armrest */}
+       <rect x={left} y={top + 3} width="5" height="14" 
+         fill={COLORS.armchair.side}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <ellipse cx={left + 2.5} cy={top + 3} rx="2.5" ry="1.5" fill={COLORS.armchair.top} />
+       
+       {/* Right armrest */}
+       <rect x={right - 5} y={top + 3} width="5" height="14" 
+         fill={COLORS.armchair.side}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <ellipse cx={right - 2.5} cy={top + 3} rx="2.5" ry="1.5" fill={COLORS.armchair.top} />
+       
+       {/* Feet */}
+       <rect x={left + 1} y={bottom} width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />
+       <rect x={right - 4} y={bottom} width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />
+     </svg>
+   );
+ };
  
  // Chair
- export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <rect x="8" y="2" width="16" height="10" fill={COLORS.wood.front} />
-     <rect x="8" y="2" width="16" height="2" fill={COLORS.wood.top} />
-     <rect x="10" y="4" width="3" height="6" fill={COLORS.wood.top} />
-     <rect x="14.5" y="4" width="3" height="6" fill={COLORS.wood.top} />
-     <rect x="19" y="4" width="3" height="6" fill={COLORS.wood.top} />
-     <rect x="6" y="14" width="20" height="6" fill={COLORS.wood.top} />
-     <rect x="6" y="18" width="20" height="2" fill={COLORS.wood.front} />
-     <polygon points="7,20 10,20 9,30 8,30" fill={COLORS.wood.shadow} />
-     <polygon points="22,20 25,20 24,30 23,30" fill={COLORS.wood.shadow} />
-     <rect x="10" y="25" width="12" height="1.5" fill={COLORS.wood.side} />
-   </svg>
- );
+ export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
+   // Padding: ~5px each side for visual breathing room (similar to armchair)
+   const left = 6;
+   const right = 26;
+   const top = 4;
+   
+   return (
+     <svg viewBox="0 0 32 32" className={className}>
+       {/* Backrest - more top-down view */}
+       <rect x={left + 2} y={top} width={right - left - 4} height="8" 
+         fill={COLORS.wood.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left + 2} y={top} width={right - left - 4} height="2" fill={COLORS.wood.top} />
+       {/* Backrest slats */}
+       <rect x={left + 4} y={top + 2} width="2" height="4" fill={COLORS.wood.top} />
+       <rect x="14" y={top + 2} width="4" height="4" fill={COLORS.wood.top} />
+       <rect x={right - 6} y={top + 2} width="2" height="4" fill={COLORS.wood.top} />
+       
+       {/* Seat - flatter perspective */}
+       <rect x={left} y={top + 10} width={right - left} height="5" 
+         fill={COLORS.wood.top}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left} y={top + 13} width={right - left} height="2" fill={COLORS.wood.front} />
+       
+       {/* Legs */}
+       <polygon points={`${left + 1},${top + 16} ${left + 3},${top + 16} ${left + 2.5},26 ${left + 1.5},26`} 
+         fill={COLORS.wood.shadow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       <polygon points={`${right - 3},${top + 16} ${right - 1},${top + 16} ${right - 1.5},26 ${right - 2.5},26`} 
+         fill={COLORS.wood.shadow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       
+       {/* Stretcher bar */}
+       <rect x={left + 3} y="22" width={right - left - 6} height="1.5" 
+         fill={COLORS.wood.side}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+     </svg>
+   );
+ };
  
  // Fridge
- export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <rect x="4" y="2" width="24" height="4" fill={COLORS.metal.top} />
-     <rect x="4" y="4" width="24" height="2" fill={COLORS.appliance.front} />
-     <rect x="4" y="4" width="24" height="26" fill={COLORS.appliance.front} />
-     <polygon points="28,4 30,2 30,28 28,30" fill={COLORS.metal.side} />
-     <rect x="5" y="5" width="22" height="9" fill={COLORS.appliance.top} />
-     <rect x="23" y="7" width="2" height="5" fill={COLORS.metal.handle} rx="0.5" />
-     <rect x="5" y="14" width="22" height="1" fill={COLORS.metal.shadow} />
-     <rect x="5" y="15" width="22" height="14" fill={COLORS.appliance.top} />
-     <rect x="23" y="18" width="2" height="8" fill={COLORS.metal.handle} rx="0.5" />
-     <rect x="8" y="18" width="8" height="6" fill={COLORS.metal.side} rx="1" />
-   </svg>
- );
+ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
+   // Padding: ~5px each side
+   const left = 5;
+   const right = 27;
+   const top = 3;
+   const bottom = 28;
+   
+   return (
+     <svg viewBox="0 0 32 32" className={className}>
+       {/* Main body */}
+       <rect x={left} y={top} width={right - left} height={bottom - top} 
+         fill={COLORS.appliance.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left} y={top} width={right - left} height="3" fill={COLORS.metal.top} />
+       
+       {/* Side panel (isometric depth) */}
+       <polygon points={`${right},${top + 3} ${right + 2},${top + 1} ${right + 2},${bottom - 2} ${right},${bottom}`} 
+         fill={COLORS.metal.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       
+       {/* Freezer door */}
+       <rect x={left + 1} y={top + 1} width={right - left - 2} height="8" fill={COLORS.appliance.top} />
+       <rect x={right - 5} y={top + 3} width="2" height="4" fill={COLORS.metal.handle} rx="0.5" />
+       
+       {/* Divider */}
+       <rect x={left + 1} y={top + 9} width={right - left - 2} height="1" fill={COLORS.metal.shadow} />
+       
+       {/* Fridge door */}
+       <rect x={left + 1} y={top + 10} width={right - left - 2} height="13" fill={COLORS.appliance.top} />
+       <rect x={right - 5} y={top + 13} width="2" height="7" fill={COLORS.metal.handle} rx="0.5" />
+       
+       {/* Ice maker detail */}
+       <rect x={left + 3} y={top + 13} width="7" height="5" fill={COLORS.metal.side} rx="1" />
+     </svg>
+   );
+ };
  
  // TV
- export const TvIcon = ({ className }: AssetIconProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <rect x="1" y="4" width="30" height="16" fill={COLORS.screen.frame} />
-     <rect x="1" y="4" width="30" height="2" fill={COLORS.metal.shadow} />
-     <rect x="2" y="6" width="28" height="13" fill={COLORS.screen.display} />
-     <rect x="4" y="7" width="10" height="4" fill={COLORS.screen.glow} opacity="0.3" />
-     <rect x="14" y="20" width="4" height="4" fill={COLORS.metal.shadow} />
-     <rect x="10" y="24" width="12" height="4" fill={COLORS.metal.front} />
-     <rect x="10" y="24" width="12" height="1" fill={COLORS.metal.top} />
-   </svg>
- );
+ export const TvIcon = ({ className }: AssetIconProps) => {
+   // Padding: ~4px each side
+   const left = 4;
+   const right = 28;
+   const top = 5;
+   
+   return (
+     <svg viewBox="0 0 32 32" className={className}>
+       {/* Screen frame */}
+       <rect x={left} y={top} width={right - left} height="14" 
+         fill={COLORS.screen.frame}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left} y={top} width={right - left} height="2" fill={COLORS.metal.shadow} />
+       
+       {/* Display */}
+       <rect x={left + 1} y={top + 2} width={right - left - 2} height="11" fill={COLORS.screen.display} />
+       <rect x={left + 3} y={top + 3} width="8" height="3" fill={COLORS.screen.glow} opacity="0.3" />
+       
+       {/* Stand neck */}
+       <rect x="14" y={top + 15} width="4" height="3" fill={COLORS.metal.shadow} />
+       
+       {/* Stand base */}
+       <rect x="11" y={top + 18} width="10" height="3" 
+         fill={COLORS.metal.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x="11" y={top + 18} width="10" height="1" fill={COLORS.metal.top} />
+     </svg>
+   );
+ };
  
  // Bookshelf
- export const BookshelfIcon = ({ className }: AssetIconProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <rect x="1" y="2" width="30" height="28" fill={COLORS.wood.front} />
-     <rect x="1" y="2" width="30" height="2" fill={COLORS.wood.top} />
-     <polygon points="31,4 32,2 32,30 31,30" fill={COLORS.wood.side} />
-     <rect x="2" y="10" width="28" height="1.5" fill={COLORS.wood.shadow} />
-     <rect x="2" y="20" width="28" height="1.5" fill={COLORS.wood.shadow} />
-     <rect x="3" y="3" width="3" height="7" fill="#C86868" />
-     <rect x="6" y="4" width="4" height="6" fill="#6888B8" />
-     <rect x="10" y="3" width="3" height="7" fill="#68B888" />
-     <rect x="13" y="4" width="5" height="6" fill="#B8A868" />
-     <rect x="18" y="3" width="3" height="7" fill="#8868B8" />
-     <rect x="21" y="4" width="5" height="6" fill="#B86888" />
-     <rect x="26" y="3" width="3" height="7" fill="#689898" />
-     <rect x="3" y="12" width="5" height="8" fill="#6B8B9B" />
-     <rect x="8" y="13" width="4" height="7" fill="#9B6B6B" />
-     <rect x="12" y="12" width="6" height="8" fill="#6B9B6B" />
-     <rect x="18" y="13" width="4" height="7" fill="#9B9B6B" />
-     <rect x="22" y="12" width="5" height="8" fill="#6B6B9B" />
-     <rect x="3" y="22" width="6" height="6" fill="#8B6B8B" />
-     <rect x="9" y="23" width="5" height="5" fill="#6B8B8B" />
-     <rect x="14" y="22" width="4" height="6" fill="#8B8B6B" />
-     <rect x="18" y="23" width="5" height="5" fill="#6B6B8B" />
-     <rect x="23" y="22" width="5" height="6" fill="#8B6B6B" />
-   </svg>
- );
+ export const BookshelfIcon = ({ className }: AssetIconProps) => {
+   // Padding: ~4px each side
+   const left = 4;
+   const right = 28;
+   const top = 4;
+   const bottom = 28;
+   
+   return (
+     <svg viewBox="0 0 32 32" className={className}>
+       {/* Main frame */}
+       <rect x={left} y={top} width={right - left} height={bottom - top} 
+         fill={COLORS.wood.front}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <rect x={left} y={top} width={right - left} height="2" fill={COLORS.wood.top} />
+       
+       {/* Side depth */}
+       <polygon points={`${right},${top + 2} ${right + 1},${top + 1} ${right + 1},${bottom - 1} ${right},${bottom}`} 
+         fill={COLORS.wood.side} />
+       
+       {/* Shelves */}
+       <rect x={left + 1} y={top + 9} width={right - left - 2} height="1.5" fill={COLORS.wood.shadow} />
+       <rect x={left + 1} y={top + 16} width={right - left - 2} height="1.5" fill={COLORS.wood.shadow} />
+       
+       {/* Top shelf books */}
+       <rect x={left + 2} y={top + 1} width="2.5" height="6" fill="#C86868" />
+       <rect x={left + 4.5} y={top + 2} width="3" height="5" fill="#6888B8" />
+       <rect x={left + 7.5} y={top + 1} width="2.5" height="6" fill="#68B888" />
+       <rect x={left + 10} y={top + 2} width="4" height="5" fill="#B8A868" />
+       <rect x={left + 14} y={top + 1} width="2.5" height="6" fill="#8868B8" />
+       <rect x={left + 16.5} y={top + 2} width="4" height="5" fill="#B86888" />
+       <rect x={left + 20.5} y={top + 1} width="2" height="6" fill="#689898" />
+       
+       {/* Middle shelf books */}
+       <rect x={left + 2} y={top + 11} width="4" height="5" fill="#6B8B9B" />
+       <rect x={left + 6} y={top + 12} width="3" height="4" fill="#9B6B6B" />
+       <rect x={left + 9} y={top + 11} width="5" height="5" fill="#6B9B6B" />
+       <rect x={left + 14} y={top + 12} width="3" height="4" fill="#9B9B6B" />
+       <rect x={left + 17} y={top + 11} width="4" height="5" fill="#6B6B9B" />
+       
+       {/* Bottom shelf books */}
+       <rect x={left + 2} y={top + 18} width="5" height="5" fill="#8B6B8B" />
+       <rect x={left + 7} y={top + 19} width="4" height="4" fill="#6B8B8B" />
+       <rect x={left + 11} y={top + 18} width="3" height="5" fill="#8B8B6B" />
+       <rect x={left + 14} y={top + 19} width="4" height="4" fill="#6B6B8B" />
+       <rect x={left + 18} y={top + 18} width="4" height="5" fill="#8B6B6B" />
+     </svg>
+   );
+ };
  
  // Plant
- export const PlantIcon = ({ className }: AssetIconProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <ellipse cx="16" cy="6" rx="5" ry="8" fill={COLORS.plant.leafFront} />
-     <ellipse cx="10" cy="8" rx="3" ry="6" fill={COLORS.plant.leafFront} transform="rotate(-20 10 8)" />
-     <ellipse cx="22" cy="8" rx="3" ry="6" fill={COLORS.plant.leafFront} transform="rotate(20 22 8)" />
-     <ellipse cx="7" cy="12" rx="2" ry="4" fill={COLORS.plant.leafSide} transform="rotate(-35 7 12)" />
-     <ellipse cx="25" cy="12" rx="2" ry="4" fill={COLORS.plant.leafSide} transform="rotate(35 25 12)" />
-     <ellipse cx="15" cy="4" rx="1.5" ry="4" fill={COLORS.plant.leafTop} opacity="0.5" />
-     <ellipse cx="16" cy="18" rx="8" ry="4" fill={COLORS.plant.potSide} />
-     <polygon points="8,18 24,18 22,28 10,28" fill={COLORS.plant.pot} />
-     <polygon points="8,18 10,28 12,28 10,18" fill={COLORS.plant.potSide} />
-     <ellipse cx="16" cy="18" rx="7" ry="3" fill={COLORS.plant.pot} />
-   </svg>
- );
+ export const PlantIcon = ({ className }: AssetIconProps) => {
+   // Padding: ~5px each side
+   return (
+     <svg viewBox="0 0 32 32" className={className}>
+       {/* Center leaves */}
+       <ellipse cx="16" cy="7" rx="4" ry="6" 
+         fill={COLORS.plant.leafFront}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       {/* Side leaves */}
+       <ellipse cx="11" cy="9" rx="2.5" ry="5" 
+         fill={COLORS.plant.leafFront} 
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5}
+         transform="rotate(-20 11 9)" />
+       <ellipse cx="21" cy="9" rx="2.5" ry="5" 
+         fill={COLORS.plant.leafFront} 
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5}
+         transform="rotate(20 21 9)" />
+       {/* Outer leaves */}
+       <ellipse cx="8" cy="12" rx="1.8" ry="3.5" 
+         fill={COLORS.plant.leafSide} transform="rotate(-35 8 12)" />
+       <ellipse cx="24" cy="12" rx="1.8" ry="3.5" 
+         fill={COLORS.plant.leafSide} transform="rotate(35 24 12)" />
+       {/* Leaf highlight */}
+       <ellipse cx="15" cy="5" rx="1.2" ry="3" fill={COLORS.plant.leafTop} opacity="0.5" />
+       
+       {/* Pot rim */}
+       <ellipse cx="16" cy="17" rx="7" ry="3.5" 
+         fill={COLORS.plant.potSide}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       {/* Pot body */}
+       <polygon points="9,17 23,17 21,26 11,26" 
+         fill={COLORS.plant.pot}
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       {/* Pot shading */}
+       <polygon points="9,17 11,26 13,26 11,17" fill={COLORS.plant.potSide} />
+       {/* Pot top */}
+       <ellipse cx="16" cy="17" rx="6" ry="2.5" fill={COLORS.plant.pot} />
+     </svg>
+   );
+ };
  
  // Toilet
  export const ToiletIcon = ({ className }: AssetIconProps) => (

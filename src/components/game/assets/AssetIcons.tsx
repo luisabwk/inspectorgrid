@@ -422,7 +422,7 @@ export const BedIcon = ({
  };
  
 // Table - 85° perspective
-// Table - 85° isometric perspective with trapezoid legs
+// Table - 85° isometric perspective with rectangular legs and depth
  export const TableIcon = ({ 
    className, 
    connectedTop = false, 
@@ -439,55 +439,32 @@ export const BedIcon = ({
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Tabletop */}
-       <rect x={left} y={topY} width={right - left} height="5" 
-         fill={COLORS.wood.top}
+        {/* Tabletop with 85° depth */}
+        <rect x={left} y={topY} width={right - left} height="6" 
+          fill={COLORS.wood.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left} y={topY + 4} width={right - left} height="1.5" fill={COLORS.wood.front} />
+        <rect x={left} y={topY} width={right - left} height="2" fill={COLORS.wood.top} />
        
-       {/* Wood grain details */}
-       <line x1={left + 4} y1={topY + 1} x2={left + 4} y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
-       <line x1="16" y1={topY + 1} x2="16" y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.3" />
-       <line x1={right - 4} y1={topY + 1} x2={right - 4} y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
+        {/* Apron - connected to tabletop */}
+        <rect x={left + 1} y={topY + 6} width={right - left - 2} height="3" fill={COLORS.wood.side} />
        
-       {/* Apron */}
-       <rect x={left + 2} y={topY + 5} width={right - left - 4} height="3" fill={COLORS.wood.side} />
-       
-      {/* Legs - small trapezoids for 85° isometric */}
+       {/* Legs - rectangular for 85° perspective */}
        {!connectedLeft && (
-          <>
-            {/* Front-left leg */}
-            <polygon 
-              points={`${padding + 1},${topY + 8} ${padding + 4},${topY + 8} ${padding + 3.5},${bottomY} ${padding + 1.5},${bottomY}`} 
-              fill={COLORS.wood.shadow} 
-              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-            {/* Back-left leg */}
-            <polygon 
-              points={`${padding + 1},${bottomY - 8} ${padding + 4},${bottomY - 8} ${padding + 3.5},${bottomY} ${padding + 1.5},${bottomY}`} 
-              fill={COLORS.wood.side} 
-              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-          </>
+          <rect x={padding + 1} y={topY + 9} width="3" height={bottomY - topY - 9} 
+            fill={COLORS.wood.shadow} 
+            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
        )}
        {!connectedRight && (
-          <>
-            {/* Front-right leg */}
-            <polygon 
-              points={`${32 - padding - 4},${topY + 8} ${32 - padding - 1},${topY + 8} ${32 - padding - 1.5},${bottomY} ${32 - padding - 3.5},${bottomY}`} 
-              fill={COLORS.wood.shadow} 
-              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-            {/* Back-right leg */}
-            <polygon 
-              points={`${32 - padding - 4},${bottomY - 8} ${32 - padding - 1},${bottomY - 8} ${32 - padding - 1.5},${bottomY} ${32 - padding - 3.5},${bottomY}`} 
-              fill={COLORS.wood.side} 
-              stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-          </>
+          <rect x={32 - padding - 4} y={topY + 9} width="3" height={bottomY - topY - 9} 
+            fill={COLORS.wood.shadow} 
+            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
        )}
      </svg>
    );
  };
  
 // Desk - 85° perspective
-// Desk - 85° isometric perspective with rectangular legs
+// Desk - 85° isometric perspective with pedestal and depth
  export const DeskIcon = ({
    className,
    connectedTop = false,
@@ -504,31 +481,34 @@ export const BedIcon = ({
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Desktop surface */}
-       <rect x={left} y={topY} width={right - left} height="4" 
-         fill={COLORS.wood.top}
+        {/* Desktop surface with 85° depth */}
+        <rect x={left} y={topY} width={right - left} height="5" 
+          fill={COLORS.wood.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left} y={topY + 3} width={right - left} height="1.5" fill={COLORS.wood.front} />
+        <rect x={left} y={topY} width={right - left} height="2" fill={COLORS.wood.top} />
        
-       {/* Drawer pedestal */}
-       <rect x={right - 12} y={topY + 4} width="11" height={bottomY - topY - 4} 
+        {/* Drawer pedestal with lateral depth */}
+        <rect x={right - 12} y={topY + 5} width="11" height={bottomY - topY - 5} 
          fill={COLORS.wood.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={right - 12} y={topY + 4} width="11" height="2" fill={COLORS.wood.top} />
+        <rect x={right - 12} y={topY + 5} width="11" height="2" fill={COLORS.wood.top} />
+        {/* Left side of pedestal (85° depth) */}
+        <rect x={right - 13} y={topY + 5} width="1.5" height={bottomY - topY - 5} 
+          fill={COLORS.wood.side} />
        {/* Top drawer */}
-       <rect x={right - 11} y={topY + 7} width="9" height="6" fill={COLORS.wood.top} />
-       <rect x={right - 8} y={topY + 9} width="3" height="1.5" fill={COLORS.metal.handle} rx="0.5" />
+        <rect x={right - 11} y={topY + 8} width="9" height="5" fill={COLORS.wood.top} />
+        <rect x={right - 8} y={topY + 10} width="3" height="1.5" fill={COLORS.metal.handle} rx="0.5" />
        {/* Bottom drawer */}
-       <rect x={right - 11} y={topY + 14} width="9" height="6" fill={COLORS.wood.top} />
-       <rect x={right - 8} y={topY + 16} width="3" height="1.5" fill={COLORS.metal.handle} rx="0.5" />
+        <rect x={right - 11} y={topY + 14} width="9" height="5" fill={COLORS.wood.top} />
+        <rect x={right - 8} y={topY + 15.5} width="3" height="1.5" fill={COLORS.metal.handle} rx="0.5" />
        
-      {/* Left legs - rectangles with height for 85° perspective */}
+       {/* Left leg - more robust with 85° depth */}
        {!connectedLeft && (
           <>
-            <rect x={padding + 1} y={topY + 5} width="3" height={bottomY - topY - 5} 
+            <rect x={padding + 1} y={topY + 5} width="3.5" height={bottomY - topY - 5} 
               fill={COLORS.wood.side} 
               stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-            <rect x={padding + 1} y={topY + 5} width="3" height="2" 
+            <rect x={padding + 1} y={topY + 5} width="3.5" height="2" 
               fill={COLORS.wood.front} />
           </>
        )}
@@ -537,7 +517,7 @@ export const BedIcon = ({
  };
  
 // Stove - 85° perspective
-// Stove - 85° perspective (smaller than fridge)
+// Stove - 85° perspective with depth (smaller than fridge)
 export const StoveIcon = ({ 
    className, 
    direction = 'down',
@@ -551,41 +531,48 @@ export const StoveIcon = ({
   const right = connectedRight ? 32 : 27;
   const top = 5;
   const bottom = 27;
+  const center = (left + right) / 2;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Body */}
-      <rect x={left} y={top} width={right - left} height="5" 
-        fill={COLORS.metal.top} 
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left} y={top + 4} width={right - left} height={bottom - top - 4} 
+        {/* Left side depth (85°) */}
+        {!connectedLeft && (
+          <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+        )}
+        
+        {/* Cooktop surface with depth */}
+       <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="6" 
+         fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Body */}
+       <rect x={left + (connectedLeft ? 0 : 2)} y={top + 6} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 6} 
         fill={COLORS.metal.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        
-      {/* 4 Burners - smaller */}
-      <ellipse cx={(left + right) / 2 - 4} cy={top + 2} rx="3" ry="1.5" fill={COLORS.metal.shadow} />
-      <ellipse cx={(left + right) / 2 - 4} cy={top + 2} rx="1.5" ry="0.8" fill={COLORS.metal.side} />
-      <ellipse cx={(left + right) / 2 + 4} cy={top + 2} rx="3" ry="1.5" fill={COLORS.metal.shadow} />
-      <ellipse cx={(left + right) / 2 + 4} cy={top + 2} rx="1.5" ry="0.8" fill={COLORS.metal.side} />
+       {/* 4 Burners - flattened ellipses for 85° */}
+       <ellipse cx={center - 4} cy={top + 3} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
+       <ellipse cx={center - 4} cy={top + 3} rx="1.2" ry="0.5" fill={COLORS.metal.side} />
+       <ellipse cx={center + 4} cy={top + 3} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
+       <ellipse cx={center + 4} cy={top + 3} rx="1.2" ry="0.5" fill={COLORS.metal.side} />
        
       {/* Knobs */}
-      <rect x={left + 1} y={top + 6} width={right - left - 2} height="2" fill={COLORS.metal.side} />
-      <circle cx={(left + right) / 2 - 5} cy={top + 7} r="1" fill={COLORS.metal.handle} />
-      <circle cx={(left + right) / 2 - 2} cy={top + 7} r="1" fill={COLORS.metal.handle} />
-      <circle cx={(left + right) / 2 + 2} cy={top + 7} r="1" fill={COLORS.metal.handle} />
-      <circle cx={(left + right) / 2 + 5} cy={top + 7} r="1" fill={COLORS.metal.handle} />
+       <rect x={left + (connectedLeft ? 1 : 3)} y={top + 7} width={right - left - (connectedLeft ? 2 : 4)} height="2" fill={COLORS.metal.side} />
+       <circle cx={center - 5} cy={top + 8} r="1" fill={COLORS.metal.handle} />
+       <circle cx={center - 2} cy={top + 8} r="1" fill={COLORS.metal.handle} />
+       <circle cx={center + 2} cy={top + 8} r="1" fill={COLORS.metal.handle} />
+       <circle cx={center + 5} cy={top + 8} r="1" fill={COLORS.metal.handle} />
        
       {/* Oven */}
-      <rect x={left + 1} y={top + 9} width={right - left - 2} height="10" 
+       <rect x={left + (connectedLeft ? 1 : 3)} y={top + 10} width={right - left - (connectedLeft ? 2 : 4)} height="10" 
         fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 2} y={top + 10} width={right - left - 4} height="1" fill={COLORS.metal.chrome} />
-      <rect x={left + 3} y={top + 12} width={right - left - 6} height="5" fill={COLORS.screen.display} opacity="0.5" />
+       <rect x={left + (connectedLeft ? 2 : 4)} y={top + 11} width={right - left - (connectedLeft ? 4 : 6)} height="1" fill={COLORS.metal.chrome} />
+       <rect x={left + (connectedLeft ? 3 : 5)} y={top + 13} width={right - left - (connectedLeft ? 6 : 8)} height="5" fill={COLORS.screen.display} opacity="0.5" />
      </svg>
    );
  };
  
- // Sink - isometric 75°
+  // Sink - 85° perspective with depth
  export const SinkIcon = ({ 
    className, 
    direction = 'down',
@@ -597,37 +584,43 @@ export const StoveIcon = ({
   // Padding: ~4px when not connected
   const left = connectedLeft ? 0 : 4;
   const right = connectedRight ? 32 : 28;
+  const center = (left + right) / 2;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Counter */}
-      <rect x={left} y="4" width={right - left} height="6" 
-        fill={COLORS.appliance.top}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left} y="8" width={right - left} height="18" 
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        {/* Left side depth (85°) */}
+        {!connectedLeft && (
+          <rect x={left} y="4" width="2" height="22" fill={COLORS.appliance.side} />
+        )}
+        
+        {/* Counter with depth */}
+       <rect x={left + (connectedLeft ? 0 : 2)} y="4" width={right - left - (connectedLeft ? 0 : 2)} height="6" 
+         fill={COLORS.appliance.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Cabinet with depth */}
+       <rect x={left + (connectedLeft ? 0 : 2)} y="10" width={right - left - (connectedLeft ? 0 : 2)} height="16" 
+         fill={COLORS.appliance.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        
-       {/* Basin */}
-      <ellipse cx="16" cy="6" rx="7" ry="3.5" fill={COLORS.metal.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx="16" cy="6" rx="5" ry="2.5" fill={COLORS.water.top} />
-      <ellipse cx="16" cy="6" rx="1.2" ry="0.8" fill={COLORS.metal.shadow} />
+        {/* Basin - smaller and more proportional */}
+       <ellipse cx={center} cy="6.5" rx="6" ry="3" fill={COLORS.metal.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+       <ellipse cx={center} cy="6.5" rx="4.5" ry="2.2" fill={COLORS.water.top} />
+       <ellipse cx={center} cy="6.5" rx="1" ry="0.6" fill={COLORS.metal.shadow} />
        
-       {/* Faucet */}
-      <rect x="14" y="2" width="4" height="2.5" fill={COLORS.metal.chrome} />
-      <ellipse cx="16" cy="2" rx="2" ry="0.8" fill={COLORS.metal.top} />
-      <path d="M18 3 Q20 3 20 6" stroke={COLORS.metal.chrome} strokeWidth="1.5" fill="none" />
-      <ellipse cx="20" cy="6" rx="0.8" ry="0.4" fill={COLORS.metal.side} />
+        {/* Faucet - smaller and more proportional */}
+       <rect x={center - 1.5} y="2.5" width="3" height="2" fill={COLORS.metal.chrome} />
+       <ellipse cx={center} cy="2.5" rx="1.5" ry="0.6" fill={COLORS.metal.top} />
+       <path d={`M${center + 1.5} 3.5 Q${center + 3} 3.5 ${center + 3} 5.5`} stroke={COLORS.metal.chrome} strokeWidth="1.2" fill="none" />
+       <ellipse cx={center + 3} cy="5.5" rx="0.6" ry="0.3" fill={COLORS.metal.side} />
        
        {/* Cabinet doors */}
-      <rect x={left + 1} y="12" width={(right - left - 2) / 2 - 1} height="12" 
+       <rect x={left + (connectedLeft ? 1 : 3)} y="12" width={(right - left - (connectedLeft ? 2 : 4)) / 2 - 1} height="12" 
         fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-      <rect x={left + (right - left) / 2 + 1} y="12" width={(right - left - 2) / 2 - 1} height="12" 
+       <rect x={center + 1} y="12" width={(right - left - (connectedLeft ? 2 : 4)) / 2 - 1} height="12" 
         fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-      <rect x={left + (right - left) / 2 - 3} y="16" width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
-      <rect x={left + (right - left) / 2 + 1.5} y="16" width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
+       <rect x={center - 2.5} y="16" width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
+       <rect x={center + 1} y="16" width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
      </svg>
    );
  };
@@ -696,31 +689,34 @@ export const ArmchairIcon = ({ className }: AssetIconProps) => {
 };
  
  // Chair
-// Chair - 85° isometric perspective with rectangular backrest
+// Chair - 85° isometric perspective with rectangular legs
  export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
    return (
      <svg viewBox="0 0 32 32" className={className}>
-      {/* Backrest - rectangle with depth */}
-      <rect x="8" y="4" width="16" height="7" 
+       {/* Backrest with left side depth */}
+       <rect x="7" y="4" width="1.5" height="8" fill={COLORS.wood.side} />
+       <rect x="8.5" y="4" width="14" height="8" 
         fill={COLORS.chair.back} 
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="8" y="4" width="16" height="2" fill={COLORS.chair.seat} />
+       <rect x="8.5" y="4" width="14" height="2" fill={COLORS.chair.seat} />
       
-      {/* Seat - rectangle with depth */}
-      <rect x="6" y="12" width="20" height="10" 
+       {/* Seat connected to backrest */}
+       <rect x="7" y="11" width="18" height="8" 
         fill={COLORS.chair.seat} 
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="6" y="12" width="20" height="2" fill="#F0E8D8" />
+       <rect x="7" y="11" width="18" height="2" fill="#F0E8D8" />
       
-      {/* Legs - small trapezoids for 85° */}
-      <polygon points="7,22 10,22 9.5,28 7.5,28" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-      <polygon points="22,22 25,22 24.5,28 22.5,28" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       {/* Legs - rectangular for 85° */}
+       <rect x="8" y="19" width="2.5" height="7" fill={COLORS.chair.legs} 
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+       <rect x="21.5" y="19" width="2.5" height="7" fill={COLORS.chair.legs} 
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
      </svg>
    );
  };
  
  // Fridge
-// Fridge - larger than stove for proper proportions
+// Fridge - 85° perspective with left side depth
 export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
   // Padding: ~4px each side (larger than stove)
   const left = 4;
@@ -730,25 +726,29 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
    
   return (
     <svg viewBox="0 0 32 32" className={className}>
+        {/* Left side depth (85°) */}
+        <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+        
        {/* Main body */}
-      <rect x={left} y={top} width={right - left} height={bottom - top} 
+       <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
          fill={COLORS.appliance.front}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left} y={top} width={right - left} height="3" fill={COLORS.metal.top} />
+       <rect x={left} y={top} width={right - left} height="3" fill={COLORS.metal.top} 
+         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        
       {/* Freezer door */}
-      <rect x={left + 1} y={top + 1} width={right - left - 2} height="8" fill={COLORS.appliance.top} />
+       <rect x={left + 3} y={top + 4} width={right - left - 5} height="7" fill={COLORS.appliance.top} />
       <rect x={right - 5} y={top + 3} width="2" height="4" fill={COLORS.metal.handle} rx="0.5" />
        
       {/* Divider */}
-      <rect x={left + 1} y={top + 9} width={right - left - 2} height="1" fill={COLORS.metal.shadow} />
+       <rect x={left + 3} y={top + 11} width={right - left - 5} height="1" fill={COLORS.metal.shadow} />
        
       {/* Fridge door */}
-      <rect x={left + 1} y={top + 10} width={right - left - 2} height="14" fill={COLORS.appliance.top} />
-      <rect x={right - 5} y={top + 14} width="2" height="7" fill={COLORS.metal.handle} rx="0.5" />
+       <rect x={left + 3} y={top + 12} width={right - left - 5} height="12" fill={COLORS.appliance.top} />
+       <rect x={right - 5} y={top + 15} width="2" height="6" fill={COLORS.metal.handle} rx="0.5" />
        
       {/* Ice maker detail */}
-      <rect x={left + 3} y={top + 14} width="8" height="5" fill={COLORS.metal.side} rx="1" />
+       <rect x={left + 5} y={top + 15} width="7" height="4" fill={COLORS.metal.side} rx="1" />
     </svg>
   );
 };

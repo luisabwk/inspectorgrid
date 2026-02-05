@@ -127,15 +127,15 @@ export const BedIcon = ({
       return (
         <svg viewBox="0 0 32 32" className={className}>
           {/* Frame superior/inferior */}
-          <rect x="2" y="1" width="30" height="2" fill={COLORS.bed.frame} />
-          <rect x="2" y="29" width="30" height="2" fill={COLORS.bed.frame} />
+          <rect x="2" y="1" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="2" y="29" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           {/* Cabeceira de madeira (vertical) */}
-          <rect x="0" y="2" width="5" height="28" fill={COLORS.wood.front} />
+          <rect x="0" y="2" width="5" height="28" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           <rect x="0" y="2" width="2" height="28" fill={COLORS.wood.top} />
           <rect x="1" y="5" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
           <rect x="1" y="19" width="2" height="8" fill={COLORS.wood.side} rx="0.5" />
           {/* Colchão base */}
-          <rect x="5" y="3" width="27" height="26" fill={COLORS.bed.mattress} />
+          <rect x="5" y="3" width="27" height="26" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           {/* Lençol bege (área do travesseiro) */}
           <rect x="6" y="4" width="14" height="24" fill={COLORS.bed.sheet} />
           {/* Cobertor verde (porção que conecta com a próxima célula) */}
@@ -154,13 +154,13 @@ export const BedIcon = ({
       return (
         <svg viewBox="0 0 32 32" className={className}>
           {/* Frame superior/inferior */}
-          <rect x="0" y="1" width="30" height="2" fill={COLORS.bed.frame} />
-          <rect x="0" y="29" width="30" height="2" fill={COLORS.bed.frame} />
+          <rect x="0" y="1" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="0" y="29" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           {/* Pé da cama (madeira) */}
-          <rect x="27" y="3" width="3" height="26" fill={COLORS.wood.side} />
+          <rect x="27" y="3" width="3" height="26" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           <rect x="27" y="3" width="1" height="26" fill={COLORS.wood.front} />
           {/* Colchão base */}
-          <rect x="0" y="3" width="27" height="26" fill={COLORS.bed.mattress} />
+          <rect x="0" y="3" width="27" height="26" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           {/* Cobertor verde (continuidade da célula esquerda) */}
           <rect x="0" y="4" width="26" height="24" fill={COLORS.bed.blanket} />
           {/* Dobras do cobertor */}
@@ -173,9 +173,9 @@ export const BedIcon = ({
     
     return (
       <svg viewBox="0 0 32 32" className={className}>
-        <rect x="0" y="1" width="32" height="2" fill={COLORS.bed.frame} />
-        <rect x="0" y="29" width="32" height="2" fill={COLORS.bed.frame} />
-        <rect x="0" y="3" width="32" height="26" fill={COLORS.bed.mattress} />
+        <rect x="0" y="1" width="32" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x="0" y="29" width="32" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x="0" y="3" width="32" height="26" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
         <rect x="1" y="4" width="30" height="24" fill={COLORS.bed.blanket} />
         <line x1="10" y1="6" x2="10" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
         <line x1="22" y1="6" x2="22" y2="26" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
@@ -191,13 +191,13 @@ export const BedIcon = ({
     if (isHeadSegment) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
-          <rect x="1" y="2" width="2" height="30" fill={COLORS.bed.frame} />
-          <rect x="29" y="2" width="2" height="30" fill={COLORS.bed.frame} />
-          <rect x="2" y="0" width="28" height="5" fill={COLORS.wood.front} />
+          <rect x="1" y="2" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="29" y="2" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="2" y="0" width="28" height="5" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
           <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
           <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-          <rect x="3" y="5" width="26" height="27" fill={COLORS.bed.mattress} />
+          <rect x="3" y="5" width="26" height="27" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           <rect x="4" y="6" width="24" height="26" fill={COLORS.bed.sheet} />
           <line x1="4" y1="28" x2="28" y2="28" stroke={COLORS.bed.sheetFold} strokeWidth="1" opacity="0.3" />
           <ellipse cx="10" cy="11" rx="5" ry="3.5" fill={COLORS.bed.pillow} />
@@ -211,16 +211,16 @@ export const BedIcon = ({
     if (isFootSegment) {
       return (
         <svg viewBox="0 0 32 32" className={className}>
-          <rect x="1" y="0" width="2" height="30" fill={COLORS.bed.frame} />
-          <rect x="29" y="0" width="2" height="30" fill={COLORS.bed.frame} />
-          <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} />
-          <rect x="3" y="0" width="26" height="28" fill={COLORS.bed.mattress} />
+          <rect x="1" y="0" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="29" y="0" width="2" height="30" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+          <rect x="3" y="0" width="26" height="28" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           <rect x="4" y="1" width="24" height="25" fill={COLORS.bed.blanket} />
           <rect x="4" y="1" width="24" height="2" fill={COLORS.bed.blanketLight} />
           <line x1="6" y1="8" x2="26" y2="8" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
           <line x1="6" y1="14" x2="26" y2="14" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
           <line x1="6" y1="20" x2="26" y2="20" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
-          <rect x="3" y="26" width="26" height="3" fill={COLORS.wood.side} />
+          <rect x="3" y="26" width="26" height="3" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
           <rect x="3" y="26" width="26" height="1" fill={COLORS.wood.front} />
         </svg>
       );
@@ -228,9 +228,9 @@ export const BedIcon = ({
     
     return (
       <svg viewBox="0 0 32 32" className={className}>
-        <rect x="1" y="0" width="2" height="32" fill={COLORS.bed.frame} />
-        <rect x="29" y="0" width="2" height="32" fill={COLORS.bed.frame} />
-        <rect x="3" y="0" width="26" height="32" fill={COLORS.bed.mattress} />
+        <rect x="1" y="0" width="2" height="32" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x="29" y="0" width="2" height="32" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <rect x="3" y="0" width="26" height="32" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
         <rect x="4" y="1" width="24" height="30" fill={COLORS.bed.blanket} />
         <line x1="6" y1="10" x2="26" y2="10" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
         <line x1="6" y1="22" x2="26" y2="22" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
@@ -241,15 +241,15 @@ export const BedIcon = ({
   // ==================== SINGLE BED ====================
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      <rect x="1" y="2" width="2" height="28" fill={COLORS.bed.frame} />
-      <rect x="29" y="2" width="2" height="28" fill={COLORS.bed.frame} />
-      <rect x="1" y="2" width="30" height="2" fill={COLORS.bed.frameTop} />
-      <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} />
-      <rect x="2" y="0" width="28" height="4" fill={COLORS.wood.front} />
+      <rect x="1" y="2" width="2" height="28" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="29" y="2" width="2" height="28" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="1" y="2" width="30" height="2" fill={COLORS.bed.frameTop} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="2" y="0" width="28" height="4" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
       <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
       <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-      <rect x="3" y="5" width="26" height="23" fill={COLORS.bed.mattress} />
+      <rect x="3" y="5" width="26" height="23" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       <rect x="4" y="6" width="24" height="21" fill={COLORS.bed.sheet} />
       <rect x="4" y="15" width="24" height="11" fill={COLORS.bed.blanket} />
       <rect x="4" y="15" width="24" height="2" fill={COLORS.bed.blanketLight} />
@@ -259,7 +259,7 @@ export const BedIcon = ({
       <ellipse cx="10" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
       <ellipse cx="22" cy="10" rx="5" ry="3" fill={COLORS.bed.pillow} />
       <ellipse cx="22" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
-      <rect x="3" y="27" width="26" height="2" fill={COLORS.wood.side} />
+      <rect x="3" y="27" width="26" height="2" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
     </svg>
   );
 };
@@ -446,35 +446,42 @@ export const BedIcon = ({
    connectedLeft = false,
    connectedRight = false
  }: ConnectableDirectionalAssetProps) => {
-   const left = connectedLeft ? 0 : 2;
-   const right = connectedRight ? 32 : 30;
+  // Padding: ~4px when not connected
+  const left = connectedLeft ? 0 : 4;
+  const right = connectedRight ? 32 : 28;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
        {/* Body */}
-       <rect x={left} y="2" width={right - left} height="6" fill={COLORS.metal.top} />
-       <rect x={left} y="6" width={right - left} height="24" fill={COLORS.metal.front} />
-       {!connectedRight && <polygon points="30,6 32,4 32,28 30,30" fill={COLORS.metal.side} />}
+      <rect x={left} y="4" width={right - left} height="6" 
+        fill={COLORS.metal.top} 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={left} y="8" width={right - left} height="20" 
+        fill={COLORS.metal.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {!connectedRight && <polygon points={`${right - 2},8 ${right},6 ${right},26 ${right - 2},28`} fill={COLORS.metal.side} />}
        
        {/* 4 Burners */}
-       <ellipse cx={left + 7} cy="4" rx="4" ry="2.5" fill={COLORS.metal.shadow} />
-       <ellipse cx={left + 7} cy="4" rx="2.5" ry="1.5" fill={COLORS.metal.side} />
-       <ellipse cx={left + 7} cy="4" rx="1" ry="0.6" fill={COLORS.metal.shadow} />
-       <ellipse cx={right - 7} cy="4" rx="4" ry="2.5" fill={COLORS.metal.shadow} />
-       <ellipse cx={right - 7} cy="4" rx="2.5" ry="1.5" fill={COLORS.metal.side} />
-       <ellipse cx={right - 7} cy="4" rx="1" ry="0.6" fill={COLORS.metal.shadow} />
+      <ellipse cx={(left + right) / 2 - 5} cy="6" rx="3.5" ry="2" fill={COLORS.metal.shadow} />
+      <ellipse cx={(left + right) / 2 - 5} cy="6" rx="2" ry="1.2" fill={COLORS.metal.side} />
+      <ellipse cx={(left + right) / 2 - 5} cy="6" rx="0.8" ry="0.5" fill={COLORS.metal.shadow} />
+      <ellipse cx={(left + right) / 2 + 5} cy="6" rx="3.5" ry="2" fill={COLORS.metal.shadow} />
+      <ellipse cx={(left + right) / 2 + 5} cy="6" rx="2" ry="1.2" fill={COLORS.metal.side} />
+      <ellipse cx={(left + right) / 2 + 5} cy="6" rx="0.8" ry="0.5" fill={COLORS.metal.shadow} />
        
        {/* Knobs */}
-       <rect x={left + 2} y="9" width={right - left - 4} height="3" fill={COLORS.metal.side} />
-       <circle cx={left + 6} cy="10.5" r="1.5" fill={COLORS.metal.handle} />
-       <circle cx={left + 11} cy="10.5" r="1.5" fill={COLORS.metal.handle} />
-       <circle cx={right - 11} cy="10.5" r="1.5" fill={COLORS.metal.handle} />
-       <circle cx={right - 6} cy="10.5" r="1.5" fill={COLORS.metal.handle} />
+      <rect x={left + 2} y="11" width={right - left - 4} height="2.5" fill={COLORS.metal.side} />
+      <circle cx={(left + right) / 2 - 6} cy="12" r="1.2" fill={COLORS.metal.handle} />
+      <circle cx={(left + right) / 2 - 2} cy="12" r="1.2" fill={COLORS.metal.handle} />
+      <circle cx={(left + right) / 2 + 2} cy="12" r="1.2" fill={COLORS.metal.handle} />
+      <circle cx={(left + right) / 2 + 6} cy="12" r="1.2" fill={COLORS.metal.handle} />
        
        {/* Oven */}
-       <rect x={left + 3} y="14" width={right - left - 6} height="14" fill={COLORS.appliance.top} />
-       <rect x={left + 4} y="15" width={right - left - 8} height="2" fill={COLORS.metal.chrome} />
-       <rect x={left + 5} y="18" width={right - left - 10} height="8" fill={COLORS.screen.display} opacity="0.5" />
+      <rect x={left + 2} y="15" width={right - left - 4} height="11" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={left + 3} y="16" width={right - left - 6} height="1.5" fill={COLORS.metal.chrome} />
+      <rect x={left + 4} y="18" width={right - left - 8} height="6" fill={COLORS.screen.display} opacity="0.5" />
      </svg>
    );
  };
@@ -488,31 +495,40 @@ export const BedIcon = ({
    connectedLeft = false,
    connectedRight = false
  }: ConnectableDirectionalAssetProps) => {
-   const left = connectedLeft ? 0 : 2;
-   const right = connectedRight ? 32 : 30;
+  // Padding: ~4px when not connected
+  const left = connectedLeft ? 0 : 4;
+  const right = connectedRight ? 32 : 28;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
        {/* Counter */}
-       <rect x={left} y="2" width={right - left} height="6" fill={COLORS.appliance.top} />
-       <rect x={left} y="6" width={right - left} height="24" fill={COLORS.appliance.front} />
+      <rect x={left} y="4" width={right - left} height="6" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={left} y="8" width={right - left} height="18" 
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
        
        {/* Basin */}
-       <ellipse cx="16" cy="5" rx="8" ry="4" fill={COLORS.metal.side} />
-       <ellipse cx="16" cy="5" rx="6" ry="3" fill={COLORS.water.top} />
-       <ellipse cx="16" cy="5" rx="1.5" ry="1" fill={COLORS.metal.shadow} />
+      <ellipse cx="16" cy="6" rx="7" ry="3.5" fill={COLORS.metal.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx="16" cy="6" rx="5" ry="2.5" fill={COLORS.water.top} />
+      <ellipse cx="16" cy="6" rx="1.2" ry="0.8" fill={COLORS.metal.shadow} />
        
        {/* Faucet */}
-       <rect x="14" y="0" width="4" height="3" fill={COLORS.metal.chrome} />
-       <ellipse cx="16" cy="0" rx="2" ry="1" fill={COLORS.metal.top} />
-       <path d="M18 1.5 Q21 1.5 21 5" stroke={COLORS.metal.chrome} strokeWidth="2" fill="none" />
-       <ellipse cx="21" cy="5" rx="1" ry="0.5" fill={COLORS.metal.side} />
+      <rect x="14" y="2" width="4" height="2.5" fill={COLORS.metal.chrome} />
+      <ellipse cx="16" cy="2" rx="2" ry="0.8" fill={COLORS.metal.top} />
+      <path d="M18 3 Q20 3 20 6" stroke={COLORS.metal.chrome} strokeWidth="1.5" fill="none" />
+      <ellipse cx="20" cy="6" rx="0.8" ry="0.4" fill={COLORS.metal.side} />
        
        {/* Cabinet doors */}
-       <rect x={left + 2} y="12" width="12" height="16" fill={COLORS.appliance.top} />
-       <rect x={right - 14} y="12" width="12" height="16" fill={COLORS.appliance.top} />
-       <rect x={left + 12} y="18" width="2" height="4" fill={COLORS.metal.handle} rx="0.5" />
-       <rect x={right - 4} y="18" width="2" height="4" fill={COLORS.metal.handle} rx="0.5" />
+      <rect x={left + 1} y="12" width={(right - left - 2) / 2 - 1} height="12" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={left + (right - left) / 2 + 1} y="12" width={(right - left - 2) / 2 - 1} height="12" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={left + (right - left) / 2 - 3} y="16" width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
+      <rect x={left + (right - left) / 2 + 1.5} y="16" width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
      </svg>
    );
  };
@@ -766,51 +782,100 @@ export const BedIcon = ({
  };
  
  // Toilet
- export const ToiletIcon = ({ className }: AssetIconProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <rect x="10" y="2" width="12" height="10" fill={COLORS.appliance.front} />
-     <rect x="10" y="2" width="12" height="2" fill={COLORS.appliance.top} />
-     <ellipse cx="16" cy="4" rx="2" ry="1" fill={COLORS.metal.chrome} />
-     <ellipse cx="16" cy="14" rx="10" ry="5" fill={COLORS.appliance.top} />
-     <ellipse cx="16" cy="14" rx="8" ry="4" fill={COLORS.metal.top} />
-     <ellipse cx="16" cy="22" rx="10" ry="7" fill={COLORS.appliance.front} />
-     <ellipse cx="16" cy="20" rx="7" ry="5" fill={COLORS.water.top} />
-     <ellipse cx="16" cy="19" rx="5" ry="3" fill={COLORS.water.front} />
-     <ellipse cx="16" cy="28" rx="8" ry="2" fill={COLORS.appliance.shadow} />
-   </svg>
- );
+export const ToiletIcon = ({ className }: AssetIconProps) => {
+  // Padding: ~5px each side for visual breathing room
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Tank */}
+      <rect x="11" y="4" width="10" height="8" 
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="11" y="4" width="10" height="1.5" fill={COLORS.appliance.top} />
+      <ellipse cx="16" cy="5.5" rx="1.5" ry="0.7" fill={COLORS.metal.chrome} />
+      
+      {/* Seat lid */}
+      <ellipse cx="16" cy="14" rx="9" ry="4.5" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx="16" cy="14" rx="7" ry="3.5" fill={COLORS.metal.top} />
+      
+      {/* Bowl */}
+      <ellipse cx="16" cy="21" rx="9" ry="6" 
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx="16" cy="19.5" rx="6" ry="4" fill={COLORS.water.top} />
+      <ellipse cx="16" cy="18.5" rx="4" ry="2.5" fill={COLORS.water.front} />
+      
+      {/* Base shadow */}
+      <ellipse cx="16" cy="26" rx="7" ry="1.8" fill={COLORS.appliance.shadow} />
+    </svg>
+  );
+};
  
  // Shower
- export const ShowerIcon = ({ className }: AssetIconProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <rect x="1" y="4" width="30" height="26" fill={COLORS.water.top} opacity="0.15" />
-     <rect x="1" y="4" width="30" height="26" fill="none" stroke={COLORS.metal.chrome} strokeWidth="2" />
-     <rect x="1" y="4" width="30" height="2" fill={COLORS.water.top} opacity="0.3" />
-     <rect x="24" y="2" width="4" height="8" fill={COLORS.metal.chrome} />
-     <ellipse cx="20" cy="8" rx="6" ry="3" fill={COLORS.metal.top} />
-     <ellipse cx="20" cy="8" rx="4" ry="2" fill={COLORS.metal.front} />
-     <ellipse cx="14" cy="14" rx="1" ry="2" fill={COLORS.water.front} opacity="0.7" />
-     <ellipse cx="18" cy="16" rx="1" ry="2.5" fill={COLORS.water.front} opacity="0.7" />
-     <ellipse cx="22" cy="13" rx="1" ry="2" fill={COLORS.water.front} opacity="0.7" />
-     <ellipse cx="16" cy="20" rx="1" ry="2" fill={COLORS.water.front} opacity="0.7" />
-     <ellipse cx="20" cy="22" rx="1" ry="2" fill={COLORS.water.front} opacity="0.7" />
-     <ellipse cx="16" cy="28" rx="3" ry="1.5" fill={COLORS.metal.shadow} />
-   </svg>
- );
+export const ShowerIcon = ({ className }: AssetIconProps) => {
+  // Padding: ~4px each side for visual breathing room
+  const left = 4;
+  const right = 28;
+  const top = 5;
+  const bottom = 27;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Glass box background */}
+      <rect x={left} y={top} width={right - left} height={bottom - top} 
+        fill={COLORS.water.top} opacity="0.15" />
+      {/* Frame with subtle outline */}
+      <rect x={left} y={top} width={right - left} height={bottom - top} 
+        fill="none" 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Top reflection */}
+      <rect x={left} y={top} width={right - left} height="1.5" fill={COLORS.water.top} opacity="0.3" />
+      
+      {/* Showerhead pipe */}
+      <rect x={right - 6} y={top - 2} width="3" height="6" fill={COLORS.metal.chrome} />
+      {/* Showerhead */}
+      <ellipse cx={(left + right) / 2 + 2} cy={top + 4} rx="5" ry="2.5" 
+        fill={COLORS.metal.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <ellipse cx={(left + right) / 2 + 2} cy={top + 4} rx="3.5" ry="1.7" fill={COLORS.metal.front} />
+      
+      {/* Water droplets */}
+      <ellipse cx={(left + right) / 2 - 2} cy={top + 10} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2 + 1} cy={top + 12} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2 + 4} cy={top + 9} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2} cy={top + 16} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx={(left + right) / 2 + 3} cy={top + 18} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
+      
+      {/* Drain */}
+      <ellipse cx={(left + right) / 2} cy={bottom - 2} rx="2.5" ry="1.2" fill={COLORS.metal.shadow} />
+    </svg>
+  );
+};
  
  // Rug
- export const RugIcon = ({ className }: AssetIconProps) => (
-   <svg viewBox="0 0 32 32" className={className}>
-     <ellipse cx="16" cy="16" rx="14" ry="10" fill={COLORS.rug.top} />
-     <ellipse cx="16" cy="16" rx="12" ry="8" fill={COLORS.rug.front} />
-     <ellipse cx="16" cy="16" rx="10" ry="6" fill={COLORS.rug.top} />
-     <ellipse cx="16" cy="16" rx="4" ry="2.5" fill={COLORS.rug.pattern} />
-     <ellipse cx="10" cy="16" rx="2" ry="1.5" fill={COLORS.rug.pattern} opacity="0.7" />
-     <ellipse cx="22" cy="16" rx="2" ry="1.5" fill={COLORS.rug.pattern} opacity="0.7" />
-     <ellipse cx="16" cy="10" rx="2" ry="1.5" fill={COLORS.rug.pattern} opacity="0.7" />
-     <ellipse cx="16" cy="22" rx="2" ry="1.5" fill={COLORS.rug.pattern} opacity="0.7" />
-   </svg>
- );
+export const RugIcon = ({ className }: AssetIconProps) => {
+  // Padding: ~3px each side for visual breathing room
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Outer ellipse with subtle stroke */}
+      <ellipse cx="16" cy="16" rx="12" ry="9" 
+        fill={COLORS.rug.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} strokeOpacity="0.5" />
+      {/* Middle ring */}
+      <ellipse cx="16" cy="16" rx="10" ry="7" fill={COLORS.rug.front} />
+      {/* Inner ring */}
+      <ellipse cx="16" cy="16" rx="8" ry="5" fill={COLORS.rug.top} />
+      {/* Center pattern */}
+      <ellipse cx="16" cy="16" rx="3.5" ry="2.2" fill={COLORS.rug.pattern} />
+      {/* Corner decorations */}
+      <ellipse cx="10" cy="16" rx="1.8" ry="1.3" fill={COLORS.rug.pattern} opacity="0.7" />
+      <ellipse cx="22" cy="16" rx="1.8" ry="1.3" fill={COLORS.rug.pattern} opacity="0.7" />
+      <ellipse cx="16" cy="10" rx="1.8" ry="1.3" fill={COLORS.rug.pattern} opacity="0.7" />
+      <ellipse cx="16" cy="22" rx="1.8" ry="1.3" fill={COLORS.rug.pattern} opacity="0.7" />
+    </svg>
+  );
+};
  
  // Window
  export const WindowIcon = ({ className }: AssetIconProps) => (

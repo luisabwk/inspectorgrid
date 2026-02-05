@@ -74,8 +74,10 @@ export const SuspectClueCards = ({
               className={cn(
                 "relative flex-shrink-0 transition-all duration-150 cursor-pointer",
                 "pixel-border-thin bg-card",
-                "w-40 sm:w-44",
-                "flex flex-row gap-2 p-2",
+                // Layout vertical quando não selecionado
+                !isSelected && "flex flex-col items-center p-2 w-16 sm:w-20",
+                // Layout horizontal quando selecionado
+                isSelected && "flex flex-row gap-2 p-2 w-40 sm:w-44",
                 isPlaced && "opacity-40 cursor-not-allowed",
                 isSelected && "translate-y-[-2px]",
                 isVictim && "bg-red-50 border-red-400",
@@ -100,9 +102,15 @@ export const SuspectClueCards = ({
               </div>
               
               {/* Info */}
-              <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <div className={cn(
+                "min-w-0 flex flex-col",
+                !isSelected && "items-center mt-1",
+                isSelected && "flex-1 justify-center"
+              )}>
                 <p className={cn(
-                  "text-xs font-bold leading-tight truncate",
+                  "font-bold leading-tight truncate",
+                  !isSelected && "text-[10px] text-center",
+                  isSelected && "text-xs",
                   isVictim ? "text-red-700" : "text-foreground"
                 )}>
                   {suspect.name.split(' ')[0]}
@@ -115,11 +123,15 @@ export const SuspectClueCards = ({
                 )}
                 
                 {isVictim && (
-                  <p className="text-[9px] text-red-600 mt-1">
+                  <p className={cn(
+                    "text-red-600",
+                    !isSelected && "text-[8px] mt-0.5",
+                    isSelected && "text-[9px] mt-1"
+                  )}>
                     Vítima
                   </p>
                 )}
-                </div>
+              </div>
 
               {/* Placed indicator */}
               {isPlaced && (

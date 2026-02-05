@@ -2,7 +2,6 @@ import { Suspect, Clue, PlacementState } from "@/types/game";
 import { cn } from "@/lib/utils";
 import { PortraitMap } from "./assets/SuspectPortraits";
 import { useRef, useEffect } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface SuspectClueCardsProps {
   suspects: Suspect[];
@@ -51,9 +50,6 @@ export const SuspectClueCards = ({
     }
   }, [selectedSuspect]);
 
-  const selectedSuspectData = suspects.find(s => s.id === selectedSuspect);
-  const selectedClue = selectedSuspectData ? findClueForSuspect(selectedSuspectData, clues) : null;
-
   return (
     <div>
       {/* Suspect cards row */}
@@ -69,77 +65,69 @@ export const SuspectClueCards = ({
           const suspectClue = findClueForSuspect(suspect, clues);
 
           return (
-            <Popover key={suspect.id} open={isSelected && !isPlaced && !!suspectClue}>
-              <PopoverTrigger asChild>
-                <div
-                  ref={isSelected ? selectedRef : null}
-                  draggable={!isPlaced}
-                  onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
-                  onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
-                  className={cn(
-                    "relative flex-shrink-0 transition-all duration-150 cursor-pointer",
-                    "pixel-border-thin bg-card",
-                    "w-16 sm:w-20",
-                    isPlaced && "opacity-40 cursor-not-allowed",
-                    isSelected && "translate-y-[-2px]",
-                    isVictim && !isSelected && "bg-red-100",
-                  )}
-                  style={{
-                    boxShadow: isSelected 
-                      ? isVictim 
-                        ? '4px 4px 0 hsl(0 65% 40%)' 
-                        : '4px 4px 0 hsl(140 45% 30%)'
-                      : undefined
-                  }}
-                >
-                  {/* Portrait section */}
-                  <div className="flex flex-col items-center p-1.5">
-                    <div 
-                      className={cn(
-                        "w-10 h-12 sm:w-12 sm:h-14 overflow-hidden",
-                        isVictim && "border-2 border-red-600"
-                      )}
-                      style={{ imageRendering: 'pixelated' }}
-                    >
-                      {Portrait && <Portrait className="w-full h-full" />}
-                    </div>
-                    
-                    <p className={cn(
-                      "text-[10px] sm:text-xs leading-tight mt-1 text-center whitespace-nowrap truncate w-full",
-                      isVictim ? "text-red-700 font-semibold" : "text-foreground"
-                    )}>
-                      {suspect.name.split(' ')[0]}
-                    </p>
-                  </div>
-
-                  {/* Placed indicator */}
-                  {isPlaced && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-background/70">
-                      <span className="text-lg font-pixel-title text-primary">✓</span>
-                    </div>
-                  )}
-                </div>
-              </PopoverTrigger>
+            <div
+              key={suspect.id}
+              ref={isSelected ? selectedRef : null}
+              draggable={!isPlaced}
+              onDragStart={(e) => onSuspectDragStart(e, suspect.id)}
+              onClick={() => !isPlaced && onSuspectSelect(suspect.id)}
+              className={cn(
+                "relative flex-shrink-0 transition-all duration-150 cursor-pointer",
+                "pixel-border-thin bg-card",
+                "w-40 sm:w-44",
+                "flex flex-row gap-2 p-2",
+                isPlaced && "opacity-40 cursor-not-allowed",
+                isSelected && "translate-y-[-2px]",
+                isVictim && "bg-red-50 border-red-400",
+              )}
+              style={{
+                boxShadow: isSelected 
+                  ? isVictim 
+                    ? '3px 3px 0 hsl(0 65% 40%)' 
+                    : '3px 3px 0 hsl(140 45% 30%)'
+                  : undefined
+              }}
+            >
+              {/* Avatar */}
+              <div 
+                className={cn(
+                  "flex-shrink-0 w-10 h-12 overflow-hidden",
+                  isVictim && "border-2 border-red-600"
+                )}
+                style={{ imageRendering: 'pixelated' }}
+              >
+                {Portrait && <Portrait className="w-full h-full" />}
+              </div>
               
-              {suspectClue && (
-                <PopoverContent 
-                  side="top" 
-                  className="pixel-card w-64 p-3"
-                  style={{
-                    borderColor: isVictim ? 'hsl(0 65% 50%)' : suspect.color
-                  }}
-                >
-                  <p className="font-pixel text-xs leading-relaxed text-foreground">
+              {/* Info */}
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
+                <p className={cn(
+                  "text-xs font-bold leading-tight truncate",
+                  isVictim ? "text-red-700" : "text-foreground"
+                )}>
+                  {suspect.name.split(' ')[0]}
+                </p>
+                
+                {suspectClue && (
+                  <p className="text-[10px] text-muted-foreground leading-tight mt-1 line-clamp-3">
                     {formatClueText(suspectClue.text, suspect.name)}
                   </p>
-                  {isVictim && (
-                    <p className="font-pixel text-[10px] text-red-600 mt-2">
-                      ☠ Vítima - Não posicionar
-                    </p>
-                  )}
-                </PopoverContent>
+                )}
+                
+                {isVictim && (
+                  <p className="text-[9px] text-red-600 mt-1">
+                    Vítima
+                  </p>
+                )}
+                </div>
+
+              {/* Placed indicator */}
+              {isPlaced && (
+                <div className="absolute inset-0 flex items-center justify-center bg-background/70">
+                  <span className="text-lg font-pixel-title text-primary">✓</span>
+                </div>
               )}
-            </Popover>
+            </div>
           );
         })}
       </div>

@@ -246,25 +246,34 @@ export const BedIcon = ({
   // ==================== SINGLE BED ====================
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      <rect x="1" y="2" width="2" height="28" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="29" y="2" width="2" height="28" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="1" y="2" width="30" height="2" fill={COLORS.bed.frameTop} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="1" y="28" width="30" height="2" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="2" y="0" width="28" height="4" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="2" y="0" width="28" height="2" fill={COLORS.wood.top} />
-      <rect x="5" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-      <rect x="19" y="1" width="8" height="2" fill={COLORS.wood.side} rx="0.5" />
-      <rect x="3" y="5" width="26" height="23" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x="4" y="6" width="24" height="21" fill={COLORS.bed.sheet} />
-      <rect x="4" y="15" width="24" height="11" fill={COLORS.bed.blanket} />
-      <rect x="4" y="15" width="24" height="2" fill={COLORS.bed.blanketLight} />
-      <line x1="6" y1="19" x2="26" y2="19" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.5" />
-      <line x1="6" y1="23" x2="26" y2="23" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
-      <ellipse cx="10" cy="10" rx="5" ry="3" fill={COLORS.bed.pillow} />
-      <ellipse cx="10" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
-      <ellipse cx="22" cy="10" rx="5" ry="3" fill={COLORS.bed.pillow} />
-      <ellipse cx="22" cy="9" rx="4" ry="2" fill={COLORS.bed.pillowShade} />
-      <rect x="3" y="27" width="26" height="2" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Cabeceira mínima - 85° perspectiva */}
+      <rect x="3" y="2" width="26" height="2" fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x="3" y="2" width="26" height="1" fill={COLORS.wood.top} />
+      
+      {/* Frame lateral sutil */}
+      <rect x="2" y="4" width="1.5" height="24" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x="28.5" y="4" width="1.5" height="24" fill={COLORS.bed.frame} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      
+      {/* Pé da cama fino */}
+      <rect x="3" y="28" width="26" height="1.5" fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      
+      {/* Colchão base */}
+      <rect x="4" y="4" width="24" height="24" fill={COLORS.bed.mattress} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Lençol */}
+      <rect x="5" y="5" width="22" height="22" fill={COLORS.bed.sheet} />
+      
+      {/* Travesseiros maiores e proeminentes */}
+      <ellipse cx="10" cy="10" rx="6" ry="4" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <ellipse cx="10" cy="9" rx="5" ry="3" fill={COLORS.bed.pillowShade} />
+      <ellipse cx="22" cy="10" rx="6" ry="4" fill={COLORS.bed.pillow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <ellipse cx="22" cy="9" rx="5" ry="3" fill={COLORS.bed.pillowShade} />
+      
+      {/* Cobertor começando mais cedo e maior */}
+      <rect x="5" y="14" width="22" height="12" fill={COLORS.bed.blanket} rx="1" />
+      <rect x="5" y="14" width="22" height="2" fill={COLORS.bed.blanketLight} rx="1" />
+      <line x1="7" y1="18" x2="25" y2="18" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.4" />
+      <line x1="7" y1="22" x2="25" y2="22" stroke={COLORS.bed.sheetFold} strokeWidth="0.5" opacity="0.3" />
     </svg>
   );
 };
@@ -277,77 +286,72 @@ export const BedIcon = ({
    connectedLeft = false,
    connectedRight = false
  }: ConnectableAssetProps) => {
-   // Padding for visual breathing room (~4px on ends)
    const padding = 4;
    const left = connectedLeft ? 0 : padding;
    const right = connectedRight ? 32 : 32 - padding;
-   const top = 5; // top padding
-   const bottom = 26; // bottom padding
+    const top = 6;
+    const height = 18;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Base frame */}
-       <rect x={left} y={bottom - 4} width={right - left} height="5" 
+        {/* Base unificada arredondada - 85° perspectiva */}
+        <rect 
+          x={left} 
+          y={top} 
+          width={right - left} 
+          height={height} 
          fill={COLORS.sofa.front}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left} y={bottom - 5} width={right - left} height="1" fill={COLORS.sofa.top} />
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
+          rx="3" ry="3" />
        
-       {/* Back cushion */}
-       <rect 
-         x={left + (connectedLeft ? 0 : 4)} 
-         y={top} 
-         width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
-         height="7" 
-         fill={COLORS.sofa.front}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect 
-         x={left + (connectedLeft ? 0 : 4)} 
-         y={top} 
-         width={right - left - (connectedLeft ? 0 : 4) - (connectedRight ? 0 : 4)} 
-         height="2" 
-         fill={COLORS.sofa.top} />
+        {/* Topo mais claro */}
+        <rect 
+          x={left + 1} 
+          y={top + 1} 
+          width={right - left - 2} 
+          height="3" 
+          fill={COLORS.sofa.top}
+          rx="2" />
        
-       {/* Seat cushion */}
-       <rect 
-         x={left + (connectedLeft ? 0 : 5)} 
-         y={top + 7} 
-         width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
-         height="9" 
-         fill={COLORS.sofa.cushion}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect 
-         x={left + (connectedLeft ? 0 : 5)} 
-         y={top + 7} 
-         width={right - left - (connectedLeft ? 0 : 5) - (connectedRight ? 0 : 5)} 
-         height="2" 
-         fill={COLORS.sofa.cushionTop} />
+        {/* Almofadas ovais - duas */}
+        <ellipse 
+          cx={connectedLeft ? 8 : 12} 
+          cy={top + 10} 
+          rx="5" 
+          ry="4" 
+          fill={COLORS.sofa.cushionTop} 
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+        <ellipse 
+          cx={connectedRight ? 24 : 20} 
+          cy={top + 10} 
+          rx="5" 
+          ry="4" 
+          fill={COLORS.sofa.cushionTop}
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
        
-       {/* Cushion divider line */}
-       <line x1="16" y1={top + 8} x2="16" y2={top + 15} stroke={COLORS.sofa.front} strokeWidth="0.8" opacity="0.5" />
-       
-       {/* Left armrest */}
-       {!connectedLeft && (
-         <>
-          <rect x={padding} y={top + 2} width="4" height="12" 
-             fill={COLORS.sofa.arm}
-            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-            rx="1" />
-         </>
-       )}
-       
-       {/* Right armrest */}
-       {!connectedRight && (
-         <>
-          <rect x={32 - padding - 4} y={top + 2} width="4" height="12" 
-             fill={COLORS.sofa.arm}
-            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-            rx="1" />
-         </>
-       )}
-       
-       {/* Feet */}
-       {!connectedLeft && <rect x={padding + 1} y={bottom} width="2.5" height="2" fill={COLORS.wood.shadow} rx="0.5" />}
-       {!connectedRight && <rect x={32 - padding - 3.5} y={bottom} width="2.5" height="2" fill={COLORS.wood.shadow} rx="0.5" />}
+        {/* Braços arredondados como extensões */}
+        {!connectedLeft && (
+          <ellipse 
+            cx={left + 2} 
+            cy={top + 9} 
+            rx="2.5" 
+            ry="7" 
+            fill={COLORS.sofa.arm}
+            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        )}
+        {!connectedRight && (
+          <ellipse 
+            cx={right - 2} 
+            cy={top + 9} 
+            rx="2.5" 
+            ry="7" 
+            fill={COLORS.sofa.arm}
+            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        )}
+        
+        {/* Pés pequenos */}
+        {!connectedLeft && <circle cx={left + 2} cy={top + height - 1} r="1.2" fill={COLORS.wood.shadow} />}
+        {!connectedRight && <circle cx={right - 2} cy={top + height - 1} r="1.2" fill={COLORS.wood.shadow} />}
      </svg>
    );
  };
@@ -360,42 +364,40 @@ export const BedIcon = ({
    connectedLeft = false, 
    connectedRight = false 
  }: ConnectableAssetProps) => {
-   // Padding for visual breathing room
    const padding = 4;
    const left = connectedLeft ? 0 : padding;
    const right = connectedRight ? 32 : 32 - padding;
-   const topY = connectedTop ? 0 : 5;
-   const bottomY = 26;
+    const topY = connectedTop ? 0 : 6;
+    const bottomY = connectedBottom ? 32 : 26;
    
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Tabletop */}
-       <rect x={left} y={topY} width={right - left} height="5" 
+        {/* Tampo da mesa */}
+        <rect x={left} y={topY} width={right - left} height={bottomY - topY} 
          fill={COLORS.wood.top}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left} y={topY + 4} width={right - left} height="1.5" fill={COLORS.wood.front} />
        
-       {/* Wood grain details */}
-       <line x1={left + 4} y1={topY + 1} x2={left + 4} y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
-       <line x1="16" y1={topY + 1} x2="16" y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.3" />
-       <line x1={right - 4} y1={topY + 1} x2={right - 4} y2={topY + 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.4" />
+        {/* Borda inferior sutil */}
+        <rect x={left} y={bottomY - 1.5} width={right - left} height="1.5" fill={COLORS.wood.front} />
        
-       {/* Apron */}
-       <rect x={left + 2} y={topY + 5} width={right - left - 4} height="3" fill={COLORS.wood.side} />
+        {/* Detalhes de veios da madeira */}
+        <line x1={left + 4} y1={topY + 3} x2={left + 4} y2={bottomY - 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.3" />
+        <line x1="16" y1={topY + 3} x2="16" y2={bottomY - 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.2" />
+        <line x1={right - 4} y1={topY + 3} x2={right - 4} y2={bottomY - 3} stroke={COLORS.wood.grain} strokeWidth="0.5" opacity="0.3" />
        
-      {/* Legs - small rectangles for 85° perspective */}
-       {!connectedLeft && (
-        <>
-          <rect x={padding + 1} y={topY + 9} width="2" height="2" fill={COLORS.wood.shadow} />
-          <rect x={padding + 1} y={bottomY - 2} width="2" height="2" fill={COLORS.wood.shadow} />
-        </>
-       )}
-       {!connectedRight && (
-        <>
-          <rect x={32 - padding - 3} y={topY + 9} width="2" height="2" fill={COLORS.wood.shadow} />
-          <rect x={32 - padding - 3} y={bottomY - 2} width="2" height="2" fill={COLORS.wood.shadow} />
-        </>
-       )}
+        {/* Pernas nos 4 cantos do tampo - 85° perspectiva */}
+        {!connectedLeft && !connectedTop && (
+          <rect x={left + 1} y={topY + 1} width="2" height="2" fill={COLORS.wood.shadow} rx="0.3" />
+        )}
+        {!connectedLeft && !connectedBottom && (
+          <rect x={left + 1} y={bottomY - 3} width="2" height="2" fill={COLORS.wood.shadow} rx="0.3" />
+        )}
+        {!connectedRight && !connectedTop && (
+          <rect x={right - 3} y={topY + 1} width="2" height="2" fill={COLORS.wood.shadow} rx="0.3" />
+        )}
+        {!connectedRight && !connectedBottom && (
+          <rect x={right - 3} y={bottomY - 3} width="2" height="2" fill={COLORS.wood.shadow} rx="0.3" />
+        )}
      </svg>
    );
  };
@@ -545,47 +547,35 @@ export const BedIcon = ({
  
  // Armchair
  export const ArmchairIcon = ({ className }: AssetIconProps) => {
-   // Padding: ~4px each side for visual breathing room
-   const left = 5;
-   const right = 27;
-   const top = 4;
-   const bottom = 26;
-   
    return (
      <svg viewBox="0 0 32 32" className={className}>
-       {/* Base frame */}
-       <rect x={left + 2} y="21" width={right - left - 4} height="4" 
-         fill={COLORS.armchair.front} 
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <rect x={left + 2} y="20" width={right - left - 4} height="1" fill={COLORS.armchair.top} />
-       
-       {/* Back rest - more top-down view */}
-       <rect x={left + 4} y={top + 1} width={right - left - 8} height="8" 
+        {/* Assento oval - 85° perspectiva */}
+        <ellipse 
+          cx="16" 
+          cy="16" 
+          rx="10" 
+          ry="8" 
+          fill={COLORS.armchair.cushion}
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Encosto como arco curvo */}
+        <path 
+          d="M6,10 Q16,2 26,10" 
          fill={COLORS.armchair.front}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left + 4} y={top + 1} width={right - left - 8} height="2" fill={COLORS.armchair.top} />
-       
-       {/* Seat cushion */}
-       <rect x={left + 4} y={top + 9} width={right - left - 8} height="7" 
-         fill={COLORS.armchair.cushion}
-         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-       <rect x={left + 4} y={top + 9} width={right - left - 8} height="2" fill={COLORS.armchair.top} />
-       
-      {/* Left armrest - simplified for 85° */}
-      <rect x={left} y={top + 3} width="4" height="12" 
-         fill={COLORS.armchair.side}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-        rx="1" />
-       
-      {/* Right armrest - simplified for 85° */}
-      <rect x={right - 4} y={top + 3} width="4" height="12" 
-         fill={COLORS.armchair.side}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
-        rx="1" />
-       
-       {/* Feet */}
-       <rect x={left + 1} y={bottom} width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />
-       <rect x={right - 4} y={bottom} width="3" height="2" fill={COLORS.wood.shadow} rx="0.5" />
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH}
+          strokeLinecap="round" />
+        <path 
+          d="M7,10 Q16,4 25,10" 
+          fill={COLORS.armchair.top}
+          stroke="none" />
+        
+        {/* Braços arredondados nas laterais */}
+        <ellipse cx="6" cy="14" rx="2.5" ry="6" fill={COLORS.armchair.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        <ellipse cx="26" cy="14" rx="2.5" ry="6" fill={COLORS.armchair.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Pés pequenos */}
+        <circle cx="8" cy="24" r="1.5" fill={COLORS.wood.shadow} />
+        <circle cx="24" cy="24" r="1.5" fill={COLORS.wood.shadow} />
      </svg>
    );
  };
@@ -594,36 +584,34 @@ export const BedIcon = ({
  export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
    return (
      <svg viewBox="0 0 32 32" className={className}>
-      {/* Legs as small circles at corners (85° perspective) */}
-      <circle cx="9" cy="9" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <circle cx="23" cy="9" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <circle cx="9" cy="24" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <circle cx="23" cy="24" r="1.5" fill={COLORS.chair.legs} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Chair back as curved arc */}
-      <path
-        d="M8,10 Q16,4 24,10"
-        stroke={COLORS.chair.back}
-        strokeWidth="3"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <path
-        d="M8,10 Q16,4 24,10"
-        stroke={OUTLINE}
-        strokeWidth={OUTLINE_WIDTH}
-        fill="none"
-        strokeLinecap="round"
-      />
-      
-      {/* Chair seat as oval */}
-      <ellipse
-        cx="16"
-        cy="17"
-        rx="9"
-        ry="7"
-        fill={COLORS.chair.seat}
+        {/* Encosto em arco mais próximo do assento */}
+        <path
+          d="M9,12 Q16,5 23,12"
+          stroke={COLORS.chair.back}
+          strokeWidth="3"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path
+          d="M9,12 Q16,5 23,12"
+          stroke={OUTLINE}
+          strokeWidth={OUTLINE_WIDTH}
+          fill="none"
+          strokeLinecap="round"
+        />
+        
+        {/* Assento oval integrado ao arco */}
+        <ellipse
+          cx="16"
+          cy="18"
+          rx="8"
+          ry="6"
+          fill={COLORS.chair.seat}
          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Pernas como pequenos círculos nos cantos */}
+        <circle cx="10" cy="24" r="1.2" fill={COLORS.chair.legs} />
+        <circle cx="22" cy="24" r="1.2" fill={COLORS.chair.legs} />
      </svg>
    );
  };

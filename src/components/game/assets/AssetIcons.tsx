@@ -953,52 +953,66 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
  };
  
  // Toilet
-// Toilet - 85° perspective with depth
+// Toilet - 85° perspective with solid rectangular depth indicators
 export const ToiletIcon = ({ className }: AssetIconProps) => {
-  const left = 6;
-  const right = 26;
+  const left = 5;
+  const right = 27;
   const top = 4;
+  const tankHeight = 8;
+  const seatTop = top + tankHeight + 1;
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Tank - left side depth (85°) */}
-      <rect x={left + 3} y={top} width="1.5" height="8" fill={COLORS.appliance.side} />
+      {/* TANK - perspectiva 85° */}
+      {/* Tank left side depth */}
+      <rect x={left} y={top} width="2" height={tankHeight} fill={COLORS.appliance.side} />
       
-      {/* Tank main body */}
-      <rect x={left + 4.5} y={top} width="11" height="8" 
+      {/* Tank body */}
+      <rect x={left + 2} y={top} width={right - left - 2} height={tankHeight} 
         fill={COLORS.appliance.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Tank top surface (85° depth) */}
-      <rect x={left + 3} y={top} width="12.5" height="1.5" fill={COLORS.appliance.top} />
+      {/* Tank top surface */}
+      <rect x={left} y={top} width={right - left} height="2" fill={COLORS.appliance.top} />
       
       {/* Flush button */}
-      <ellipse cx="16" cy={top + 2.5} rx="1.5" ry="0.7" fill={COLORS.metal.chrome} />
+      <ellipse cx="16" cy={top + 3.5} rx="2" ry="1" fill={COLORS.metal.chrome} />
       
-      {/* Seat lid - with left depth */}
-      <ellipse cx="16" cy={top + 10} rx="9" ry="4.5" 
-        fill={COLORS.appliance.top}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx="16" cy={top + 10} rx="7" ry="3.5" fill={COLORS.metal.top} />
+      {/* SEAT/LID - perspectiva 85° */}
+      {/* Seat left side depth */}
+      <rect x={left - 1} y={seatTop} width="2" height="6" fill={COLORS.appliance.side} />
       
-      {/* Bowl - with left depth indicator */}
-      <path d="M 7 19 Q 5 22 7 26 Q 12 30 16 30 Q 20 30 25 26 Q 27 22 25 19 Z" 
-        fill={COLORS.appliance.side} />
-      <ellipse cx="16" cy="21" rx="9" ry="6" 
+      {/* Seat lid body */}
+      <rect x={left + 1} y={seatTop} width={right - left - 2} height="6" rx="3"
         fill={COLORS.appliance.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Water inside bowl */}
-      <ellipse cx="16" cy="19.5" rx="6" ry="4" fill={COLORS.water.top} />
-      <ellipse cx="16" cy="18.5" rx="4" ry="2.5" fill={COLORS.water.front} />
+      {/* Seat top surface */}
+      <rect x={left - 1} y={seatTop} width={right - left + 2} height="1.5" rx="1"
+        fill={COLORS.appliance.top} />
+      
+      {/* Seat opening (interior oval) */}
+      <ellipse cx="16" cy={seatTop + 3.5} rx="7" ry="2.8" fill={COLORS.metal.top} />
+      
+      {/* BOWL - com profundidade */}
+      {/* Bowl left side depth */}
+      <rect x={left - 2} y={seatTop + 6} width="2" height="7" fill={COLORS.appliance.side} rx="1" />
+      
+      {/* Bowl body */}
+      <rect x={left} y={seatTop + 6} width={right - left} height="7" rx="3"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Water inside */}
+      <ellipse cx="16" cy={seatTop + 9} rx="5" ry="2" fill={COLORS.water.top} />
       
       {/* Base shadow */}
-      <ellipse cx="16" cy="26" rx="7" ry="1.8" fill={COLORS.appliance.shadow} />
+      <ellipse cx="16" cy={seatTop + 12.5} rx="8" ry="1.5" fill={COLORS.appliance.shadow} />
     </svg>
   );
 };
  
-// Shower - 85° perspective with glass box depth
+// Shower - 85° perspective with solid base and visible glass depth
 export const ShowerIcon = ({ className }: AssetIconProps) => {
   const left = 4;
   const right = 28;
@@ -1007,51 +1021,55 @@ export const ShowerIcon = ({ className }: AssetIconProps) => {
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Left side depth (85°) - glass tint */}
-      <rect x={left} y={top} width="2" height={bottom - top} 
-        fill={COLORS.water.front} opacity="0.25" />
+      {/* BASE/PISO - elemento mais sólido */}
+      {/* Base left side depth (85°) - SÓLIDO */}
+      <rect x={left} y={bottom - 4} width="2" height="4" fill={COLORS.appliance.side} />
       
-      {/* Glass box background */}
-      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
-        fill={COLORS.water.top} opacity="0.12" />
-      
-      {/* Top surface (85° depth indicator) */}
-      <rect x={left} y={top} width={right - left} height="2" 
-        fill={COLORS.water.top} opacity="0.35" />
-      
-      {/* Frame with subtle outline */}
-      <rect x={left} y={top} width={right - left} height={bottom - top} 
-        fill="none" 
+      {/* Base floor */}
+      <rect x={left + 2} y={bottom - 4} width={right - left - 2} height="4" 
+        fill={COLORS.appliance.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Left frame edge (vertical) */}
-      <rect x={left} y={top} width="0.8" height={bottom - top} 
-        fill={COLORS.metal.chrome} opacity="0.6" />
-      
-      {/* Showerhead pipe - with depth */}
-      <rect x={right - 6} y={top} width="1" height="6" fill={COLORS.metal.side} />
-      <rect x={right - 5} y={top} width="2" height="6" fill={COLORS.metal.chrome} />
-      
-      {/* Showerhead */}
-      <ellipse cx={(left + right) / 2 + 2} cy={top + 5} rx="5" ry="2.5" 
-        fill={COLORS.metal.top}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-      <ellipse cx={(left + right) / 2 + 2} cy={top + 5} rx="3.5" ry="1.7" fill={COLORS.metal.front} />
-      
-      {/* Water droplets */}
-      <ellipse cx={(left + right) / 2 - 2} cy={top + 11} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2 + 1} cy={top + 13} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2 + 4} cy={top + 10} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2} cy={top + 17} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2 + 3} cy={top + 19} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      
-      {/* Floor base with depth */}
-      <rect x={left} y={bottom - 3} width="2" height="3" fill={COLORS.appliance.side} />
-      <rect x={left + 2} y={bottom - 3} width={right - left - 2} height="3" 
-        fill={COLORS.appliance.front} opacity="0.5" />
+      {/* Base top surface */}
+      <rect x={left} y={bottom - 4} width={right - left} height="1.5" fill={COLORS.appliance.top} />
       
       {/* Drain */}
-      <ellipse cx={(left + right) / 2} cy={bottom - 1.5} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
+      <ellipse cx="16" cy={bottom - 2} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
+      
+      {/* GLASS PANELS - com profundidade esquerda visível */}
+      {/* Left glass side depth (85°) - mais visível */}
+      <rect x={left} y={top} width="2" height={bottom - top - 4} 
+        fill={COLORS.water.front} opacity="0.5" />
+      
+      {/* Glass main panel - translúcido */}
+      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top - 4} 
+        fill={COLORS.water.top} opacity="0.2"
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Glass top edge */}
+      <rect x={left} y={top} width={right - left} height="2" 
+        fill={COLORS.water.top} opacity="0.6" />
+      
+      {/* Chrome frame left edge */}
+      <rect x={left} y={top} width="1" height={bottom - top - 4} 
+        fill={COLORS.metal.chrome} />
+      
+      {/* SHOWERHEAD */}
+      {/* Pipe - com profundidade */}
+      <rect x={right - 6} y={top + 1} width="1.5" height="5" fill={COLORS.metal.side} />
+      <rect x={right - 4.5} y={top + 1} width="2" height="5" fill={COLORS.metal.chrome} />
+      
+      {/* Showerhead */}
+      <ellipse cx="17" cy={top + 6} rx="5" ry="2.5" 
+        fill={COLORS.metal.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <ellipse cx="17" cy={top + 6} rx="3.5" ry="1.7" fill={COLORS.metal.front} />
+      
+      {/* Water droplets */}
+      <ellipse cx="14" cy={top + 12} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx="17" cy={top + 14} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx="20" cy={top + 11} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
+      <ellipse cx="16" cy={top + 18} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
     </svg>
   );
 };

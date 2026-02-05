@@ -1,14 +1,14 @@
 
 
-# Aplicar Perspectiva 85° aos Assets do Banheiro
+# Ajustes na Cozinha: Fogão e Pia
 
-## Diagnóstico Atual
+## Problemas Diagnosticados
 
-| Asset | Estado | Problema |
-|-------|--------|----------|
-| SinkIcon | ✓ Correto | Já possui lateral esquerda de 2px e perspectiva 85° |
-| ToiletIcon | ✗ Incorreto | Sem lateral de profundidade, visão frontal plana |
-| ShowerIcon | ✗ Incorreto | Sem lateral de profundidade, box plano |
+| Problema | Asset | Estado Atual |
+|----------|-------|--------------|
+| Desalinhamento vertical | Fogão vs Pia | Fogão: top=8, Pia: top=4 |
+| Fogão muito largo | StoveIcon | 22px largura (left=5, right=27) |
+| Pia oval | SinkIcon | Bacia usa `<ellipse>` |
 
 ---
 
@@ -18,128 +18,161 @@
 
 ---
 
-## 1. ToiletIcon - Adicionar Perspectiva 85°
+## 1. Alinhar Fogão e Pia
 
-### Problemas Atuais
-- Tanque sem lateral esquerda
-- Vaso completamente frontal
-- Sem indicador de profundidade no topo
+Ambos devem começar na mesma altura vertical para parecerem parte de uma bancada contínua quando conectados.
 
-### Código Corrigido
+**Correção:** Manter pia em `top=4` e ajustar fogão para `top=4` também (aumentando sua altura de 20px para 24px).
+
+---
+
+## 2. Diminuir Largura do Fogão
+
+Fogões reais são mais estreitos que pias. Reduzir a largura do fogão de 22px para 18px.
+
+| Dimensão | Antes | Depois |
+|----------|-------|--------|
+| left | 5 | 7 |
+| right | 27 | 25 |
+| **Largura** | 22px | **18px** |
+
+---
+
+## 3. Pia Retangular
+
+Substituir a bacia oval por formato retangular com cantos arredondados, típico de pias de cozinha.
 
 ```tsx
-// Toilet - 85° perspective with depth
-export const ToiletIcon = ({ className }: AssetIconProps) => {
-  const left = 6;
-  const right = 26;
-  const top = 4;
+// ANTES (oval)
+<ellipse cx={center} cy={top + counterH / 2 + 1} rx="5.5" ry="2.5" ... />
+
+// DEPOIS (retangular)
+<rect x={center - 5} y={top + 2} width="10" height="4" rx="1" ... />
+```
+
+---
+
+## Código Corrigido
+
+### StoveIcon
+
+```tsx
+export const StoveIcon = ({ 
+  className, 
+  direction = 'down',
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableDirectionalAssetProps) => {
+  // Mais estreito (18px) e alinhado com pia (top=4)
+  const left = connectedLeft ? 0 : 7;
+  const right = connectedRight ? 32 : 25;
+  const top = 4;      // Alinhado com pia
+  const bottom = 28;
+  const center = (left + right) / 2;
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Tank - left side depth (85°) */}
-      <rect x={left + 3} y={top} width="1.5" height="8" fill={COLORS.appliance.side} />
+      {/* Left side depth (85°) */}
+      {!connectedLeft && (
+        <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+      )}
       
-      {/* Tank main body */}
-      <rect x={left + 4.5} y={top} width="11" height="8" 
-        fill={COLORS.appliance.front}
+      {/* Cooktop surface */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="6" 
+        fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* 2 Burners (narrower stove) */}
+      <ellipse cx={center - 3.5} cy={top + 3} rx="2.5" ry="1.2" fill={COLORS.metal.shadow} />
+      <ellipse cx={center - 3.5} cy={top + 3} rx="1.5" ry="0.7" fill={COLORS.metal.side} />
+      <ellipse cx={center + 3.5} cy={top + 3} rx="2.5" ry="1.2" fill={COLORS.metal.shadow} />
+      <ellipse cx={center + 3.5} cy={top + 3} rx="1.5" ry="0.7" fill={COLORS.metal.side} />
+      
+      {/* Body */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 6} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 6} 
+        fill={COLORS.metal.front}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Tank top surface (85° depth) */}
-      <rect x={left + 3} y={top} width="12.5" height="1.5" fill={COLORS.appliance.top} />
+      {/* Control panel with knobs */}
+      <rect x={left + (connectedLeft ? 1 : 3)} y={top + 7} width={right - left - (connectedLeft ? 2 : 4)} height="2.5" 
+        fill={COLORS.metal.side} />
+      <circle cx={center - 3} cy={top + 8.2} r="0.9" fill={COLORS.metal.handle} />
+      <circle cx={center} cy={top + 8.2} r="0.9" fill={COLORS.metal.handle} />
+      <circle cx={center + 3} cy={top + 8.2} r="0.9" fill={COLORS.metal.handle} />
       
-      {/* Flush button */}
-      <ellipse cx="16" cy={top + 2.5} rx="1.5" ry="0.7" fill={COLORS.metal.chrome} />
-      
-      {/* Seat lid - with left depth */}
-      <ellipse cx="16" cy={top + 10} rx="9" ry="4.5" 
+      {/* Oven door */}
+      <rect x={left + (connectedLeft ? 2 : 4)} y={top + 10.5} width={right - left - (connectedLeft ? 4 : 6)} height="8" 
         fill={COLORS.appliance.top}
         stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      <ellipse cx="16" cy={top + 10} rx="7" ry="3.5" fill={COLORS.metal.top} />
-      
-      {/* Bowl - with left depth indicator */}
-      <path d="M 7 19 Q 5 22 7 26 Q 12 30 16 30 Q 20 30 25 26 Q 27 22 25 19 Z" 
-        fill={COLORS.appliance.side} />
-      <ellipse cx="16" cy="21" rx="9" ry="6" 
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Water inside bowl */}
-      <ellipse cx="16" cy="19.5" rx="6" ry="4" fill={COLORS.water.top} />
-      <ellipse cx="16" cy="18.5" rx="4" ry="2.5" fill={COLORS.water.front} />
-      
-      {/* Base shadow */}
-      <ellipse cx="16" cy="26" rx="7" ry="1.8" fill={COLORS.appliance.shadow} />
+      {/* Oven handle */}
+      <rect x={left + (connectedLeft ? 3 : 5)} y={top + 11.5} width={right - left - (connectedLeft ? 6 : 8)} height="1.2" 
+        fill={COLORS.metal.chrome} rx="0.5" />
+      {/* Oven window */}
+      <rect x={left + (connectedLeft ? 4 : 6)} y={top + 13.5} width={right - left - (connectedLeft ? 8 : 10)} height="4" 
+        fill={COLORS.screen.display} opacity="0.4" />
     </svg>
   );
 };
 ```
 
----
-
-## 2. ShowerIcon - Adicionar Perspectiva 85°
-
-### Problemas Atuais
-- Box de vidro completamente plano
-- Sem lateral esquerda indicando profundidade
-- Sem superfície de topo visível
-
-### Código Corrigido
+### SinkIcon
 
 ```tsx
-// Shower - 85° perspective with glass box depth
-export const ShowerIcon = ({ className }: AssetIconProps) => {
-  const left = 4;
-  const right = 28;
+export const SinkIcon = ({ 
+  className, 
+  direction = 'down',
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableDirectionalAssetProps) => {
+  const left = connectedLeft ? 0 : 5;
+  const right = connectedRight ? 32 : 27;
+  const center = (left + right) / 2;
   const top = 4;
-  const bottom = 28;
+  const counterH = 8;
+  const cabinetTop = top + counterH;
   
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* Left side depth (85°) - glass tint */}
-      <rect x={left} y={top} width="2" height={bottom - top} 
-        fill={COLORS.water.front} opacity="0.25" />
+      {/* Left side depth (85°) */}
+      {!connectedLeft && (
+        <rect x={left} y={top} width="2" height="24" fill={COLORS.appliance.side} />
+      )}
       
-      {/* Glass box background */}
-      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
-        fill={COLORS.water.top} opacity="0.12" />
+      {/* Counter with depth - thicker */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height={counterH} 
+        fill={COLORS.appliance.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
       
-      {/* Top surface (85° depth indicator) */}
-      <rect x={left} y={top} width={right - left} height="2" 
-        fill={COLORS.water.top} opacity="0.35" />
-      
-      {/* Frame with subtle outline */}
-      <rect x={left} y={top} width={right - left} height={bottom - top} 
-        fill="none" 
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Left frame edge (vertical) */}
-      <rect x={left} y={top} width="0.8" height={bottom - top} 
-        fill={COLORS.metal.chrome} opacity="0.6" />
-      
-      {/* Showerhead pipe - with depth */}
-      <rect x={right - 6} y={top} width="1" height="6" fill={COLORS.metal.side} />
-      <rect x={right - 5} y={top} width="2" height="6" fill={COLORS.metal.chrome} />
-      
-      {/* Showerhead */}
-      <ellipse cx={(left + right) / 2 + 2} cy={top + 5} rx="5" ry="2.5" 
-        fill={COLORS.metal.top}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-      <ellipse cx={(left + right) / 2 + 2} cy={top + 5} rx="3.5" ry="1.7" fill={COLORS.metal.front} />
-      
-      {/* Water droplets */}
-      <ellipse cx={(left + right) / 2 - 2} cy={top + 11} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2 + 1} cy={top + 13} rx="0.8" ry="2" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2 + 4} cy={top + 10} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2} cy={top + 17} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      <ellipse cx={(left + right) / 2 + 3} cy={top + 19} rx="0.8" ry="1.8" fill={COLORS.water.front} opacity="0.7" />
-      
-      {/* Floor base with depth */}
-      <rect x={left} y={bottom - 3} width="2" height="3" fill={COLORS.appliance.side} />
-      <rect x={left + 2} y={bottom - 3} width={right - left - 2} height="3" 
-        fill={COLORS.appliance.front} opacity="0.5" />
-      
+      {/* Basin - RETANGULAR (pia de cozinha) */}
+      <rect x={center - 5.5} y={top + 2} width="11" height="4.5" rx="1"
+        fill={COLORS.metal.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={center - 4.5} y={top + 2.8} width="9" height="3" rx="0.8" 
+        fill={COLORS.water.top} />
       {/* Drain */}
-      <ellipse cx={(left + right) / 2} cy={bottom - 1.5} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
+      <ellipse cx={center} cy={top + 4.5} rx="1" ry="0.5" fill={COLORS.metal.shadow} />
+      
+      {/* Faucet - simpler and smaller */}
+      <rect x={center - 1} y={top} width="2" height="2" fill={COLORS.metal.chrome} />
+      <rect x={center + 1} y={top + 0.5} width="2.5" height="1" fill={COLORS.metal.chrome} />
+      <circle cx={center + 3.2} cy={top + 1.5} r="0.5" fill={COLORS.metal.side} />
+      
+      {/* Cabinet */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={cabinetTop} width={right - left - (connectedLeft ? 0 : 2)} height="14" 
+        fill={COLORS.appliance.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Cabinet doors */}
+      <rect x={left + (connectedLeft ? 1 : 3)} y={cabinetTop + 1} width={(right - left - (connectedLeft ? 2 : 4)) / 2 - 1} height="11" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={center + 0.5} y={cabinetTop + 1} width={(right - left - (connectedLeft ? 2 : 4)) / 2 - 1} height="11" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      
+      {/* Door handles */}
+      <rect x={center - 2} y={cabinetTop + 5} width="1" height="2.5" fill={COLORS.metal.handle} rx="0.3" />
+      <rect x={center + 1} y={cabinetTop + 5} width="1" height="2.5" fill={COLORS.metal.handle} rx="0.3" />
     </svg>
   );
 };
@@ -147,64 +180,69 @@ export const ShowerIcon = ({ className }: AssetIconProps) => {
 
 ---
 
-## Resumo Visual
+## Comparação Visual
 
 ```text
-ANTES (ToiletIcon):
-┌──────────────────┐
-│    ┌──────┐      │  Tanque plano
-│    │      │      │
-│    ╭──────╮      │  Assento frontal
-│   (  ~~~   )     │  
-│    ╰──────╯      │  
-└──────────────────┘
+ANTES:
+┌────────────────────┐
+│                    │  Pia: top=4, larga (22px)
+│   ┌────────────┐   │  Bacia oval
+│   │  (  ~~~  ) │   │
+│   └────────────┘   │
+└────────────────────┘
 
-DEPOIS (ToiletIcon):
-┌──────────────────┐
-│   ▌┌──────┐      │  Tanque com lateral + topo
-│   ▌│      │      │
-│    ╭──────╮      │  
-│   (  ~~~   )     │  Tigela com indicador lateral
-│    ╰──────╯      │  
-└──────────────────┘
+┌────────────────────┐
+│                    │  
+│                    │  Fogão: top=8, largo (22px)
+│   ┌────────────┐   │  Desalinhado verticalmente
+│   │  ○    ○    │   │
+│   └────────────┘   │
+└────────────────────┘
 
-ANTES (ShowerIcon):
-┌──────────────────┐
-│ ┌──────────────┐ │  Box plano
-│ │   ●  água    │ │
-│ │   ○  ○      │ │
-│ │      ○      │ │
-│ └──────────────┘ │
-└──────────────────┘
 
-DEPOIS (ShowerIcon):
-┌──────────────────┐
-│ █┌─────────────┐ │  Lateral esquerda de vidro
-│ █│   ●  água   │ │  Topo com superfície visível
-│ █│   ○  ○     │ │  Moldura cromada na borda
-│ █│      ○     │ │
-│ █└▄▄▄▄▄▄▄▄▄▄▄▄┘ │  Base com profundidade
-└──────────────────┘
+DEPOIS:
+┌────────────────────┐
+│   ┌────────────┐   │  Pia: top=4, larga (22px)
+│   │ ┌────────┐ │   │  Bacia RETANGULAR
+│   │ │  ~~~   │ │   │
+│   └────────────┘   │
+└────────────────────┘
+
+┌────────────────────┐
+│     ┌────────┐     │  Fogão: top=4, ESTREITO (18px)
+│     │ ○   ○  │     │  Alinhado com pia
+│     │        │     │  2 bocas (mais proporcional)
+│     └────────┘     │
+└────────────────────┘
 ```
+
+---
+
+## Resumo das Alterações
+
+| Mudança | Antes | Depois |
+|---------|-------|--------|
+| Fogão top | 8 | 4 (alinhado com pia) |
+| Fogão largura | 22px | 18px |
+| Fogão bocas | 4 | 2 (proporcional) |
+| Pia bacia | Oval (ellipse) | Retangular (rect rx=1) |
 
 ---
 
 ## Seção Técnica
 
-### Padrões de Perspectiva 85° Aplicados
+### Hierarquia de Proporções Cozinha
 
-| Elemento | Largura | Cor |
-|----------|---------|-----|
-| Lateral esquerda (sólido) | 1.5-2px | `COLORS.appliance.side` |
-| Lateral esquerda (vidro) | 2px | `COLORS.water.front` opacity="0.25" |
-| Topo (sólido) | 1.5px | `COLORS.appliance.top` |
-| Topo (vidro) | 2px | `COLORS.water.top` opacity="0.35" |
+| Asset | Largura | Altura | Top |
+|-------|---------|--------|-----|
+| Pia | 22px | 24px | 4 |
+| Fogão | 18px | 24px | 4 |
+| Geladeira | 22px | 28px | 2 |
 
-### Hierarquia de Escala do Banheiro
+### Alinhamento de Bancada
 
-| Asset | Dimensões | Ocupação Vertical |
-|-------|-----------|-------------------|
-| Pia (com gabinete) | top=4, bottom=28 | 24px |
-| Chuveiro (box) | top=4, bottom=28 | 24px |
-| Vaso Sanitário | top=4, bottom=27 | 23px |
+Quando conectados lado a lado, fogão e pia formam uma bancada contínua com:
+- Mesmo nível de topo (`top=4`)
+- Superfícies de trabalho alinhadas
+- Profundidade lateral consistente (2px)
 

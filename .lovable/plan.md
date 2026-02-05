@@ -1,221 +1,15 @@
 
-# Corrigir Perspectiva e Angulo dos Assets
+# Corrigir Perspectiva 85° dos Assets de Cozinha e Mobiliario
 
-## Diagnostico dos Problemas
+## Resumo Visual dos Problemas
 
-Os assets atualmente misturam elementos de perspectiva frontal (90 graus) com a perspectiva 85 graus declarada. Para harmonizar com sofas, camas e poltronas (que ja usam 85 graus corretamente), precisamos adicionar indicadores visuais de profundidade consistentes.
-
-### Principios da Perspectiva 85 Graus
-- Superficies superiores mostram uma fina faixa de "topo" (1.5-2px)
-- Partes frontais sao mais altas que partes traseiras
-- Pernas/bases tem ligeira inclinacao trapezoidal
-- Elipses horizontais (como queimadores) devem ter ry menor que rx
+Os assets ainda nao seguem a perspectiva 85 graus harmonizada. Os principais defeitos sao:
+- Proporcoes inconsistentes entre partes do mesmo movel
+- Elementos muito finos ou muito grossos
+- Falta de indicadores de profundidade uniformes
+- Elementos mal centralizados ou desalinhados
 
 ---
-
-## Alteracoes por Asset
-
-### 1. TableIcon (linhas 426-487)
-
-**Problemas atuais:**
-- Tampo com apenas 5px de altura (muito fino)
-- Pernas completamente desconectadas visualmente do avental
-- Avental (apron) sem conexao visual com pernas
-
-**Correcoes:**
-- Adicionar faixa de topo destacada no tampo
-- Conectar pernas ao avental de forma continua
-- Simplificar para 2 pernas visiveis (frente esquerda e frente direita) em perspectiva 85 graus
-
-```tsx
-// Novo tampo com profundidade
-<rect x={left} y={topY} width={right - left} height="6" 
-  fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-<rect x={left} y={topY} width={right - left} height="2" fill={COLORS.wood.top} />
-
-// Avental conectado ao tampo
-<rect x={left + 1} y={topY + 6} width={right - left - 2} height="3" fill={COLORS.wood.side} />
-
-// Pernas retangulares simples (mais harmonico com 85 graus)
-<rect x={left + 1} y={topY + 9} width="3" height={bottomY - topY - 9} 
-  fill={COLORS.wood.shadow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-<rect x={right - 4} y={topY + 9} width="3" height={bottomY - topY - 9} 
-  fill={COLORS.wood.shadow} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-```
-
----
-
-### 2. DeskIcon (linhas 491-537)
-
-**Problemas atuais:**
-- Pedestal de gavetas posicionado muito a direita
-- Perna esquerda isolada e fina
-- Sem indicacao visual de profundidade no tampo
-
-**Correcoes:**
-- Centralizar melhor o pedestal
-- Adicionar painel lateral de profundidade
-- Faixa de topo no tampo para 85 graus
-
-```tsx
-// Tampo com profundidade 85 graus
-<rect x={left} y={topY} width={right - left} height="5" 
-  fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-<rect x={left} y={topY} width={right - left} height="2" fill={COLORS.wood.top} />
-
-// Pedestal reposicionado e com lateral visivel
-<rect x={right - 11} y={topY + 5} width="10" height={bottomY - topY - 5} 
-  fill={COLORS.wood.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-<rect x={right - 11} y={topY + 5} width="10" height="2" fill={COLORS.wood.top} />
-// Lateral do pedestal (profundidade 85 graus)
-<rect x={right - 12} y={topY + 5} width="1.5" height={bottomY - topY - 5} 
-  fill={COLORS.wood.side} />
-
-// Perna esquerda mais robusta
-<rect x={left + 1} y={topY + 5} width="3.5" height={bottomY - topY - 5} 
-  fill={COLORS.wood.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-```
-
----
-
-### 3. ChairIcon (linhas 700-720)
-
-**Problemas atuais:**
-- Encosto muito largo (16px) comparado ao assento (20px)
-- Pernas trapezoidais desproporcionais
-- Gap entre encosto e assento
-
-**Correcoes:**
-- Encosto ligeiramente mais estreito e conectado ao assento
-- Pernas retangulares simples (consistente com 85 graus)
-- Adicionar espessura lateral no encosto
-
-```tsx
-// Encosto com profundidade
-<rect x="9" y="4" width="14" height="8" 
-  fill={COLORS.chair.back} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-<rect x="9" y="4" width="14" height="2" fill={COLORS.chair.seat} />
-// Borda lateral do encosto
-<rect x="8" y="4" width="1.5" height="8" fill={COLORS.wood.side} />
-
-// Assento conectado ao encosto
-<rect x="7" y="11" width="18" height="8" 
-  fill={COLORS.chair.seat} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-<rect x="7" y="11" width="18" height="2" fill="#F0E8D8" />
-
-// Pernas retangulares simples
-<rect x="8" y="19" width="2.5" height="7" fill={COLORS.chair.legs} 
-  stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-<rect x="21.5" y="19" width="2.5" height="7" fill={COLORS.chair.legs} 
-  stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-```
-
----
-
-### 4. FridgeIcon (linhas 724-754)
-
-**Problemas atuais:**
-- Corpo completamente frontal/plano
-- Sem indicacao de profundidade lateral
-- Portas ocupam toda a frente sem recuo
-
-**Correcoes:**
-- Adicionar lateral visivel (85 graus)
-- Faixa de topo mais pronunciada
-- Portas com leve recuo visual
-
-```tsx
-// Lateral esquerda (profundidade 85 graus)
-<rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
-
-// Corpo principal com profundidade
-<rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
-  fill={COLORS.appliance.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-<rect x={left} y={top} width={right - left} height="3" fill={COLORS.metal.top} />
-
-// Portas com recuo
-<rect x={left + 3} y={top + 2} width={right - left - 5} height="8" fill={COLORS.appliance.top} />
-<rect x={left + 3} y={top + 11} width={right - left - 5} height="13" fill={COLORS.appliance.top} />
-```
-
----
-
-### 5. StoveIcon (linhas 541-586)
-
-**Problemas atuais:**
-- Tampo fino sem profundidade
-- Burners como elipses puras (frontais)
-- Corpo retangular sem lateral
-
-**Correcoes:**
-- Tampo mais grosso com highlight de topo
-- Lateral visivel para profundidade
-- Burners mais sutis
-
-```tsx
-// Lateral esquerda (profundidade 85 graus)
-{!connectedLeft && (
-  <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
-)}
-
-// Tampo com profundidade
-<rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="6" 
-  fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-
-// Corpo principal
-<rect x={left + (connectedLeft ? 0 : 2)} y={top + 6} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 6} 
-  fill={COLORS.metal.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-
-// Burners mais planos (elipses achatadas para 85 graus)
-<ellipse cx={center - 4} cy={top + 3} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
-<ellipse cx={center + 4} cy={top + 3} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
-```
-
----
-
-### 6. SinkIcon (linhas 588-633)
-
-**Problemas atuais:**
-- Contador sem profundidade lateral
-- Gabinete completamente frontal
-- Torneira desproporcionalmente grande
-
-**Correcoes:**
-- Adicionar lateral ao contador e gabinete
-- Bacia mais proporcional
-- Torneira redimensionada
-
-```tsx
-// Lateral esquerda (profundidade 85 graus)
-{!connectedLeft && (
-  <rect x={left} y="4" width="2" height="22" fill={COLORS.appliance.side} />
-)}
-
-// Contador com profundidade
-<rect x={left + (connectedLeft ? 0 : 2)} y="4" width={right - left - (connectedLeft ? 0 : 2)} height="6" 
-  fill={COLORS.appliance.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-
-// Gabinete com lateral
-<rect x={left + (connectedLeft ? 0 : 2)} y="10" width={right - left - (connectedLeft ? 0 : 2)} height="16" 
-  fill={COLORS.appliance.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-
-// Bacia menor e mais centrada
-<ellipse cx="16" cy="6.5" rx="6" ry="3" fill={COLORS.metal.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-<ellipse cx="16" cy="6.5" rx="4.5" ry="2.2" fill={COLORS.water.top} />
-```
-
----
-
-## Resumo das Mudancas
-
-| Asset | Problema Principal | Solucao |
-|-------|-------------------|---------|
-| Mesa | Pernas desconectadas | Pernas retangulares, avental continuo |
-| Escrivaninha | Pedestal mal posicionado | Reposicionar, adicionar lateral |
-| Cadeira | Pernas trapezoidais | Pernas retangulares, encosto conectado |
-| Geladeira | Totalmente frontal | Lateral esquerda visivel |
-| Fogao | Sem profundidade | Lateral + tampo mais alto |
-| Pia | Gabinete plano | Lateral + contador com profundidade |
 
 ## Arquivo Afetado
 
@@ -223,17 +17,410 @@ Os assets atualmente misturam elementos de perspectiva frontal (90 graus) com a 
 
 ---
 
+## 1. Mesa (TableIcon) - Linhas 426-463
+
+### Problemas
+- Tampo de 6px altura, mas pernas de apenas 3px largura (desproporcional)
+- Avental de 3px muito alto
+- Sem indicador de profundidade lateral
+
+### Correcoes
+
+```tsx
+// Table - 85° isometric perspective with rectangular legs and depth
+export const TableIcon = ({ 
+  className, 
+  connectedTop = false, 
+  connectedBottom = false, 
+  connectedLeft = false, 
+  connectedRight = false 
+}: ConnectableAssetProps) => {
+  const padding = 4;
+  const left = connectedLeft ? 0 : padding;
+  const right = connectedRight ? 32 : 32 - padding;
+  const topY = connectedTop ? 0 : 6;
+  const bottomY = 27;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) - only when not connected */}
+      {!connectedLeft && (
+        <rect x={left} y={topY} width="1.5" height="5" fill={COLORS.wood.side} />
+      )}
+      
+      {/* Tabletop with 85° depth - thinner (5px) */}
+      <rect x={left + (connectedLeft ? 0 : 1.5)} y={topY} width={right - left - (connectedLeft ? 0 : 1.5)} height="5" 
+        fill={COLORS.wood.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={left + (connectedLeft ? 0 : 1.5)} y={topY} width={right - left - (connectedLeft ? 0 : 1.5)} height="1.5" 
+        fill={COLORS.wood.top} />
+      
+      {/* Apron - thinner (2px) */}
+      <rect x={left + (connectedLeft ? 1 : 2.5)} y={topY + 5} width={right - left - (connectedLeft ? 2 : 5)} height="2" 
+        fill={COLORS.wood.side} />
+      
+      {/* Legs - wider (4px) for better proportion */}
+      {!connectedLeft && (
+        <rect x={left + 2} y={topY + 7} width="4" height={bottomY - topY - 7} 
+          fill={COLORS.wood.shadow} 
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      )}
+      {!connectedRight && (
+        <rect x={right - 6} y={topY + 7} width="4" height={bottomY - topY - 7} 
+          fill={COLORS.wood.shadow} 
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      )}
+    </svg>
+  );
+};
+```
+
+---
+
+## 2. Escrivaninha (DeskIcon) - Linhas 468-516
+
+### Problemas
+- Pedestal muito largo (11px) e dominante
+- Perna esquerda isolada e fina
+- Proporcoes desbalanceadas
+
+### Correcoes
+
+```tsx
+// Desk - 85° isometric perspective with balanced pedestal
+export const DeskIcon = ({
+  className,
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableAssetProps) => {
+  const padding = 4;
+  const left = connectedLeft ? 0 : padding;
+  const right = connectedRight ? 32 : 32 - padding;
+  const topY = connectedTop ? 0 : 6;
+  const bottomY = 27;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      {!connectedLeft && (
+        <rect x={left} y={topY} width="1.5" height="5" fill={COLORS.wood.side} />
+      )}
+      
+      {/* Desktop surface with 85° depth - thinner */}
+      <rect x={left + (connectedLeft ? 0 : 1.5)} y={topY} width={right - left - (connectedLeft ? 0 : 1.5)} height="5" 
+        fill={COLORS.wood.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={left + (connectedLeft ? 0 : 1.5)} y={topY} width={right - left - (connectedLeft ? 0 : 1.5)} height="1.5" 
+        fill={COLORS.wood.top} />
+      
+      {/* Drawer pedestal - narrower (9px) */}
+      <rect x={right - 10} y={topY + 5} width="9" height={bottomY - topY - 5} 
+        fill={COLORS.wood.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Left side of pedestal (85° depth) */}
+      <rect x={right - 11} y={topY + 5} width="1.5" height={bottomY - topY - 5} 
+        fill={COLORS.wood.side} />
+      {/* Top drawer */}
+      <rect x={right - 9} y={topY + 7} width="7" height="4" fill={COLORS.wood.top} />
+      <rect x={right - 7} y={topY + 8.5} width="3" height="1" fill={COLORS.metal.handle} rx="0.5" />
+      {/* Bottom drawer */}
+      <rect x={right - 9} y={topY + 12} width="7" height="5" fill={COLORS.wood.top} />
+      <rect x={right - 7} y={topY + 14} width="3" height="1" fill={COLORS.metal.handle} rx="0.5" />
+      
+      {/* Left support panel (instead of thin leg) */}
+      {!connectedLeft && (
+        <>
+          <rect x={left + 2} y={topY + 5} width="5" height={bottomY - topY - 5} 
+            fill={COLORS.wood.side} 
+            stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+          <rect x={left + 2} y={topY + 5} width="5" height="1.5" 
+            fill={COLORS.wood.front} />
+        </>
+      )}
+    </svg>
+  );
+};
+```
+
+---
+
+## 3. Cadeira (ChairIcon) - Linhas 693-716
+
+### Problemas
+- Apenas 2 pernas visiveis (deveria mostrar 4)
+- Encosto muito plano sem volume
+- Proporcoes assento vs encosto desbalanceadas
+- Lado esquerdo do encosto desalinhado
+
+### Correcoes
+
+```tsx
+// Chair - 85° isometric perspective with 4 visible legs
+export const ChairIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
+  const PAD = 6;
+  const TOP = 4;
+  const SEAT_Y = 13;
+  const SEAT_H = 6;
+  const LEG_H = 8;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Back legs (behind, slightly visible) */}
+      <rect x={PAD + 1} y={SEAT_Y + SEAT_H - 1} width="3" height={LEG_H + 1} 
+        fill={COLORS.wood.shadow} opacity="0.6" />
+      <rect x={32 - PAD - 4} y={SEAT_Y + SEAT_H - 1} width="3" height={LEG_H + 1} 
+        fill={COLORS.wood.shadow} opacity="0.6" />
+      
+      {/* Backrest - taller and narrower */}
+      <rect x={PAD} y={TOP} width={32 - PAD * 2} height="10" 
+        fill={COLORS.chair.back} 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={PAD} y={TOP} width={32 - PAD * 2} height="2" fill={COLORS.chair.seat} />
+      {/* Backrest left side depth */}
+      <rect x={PAD - 1} y={TOP} width="1.5" height="10" fill={COLORS.wood.side} />
+      {/* Backrest vertical slats detail */}
+      <rect x={PAD + 3} y={TOP + 3} width="2" height="5" fill={COLORS.wood.side} rx="0.5" />
+      <rect x="15" y={TOP + 3} width="2" height="5" fill={COLORS.wood.side} rx="0.5" />
+      <rect x={32 - PAD - 5} y={TOP + 3} width="2" height="5" fill={COLORS.wood.side} rx="0.5" />
+      
+      {/* Seat - thinner */}
+      <rect x={PAD} y={SEAT_Y} width={32 - PAD * 2} height={SEAT_H} 
+        fill={COLORS.chair.seat} 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <rect x={PAD} y={SEAT_Y} width={32 - PAD * 2} height="1.5" fill="#F0E8D8" />
+      {/* Seat left side depth */}
+      <rect x={PAD - 1} y={SEAT_Y} width="1.5" height={SEAT_H} fill={COLORS.wood.grain} />
+      
+      {/* Front legs - wider */}
+      <rect x={PAD} y={SEAT_Y + SEAT_H} width="3.5" height={LEG_H} fill={COLORS.chair.legs} 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={32 - PAD - 3.5} y={SEAT_Y + SEAT_H} width="3.5" height={LEG_H} fill={COLORS.chair.legs} 
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+    </svg>
+  );
+};
+```
+
+---
+
+## 4. Geladeira (FridgeIcon) - Linhas 720-753
+
+### Problemas
+- Outline duplicado no topo (sobrepoe)
+- Proporcao muito achatada
+- Handles mal posicionados
+
+### Correcoes
+
+```tsx
+// Fridge - 85° perspective with proper proportions
+export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetProps) => {
+  const left = 5;
+  const right = 27;
+  const top = 3;
+  const bottom = 29;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+      
+      {/* Main body */}
+      <rect x={left + 2} y={top} width={right - left - 2} height={bottom - top} 
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Top surface (85° depth indicator) */}
+      <rect x={left} y={top} width={right - left} height="2.5" fill={COLORS.metal.top} />
+      
+      {/* Freezer compartment */}
+      <rect x={left + 4} y={top + 4} width={right - left - 6} height="7" fill={COLORS.appliance.top} />
+      <rect x={right - 5} y={top + 6} width="1.5" height="3" fill={COLORS.metal.handle} rx="0.3" />
+      
+      {/* Divider line */}
+      <rect x={left + 4} y={top + 11.5} width={right - left - 6} height="1" fill={COLORS.metal.shadow} />
+      
+      {/* Fridge compartment */}
+      <rect x={left + 4} y={top + 13} width={right - left - 6} height="12" fill={COLORS.appliance.top} />
+      <rect x={right - 5} y={top + 17} width="1.5" height="4" fill={COLORS.metal.handle} rx="0.3" />
+    </svg>
+  );
+};
+```
+
+---
+
+## 5. Fogao (StoveIcon) - Linhas 521-573
+
+### Problemas
+- Queimadores muito pequenos
+- Forno muito alto
+- Knobs muito proximos do topo
+
+### Correcoes
+
+```tsx
+// Stove - 85° perspective with proper proportions
+export const StoveIcon = ({ 
+  className, 
+  direction = 'down',
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableDirectionalAssetProps) => {
+  const left = connectedLeft ? 0 : 5;
+  const right = connectedRight ? 32 : 27;
+  const top = 4;
+  const bottom = 28;
+  const center = (left + right) / 2;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      {!connectedLeft && (
+        <rect x={left} y={top} width="2" height={bottom - top} fill={COLORS.metal.side} />
+      )}
+      
+      {/* Cooktop surface - thicker for 85° */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height="7" 
+        fill={COLORS.metal.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* 4 Burners - larger and properly spaced */}
+      <ellipse cx={center - 5} cy={top + 3.5} rx="3.5" ry="1.5" fill={COLORS.metal.shadow} />
+      <ellipse cx={center - 5} cy={top + 3.5} rx="2" ry="0.8" fill={COLORS.metal.side} />
+      <ellipse cx={center + 5} cy={top + 3.5} rx="3.5" ry="1.5" fill={COLORS.metal.shadow} />
+      <ellipse cx={center + 5} cy={top + 3.5} rx="2" ry="0.8" fill={COLORS.metal.side} />
+      
+      {/* Body */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top + 7} width={right - left - (connectedLeft ? 0 : 2)} height={bottom - top - 7} 
+        fill={COLORS.metal.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Control panel with knobs - lower position */}
+      <rect x={left + (connectedLeft ? 1 : 3)} y={top + 8} width={right - left - (connectedLeft ? 2 : 4)} height="3" 
+        fill={COLORS.metal.side} />
+      <circle cx={center - 6} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
+      <circle cx={center - 2} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
+      <circle cx={center + 2} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
+      <circle cx={center + 6} cy={top + 9.5} r="1.2" fill={COLORS.metal.handle} />
+      
+      {/* Oven door - smaller */}
+      <rect x={left + (connectedLeft ? 2 : 4)} y={top + 12} width={right - left - (connectedLeft ? 4 : 6)} height="9" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      {/* Oven handle */}
+      <rect x={left + (connectedLeft ? 3 : 5)} y={top + 13} width={right - left - (connectedLeft ? 6 : 8)} height="1.5" 
+        fill={COLORS.metal.chrome} rx="0.5" />
+      {/* Oven window */}
+      <rect x={left + (connectedLeft ? 4 : 6)} y={top + 15.5} width={right - left - (connectedLeft ? 8 : 10)} height="4" 
+        fill={COLORS.screen.display} opacity="0.4" />
+    </svg>
+  );
+};
+```
+
+---
+
+## 6. Pia (SinkIcon) - Linhas 576-626
+
+### Problemas
+- Torneira muito complexa e desproporcional
+- Bacia muito alta
+- Gabinete muito grande
+
+### Correcoes
+
+```tsx
+// Sink - 85° perspective with balanced proportions
+export const SinkIcon = ({ 
+  className, 
+  direction = 'down',
+  connectedTop = false,
+  connectedBottom = false,
+  connectedLeft = false,
+  connectedRight = false
+}: ConnectableDirectionalAssetProps) => {
+  const left = connectedLeft ? 0 : 5;
+  const right = connectedRight ? 32 : 27;
+  const center = (left + right) / 2;
+  const top = 4;
+  const counterH = 8;
+  const cabinetTop = top + counterH;
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Left side depth (85°) */}
+      {!connectedLeft && (
+        <rect x={left} y={top} width="2" height="24" fill={COLORS.appliance.side} />
+      )}
+      
+      {/* Counter with depth - thicker */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={top} width={right - left - (connectedLeft ? 0 : 2)} height={counterH} 
+        fill={COLORS.appliance.top} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Basin - properly centered and sized */}
+      <ellipse cx={center} cy={top + counterH / 2 + 1} rx="5.5" ry="2.5" 
+        fill={COLORS.metal.side} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <ellipse cx={center} cy={top + counterH / 2 + 1} rx="4" ry="1.8" fill={COLORS.water.top} />
+      <ellipse cx={center} cy={top + counterH / 2 + 1.5} rx="1" ry="0.4" fill={COLORS.metal.shadow} />
+      
+      {/* Faucet - simpler and smaller */}
+      <rect x={center - 1} y={top} width="2" height="2" fill={COLORS.metal.chrome} />
+      <rect x={center + 1} y={top + 0.5} width="2.5" height="1" fill={COLORS.metal.chrome} />
+      <circle cx={center + 3.2} cy={top + 1.5} r="0.5" fill={COLORS.metal.side} />
+      
+      {/* Cabinet */}
+      <rect x={left + (connectedLeft ? 0 : 2)} y={cabinetTop} width={right - left - (connectedLeft ? 0 : 2)} height="14" 
+        fill={COLORS.appliance.front} stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Cabinet doors */}
+      <rect x={left + (connectedLeft ? 1 : 3)} y={cabinetTop + 1} width={(right - left - (connectedLeft ? 2 : 4)) / 2 - 1} height="11" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      <rect x={center + 0.5} y={cabinetTop + 1} width={(right - left - (connectedLeft ? 2 : 4)) / 2 - 1} height="11" 
+        fill={COLORS.appliance.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      
+      {/* Door handles */}
+      <rect x={center - 2} y={cabinetTop + 5} width="1" height="2.5" fill={COLORS.metal.handle} rx="0.3" />
+      <rect x={center + 1} y={cabinetTop + 5} width="1" height="2.5" fill={COLORS.metal.handle} rx="0.3" />
+    </svg>
+  );
+};
+```
+
+---
+
+## Resumo das Correcoes
+
+| Asset | Problemas Corrigidos |
+|-------|---------------------|
+| Mesa | Pernas mais largas (4px), avental mais fino (2px), lateral esquerda de profundidade |
+| Escrivaninha | Pedestal mais estreito (9px), painel lateral esquerdo (nao perna fina), proporcoes balanceadas |
+| Cadeira | 4 pernas visiveis (traseiras em opacidade), encosto mais alto (10px), lateral de profundidade, slats decorativos |
+| Geladeira | Topo sem duplicacao de outline, proporcoes mais altas, handles menores |
+| Fogao | Queimadores maiores (rx=3.5), painel de controle mais baixo, forno menor |
+| Pia | Torneira simplificada, bacia centralizada, counter mais espesso (8px), gabinete menor (14px) |
+
+---
+
 ## Secao Tecnica
 
-### Padroes de Profundidade 85 Graus
+### Padroes de Perspectiva 85°
 
-1. **Faixa de topo**: 1.5-2px de altura com cor mais clara
-2. **Lateral esquerda**: 1.5-2px de largura com cor intermediaria
-3. **Corpo frontal**: Cor principal do material
-4. **Pernas**: Retangulares simples, nao trapezoidais
+1. **Lateral esquerda**: 1.5-2px de largura, cor `*.side`
+2. **Faixa de topo**: 1.5-2.5px de altura, cor `*.top`
+3. **Proporcao de pernas**: Largura minima 3.5-4px para equilibrio visual
+4. **Avental/apron**: Maximo 2px de altura
 
-### Cores Utilizadas
+### Hierarquia de Tamanho (Comparativo)
 
-- `COLORS.wood.top` / `COLORS.metal.top` / `COLORS.appliance.top` - superficies superiores
-- `COLORS.wood.side` / `COLORS.metal.side` / `COLORS.appliance.side` - laterais
-- `COLORS.wood.front` / `COLORS.metal.front` / `COLORS.appliance.front` - frentes
+```text
+Geladeira > Fogao/Pia > Mesa > Escrivaninha > Cadeira
+  (maior)                                      (menor)
+```
+
+Isso reflete a escala real dos moveis em uma planta baixa.

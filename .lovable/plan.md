@@ -1,34 +1,47 @@
 
-# Ajustar Largura dos Braços da Poltrona
+
+# Corrigir Cards de Avatares - Pistas Aparecem Apenas ao Clicar
 
 ## Diagnostico
 
-No arquivo `src/components/game/assets/AssetIcons.tsx`, o componente `ArmchairIcon` define a largura dos bracos na linha 642:
+No arquivo `src/components/game/SuspectClueCards.tsx`, as pistas sao exibidas incondicionalmente para todos os suspeitos (linha 111-115):
 
 ```tsx
-const armWidth = 5;  // Valor atual
+{suspectClue && (
+  <p className="text-[10px] text-muted-foreground leading-tight mt-1 line-clamp-3">
+    {formatClueText(suspectClue.text, suspect.name)}
+  </p>
+)}
 ```
-
-Os bracos sao renderizados como retangulos com essa largura nas linhas 674 e 682.
 
 ## Alteracao Proposta
 
-Reduzir `armWidth` de `5` para `3` pixels, tornando os bracos visivelmente mais finos mantendo a proporcao harmonica com o corpo da poltrona.
+Condicionar a exibicao da pista ao estado `isSelected`, mostrando-a apenas quando o avatar for clicado/selecionado.
 
-### Arquivo: `src/components/game/assets/AssetIcons.tsx`
+### Arquivo: `src/components/game/SuspectClueCards.tsx`
 
-**Linha 642:**
+**Linhas 111-115 (antes):**
 ```tsx
-// Antes
-const armWidth = 5;
-
-// Depois
-const armWidth = 3;
+{suspectClue && (
+  <p className="text-[10px] text-muted-foreground leading-tight mt-1 line-clamp-3">
+    {formatClueText(suspectClue.text, suspect.name)}
+  </p>
+)}
 ```
 
-## Impacto Visual
+**Linhas 111-115 (depois):**
+```tsx
+{isSelected && suspectClue && (
+  <p className="text-[10px] text-muted-foreground leading-tight mt-1 line-clamp-3">
+    {formatClueText(suspectClue.text, suspect.name)}
+  </p>
+)}
+```
 
-- Os bracos ficarao 40% mais finos (de 5px para 3px)
-- O assento ficara proporcionalmente mais largo (de 14px para 18px de largura interna)
-- As elipses de topo dos bracos serao automaticamente ajustadas pois usam `armWidth/2` como raio
-- O resultado sera uma poltrona com silhueta mais elegante e bracos delicados
+## Resultado Esperado
+
+- Cards nao selecionados exibem apenas o avatar e o primeiro nome do suspeito
+- Ao clicar em um card, a pista correspondente aparece abaixo do nome
+- Cards de vitimas continuam exibindo a label "Vitima" independentemente da selecao
+- O layout dos cards fica mais limpo e compacto quando nao selecionados
+

@@ -1,161 +1,92 @@
 
+## Situação atual (o que está renderizando no grid agora)
 
-# Redesenho do Vaso Sanitário com Perspectiva ¾ Diagonal
+- No caso carregado em `/game` (“O Mistério da Mansão Blackwood”, grid 6x6), o **vaso sanitário** está no **banheiro** em:
+  - **row=2, col=4** (visualmente: **L3 / C5**)
+  - Ao lado do chuveiro (row=2, col=5).
+- O `ToiletIcon` atual (diff que você enviou) usa um `<g transform="rotate(-25, 16, 16)">` e **muitas elipses claras** (tons próximos de branco/cinza) com detalhes internos também claros.
 
-## Problema Identificado
+## Diagnóstico (por que ainda não está inteligível)
 
-O vaso sanitário atual é composto por retângulos empilhados verticalmente (tanque → assento → bacia), formando uma "caixa" genérica que não se diferencia visualmente de outros eletrodomésticos como geladeira ou fogão.
+1. **Rotação em SVG tende a “borrar”/anti-alias** em tamanhos pequenos, o que enfraquece a leitura “pixel art nítida”.
+2. **A abertura do assento está clara demais**: hoje ela usa `COLORS.metal.top` (quase branco). Em escala pequena, isso não comunica “buraco”; vira apenas mais um highlight.
+3. **Faltam pistas de profundidade 85° no corpo do vaso** (principalmente no assento/bacia): o tanque tem “side/top”, mas o restante parece “oval chapado”.
+4. **Silhueta pouco icônica**: tanque + dois ovais empilhados pode parecer “qualquer coisa” quando reduzido e com opacidade aplicada na célula.
 
-```text
-ATUAL (vista frontal empilhada):
-┌──────────────────┐
-│ ┌──────────────┐ │  ← Tanque (retângulo)
-│ └──────────────┘ │
-│ ┌──────────────┐ │  ← Assento (retângulo)
-│ └──────────────┘ │
-│ ┌──────────────┐ │  ← Bacia (retângulo)
-│ └──────────────┘ │
-└──────────────────┘
-```
+## Objetivo do próximo ajuste
 
-O formato **não comunica** que é um vaso sanitário porque:
-- Falta a silhueta característica (tanque atrás + bacia oval na frente)
-- Todos os elementos estão alinhados no mesmo eixo vertical
-- Parece mais uma estante ou armário empilhado
+Fazer o vaso ser reconhecido em 1 segundo, mesmo pequeno:
+- Sem vista frontal “placa”
+- Sem vista aérea/top-down
+- Com **perspectiva 85°** consistente com os demais assets (top strip + side depth), e **silhueta de vaso** (tanque atrás + bacia/pedestal na frente).
 
 ---
 
-## Solução Proposta: Perspectiva ¾ com Rotação Sutil
+## Mudança proposta (ToiletIcon v3 – 85° com leitura forte, sem rotação)
 
-Redesenhar o vaso com uma **orientação diagonal (~30°)** que mostra:
-1. O tanque posicionado na parte de trás (canto superior)
-2. A bacia oval saindo em direção ao observador
-3. A silhueta icônica do vaso sanitário reconhecível
+### Estratégia de desenho
+- **Remover a rotação** (eliminar o `transform="rotate(...)"`) para manter linhas mais nítidas.
+- Construir o vaso com 3 blocos claros, todos com padrão 85°:
+  1. **Tanque (atrás)**: retângulos com `side` (2px) + `top` (1.5–2px) + front com outline.
+  2. **Assento / tampa (meio)**: formato mais “U/oval” mas com **top strip** e **side depth** (mesmo que simplificado).
+  3. **Bacia + pedestal (frente)**: corpo com front + base (um “frontal base” como cama/sofá) para dar volume.
+- **Abertura do vaso escura** (ex.: `COLORS.metal.handle` ou `COLORS.metal.shadow`) para leitura imediata.
+- **Água** com turquesa/claro (`COLORS.water.front/top`) em uma área menor, para reforçar “banheiro” sem virar “piscina”.
+- **Composição em ¾ sem rotação**: ao invés de girar tudo, deslocar levemente a bacia para **baixo/direita** em relação ao tanque (2px), criando sensação de diagonal/perspectiva sem blur.
 
-```text
-PROPOSTO (perspectiva ¾ diagonal):
-┌──────────────────┐
-│      ┌───┐       │  ← Tanque (canto superior-direito)
-│     ┌┘   └┐      │     rotacionado
-│    ┌───────┐     │  
-│   │   ◯    │     │  ← Assento oval com abertura
-│    ╲       ╱     │
-│     ╲_____╱      │  ← Bacia arredondada (frente)
-└──────────────────┘
-```
+### Esboço técnico (como ficará o código)
+No `src/components/game/assets/AssetIcons.tsx`, substituir o `ToiletIcon` atual por uma versão baseada em constantes, algo assim (valores finais ajustados “no olho” para não encher a célula e manter respiro):
 
----
+- Constantes sugeridas:
+  - `const PAD = 6;`
+  - `const TOP_STRIP = 1.5;`
+  - `const DEPTH = 2;`
+- Tanque:
+  - side depth: `rect x={PAD} ... width={DEPTH}`
+  - body: `rect x={PAD+DEPTH} ... stroke={OUTLINE}`
+  - top strip: `rect height={2}`
+- Assento:
+  - usar `rect` arredondado (rx) para manter “pixel nítido” e evitar elipse rotacionada/blur
+  - abertura com fill escuro
+- Bacia/pedestal:
+  - corpo principal (rounded rect)
+  - base frontal (um retângulo na parte inferior com `appliance.front` + top strip) para sugerir volume
+- Opcional: `shapeRendering="crispEdges"` no `<svg>` do vaso para reforçar leitura pixel.
 
-## Implementação Técnica
-
-### Abordagem com SVG Transform
-
-```tsx
-export const ToiletIcon = ({ className }: AssetIconProps) => {
-  return (
-    <svg viewBox="0 0 32 32" className={className}>
-      {/* Grupo principal rotacionado -25° em torno do centro */}
-      <g transform="rotate(-25, 16, 16)">
-        
-        {/* TANQUE - posicionado atrás */}
-        <rect x="11" y="3" width="2" height="7" fill={COLORS.appliance.side} />
-        <rect x="13" y="3" width="8" height="7" 
-          fill={COLORS.appliance.front}
-          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <rect x="11" y="3" width="10" height="1.5" fill={COLORS.appliance.top} />
-        <ellipse cx="17" cy="5.5" rx="1.5" ry="0.7" fill={COLORS.metal.chrome} />
-        
-        {/* ASSENTO/TAMPA - formato oval */}
-        <ellipse cx="16" cy="14" rx="9" ry="5" 
-          fill={COLORS.appliance.front}
-          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <ellipse cx="16" cy="13" rx="8" ry="4" fill={COLORS.appliance.top} />
-        <ellipse cx="16" cy="14" rx="6" ry="3" fill={COLORS.metal.top} />
-        
-        {/* BACIA - oval alongada */}
-        <ellipse cx="16" cy="22" rx="10" ry="6" 
-          fill={COLORS.appliance.front}
-          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        <ellipse cx="16" cy="21" rx="6" ry="3.5" fill={COLORS.water.top} />
-        
-      </g>
-      
-      {/* Sombra base (NÃO rotacionada para ancorar) */}
-      <ellipse cx="16" cy="28" rx="9" ry="2" 
-        fill={COLORS.appliance.shadow} opacity="0.4" />
-    </svg>
-  );
-};
-```
+### Ajustes críticos de legibilidade
+- Trocar a cor da abertura do assento de `COLORS.metal.top` para algo **bem mais escuro**, por exemplo:
+  - `COLORS.metal.handle` (mais contrastado) ou `COLORS.metal.shadow`
+- Aumentar levemente a presença do outline no vaso (sem mudar o padrão global):
+  - ou usar `strokeWidth={OUTLINE_WIDTH}` mas com mais áreas sólidas e menos detalhes finos,
+  - ou (se necessário) um `const TOILET_OUTLINE_W = 1` apenas no vaso (último recurso).
 
 ---
 
-## Parâmetros de Design
+## Verificação visual (obrigatória) após implementar
 
-| Parâmetro | Valor | Justificativa |
-|-----------|-------|---------------|
-| **Ângulo de rotação** | -25° | Diagonal suave, reconhecível |
-| **Centro de rotação** | (16, 16) | Centro do viewBox |
-| **Formas do assento/bacia** | Elipses | Mais natural para vasos |
-| **Forma do tanque** | Retângulo | Mantém indicador de profundidade 85° |
-| **Sombra** | Não rotacionada | Ancora o asset no grid |
-
----
-
-## Elementos Visuais
-
-| Componente | Forma | Posição | Cor |
-|------------|-------|---------|-----|
-| Tanque | Retângulo 8x7 | Canto superior | `appliance.front` + depth |
-| Botão descarga | Elipse pequena | Centro do tanque | `metal.chrome` |
-| Tampa/Assento | Elipse 18x10 | Centro | `appliance.top` |
-| Abertura | Elipse 12x6 | Centro do assento | `metal.top` (escuro) |
-| Bacia | Elipse 20x12 | Parte inferior | `appliance.front` |
-| Água | Elipse 12x7 | Centro da bacia | `water.top` |
-| Sombra | Elipse 18x4 | Base (não rotacionada) | `appliance.shadow` |
+1. Abrir `/game` e ir direto ao banheiro:
+   - Confirmar o vaso em **L3/C5** (row=2 col=4) e o chuveiro em **L3/C6**.
+2. Checar em 2 tamanhos:
+   - Desktop (grid ~420–480px)
+   - Mobile (largura ~390px)
+3. Critérios de sucesso:
+   - O usuário identifica “vaso sanitário” sem precisar de popover/dicionário.
+   - Abertura escura é evidente.
+   - Volume 85° (top strip + depth) é percebido.
+   - Não “enche” a célula: mantém respiro (padding visual).
 
 ---
 
-## Comparação Visual
+## Escopo e arquivos afetados
 
-```text
-ANTES (não reconhecível):     DEPOIS (icônico):
-┌────────────────┐            ┌────────────────┐
-│ ████████████   │            │      ▄██▄      │
-│ ████████████   │            │    ▄██████▄    │
-│ ████████████   │    →       │   ██  ○○  ██   │
-│ ████████████   │            │    ▀██████▀    │
-│ ████████████   │            │     ▀▀▀▀▀▀     │
-└────────────────┘            └────────────────┘
-   "Uma caixa?"                 "Ah, um vaso!"
-```
+- **Editar**: `src/components/game/assets/AssetIcons.tsx`
+  - Apenas o `ToiletIcon` (mantendo o restante intacto).
 
 ---
 
-## Arquivo Afetado
+## Plano B (se ainda ficar ambíguo)
 
-`src/components/game/assets/AssetIcons.tsx` - linhas 955-1013
-
----
-
-## Seção Técnica
-
-### Por que rotação e não redesenho completo?
-
-1. **Simplicidade**: `transform="rotate(-25, 16, 16)"` aplica a rotação a todos os elementos internos
-2. **Manutenibilidade**: Os elementos individuais mantêm coordenadas relativas simples
-3. **Consistência**: Ainda segue o padrão de cores da paleta `COLORS`
-
-### Preservação da Perspectiva 85°
-
-- O **tanque** mantém os indicadores de profundidade lateral (`appliance.side`)
-- O **assento e bacia** usam elipses que naturalmente comunicam perspectiva de cima
-- A **rotação do grupo** cria a sensação de ¾ sem quebrar o estilo
-
-### Hierarquia de Z-Index (ordem de desenho)
-
-1. Tanque (fundo)
-2. Assento/Tampa
-3. Bacia (frente)
-4. Sombra (último, mas fora do grupo rotacionado)
+Se mesmo assim a leitura ficar fraca, aí sim faremos um ajuste mínimo de renderização no grid:
+- **Aumentar a opacidade do asset especificamente para `toilet`** no `GameCell` (ex.: 0.85 só para o vaso), sem mexer na opacidade dos demais assets.
+- Isso é opcional e só entra se o redesenho v3 ainda não resolver.
 

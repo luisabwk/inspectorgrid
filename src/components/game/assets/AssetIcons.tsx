@@ -952,54 +952,85 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
    );
  };
  
-// Toilet - ¾ diagonal perspective for recognizable silhouette
+// Toilet - 85° perspective with crisp edges, no rotation
+// v3: Tank behind + bowl/pedestal front with dark opening for instant recognition
 export const ToiletIcon = ({ className }: AssetIconProps) => {
+  // Layout constants for visual padding and 85° depth
+  const PAD = 5;
+  const DEPTH = 2;
+  const TOP_STRIP = 1.5;
+  
+  // Tank dimensions (back)
+  const tankLeft = PAD + 4;
+  const tankTop = 4;
+  const tankW = 12;
+  const tankH = 8;
+  
+  // Bowl/seat dimensions (front, offset down-right for ¾ feel)
+  const bowlLeft = PAD + 2;
+  const bowlTop = tankTop + tankH - 2;
+  const bowlW = 16;
+  const bowlH = 14;
+  
   return (
-    <svg viewBox="0 0 32 32" className={className}>
-      {/* Grupo principal rotacionado -25° em torno do centro */}
-      <g transform="rotate(-25, 16, 16)">
-        
-        {/* TANQUE - posicionado atrás */}
-        {/* Tank left side depth */}
-        <rect x="11" y="3" width="2" height="7" fill={COLORS.appliance.side} />
-        
-        {/* Tank body */}
-        <rect x="13" y="3" width="8" height="7" 
-          fill={COLORS.appliance.front}
-          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        
-        {/* Tank top surface */}
-        <rect x="11" y="3" width="10" height="1.5" fill={COLORS.appliance.top} />
-        
-        {/* Flush button */}
-        <ellipse cx="17" cy="5.5" rx="1.5" ry="0.7" fill={COLORS.metal.chrome} />
-        
-        {/* ASSENTO/TAMPA - formato oval */}
-        {/* Seat body */}
-        <ellipse cx="16" cy="14" rx="9" ry="5" 
-          fill={COLORS.appliance.front}
-          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        
-        {/* Seat top surface */}
-        <ellipse cx="16" cy="13" rx="8" ry="4" fill={COLORS.appliance.top} />
-        
-        {/* Seat opening */}
-        <ellipse cx="16" cy="14" rx="6" ry="3" fill={COLORS.metal.top} />
-        
-        {/* BACIA - oval alongada */}
-        {/* Bowl body */}
-        <ellipse cx="16" cy="22" rx="10" ry="6" 
-          fill={COLORS.appliance.front}
-          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-        
-        {/* Water inside */}
-        <ellipse cx="16" cy="21" rx="6" ry="3.5" fill={COLORS.water.top} />
-        
-      </g>
+    <svg viewBox="0 0 32 32" className={className} shapeRendering="crispEdges">
+      {/* ===== TANK (back) ===== */}
+      {/* Tank left side depth (85°) */}
+      <rect x={tankLeft} y={tankTop + TOP_STRIP} width={DEPTH} height={tankH - TOP_STRIP} 
+        fill={COLORS.appliance.side} />
       
-      {/* Sombra base (NÃO rotacionada para ancorar) */}
-      <ellipse cx="16" cy="28" rx="9" ry="2" 
-        fill={COLORS.appliance.shadow} opacity="0.4" />
+      {/* Tank body */}
+      <rect x={tankLeft + DEPTH} y={tankTop + TOP_STRIP} width={tankW - DEPTH} height={tankH - TOP_STRIP} 
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Tank top surface */}
+      <rect x={tankLeft} y={tankTop} width={tankW} height={TOP_STRIP} 
+        fill={COLORS.appliance.top} />
+      
+      {/* Flush button */}
+      <rect x={tankLeft + tankW / 2 - 1.5} y={tankTop + 2.5} width={3} height={2} rx={0.5}
+        fill={COLORS.metal.chrome} />
+      
+      {/* ===== SEAT/LID (middle layer) ===== */}
+      {/* Seat left side depth */}
+      <rect x={bowlLeft} y={bowlTop + TOP_STRIP} width={DEPTH} height={5} 
+        fill={COLORS.appliance.side} />
+      
+      {/* Seat body - rounded rect */}
+      <rect x={bowlLeft + DEPTH} y={bowlTop} width={bowlW - DEPTH} height={6} rx={3}
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Seat top surface */}
+      <rect x={bowlLeft} y={bowlTop} width={bowlW} height={TOP_STRIP} rx={1}
+        fill={COLORS.appliance.top} />
+      
+      {/* Seat OPENING - dark for instant readability */}
+      <rect x={bowlLeft + 4} y={bowlTop + 2} width={bowlW - 8} height={3} rx={1.5}
+        fill={COLORS.metal.handle} />
+      
+      {/* ===== BOWL/PEDESTAL (front) ===== */}
+      {/* Bowl left side depth */}
+      <rect x={bowlLeft} y={bowlTop + 6} width={DEPTH} height={bowlH - 6} 
+        fill={COLORS.appliance.side} />
+      
+      {/* Bowl body */}
+      <rect x={bowlLeft + DEPTH} y={bowlTop + 5} width={bowlW - DEPTH} height={bowlH - 5} rx={4}
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Water inside bowl - small turquoise area */}
+      <rect x={bowlLeft + 4} y={bowlTop + 7} width={bowlW - 8} height={4} rx={2}
+        fill={COLORS.water.top} />
+      
+      {/* Pedestal base - gives grounded volume */}
+      <rect x={bowlLeft + 3} y={bowlTop + bowlH - 3} width={bowlW - 6} height={3} rx={1}
+        fill={COLORS.appliance.side} />
+      
+      {/* Base top strip */}
+      <rect x={bowlLeft + 3} y={bowlTop + bowlH - 3} width={bowlW - 6} height={TOP_STRIP}
+        fill={COLORS.appliance.front} />
     </svg>
   );
 };

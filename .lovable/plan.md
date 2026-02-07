@@ -1,92 +1,252 @@
 
-## Situação atual (o que está renderizando no grid agora)
 
-- No caso carregado em `/game` (“O Mistério da Mansão Blackwood”, grid 6x6), o **vaso sanitário** está no **banheiro** em:
-  - **row=2, col=4** (visualmente: **L3 / C5**)
-  - Ao lado do chuveiro (row=2, col=5).
-- O `ToiletIcon` atual (diff que você enviou) usa um `<g transform="rotate(-25, 16, 16)">` e **muitas elipses claras** (tons próximos de branco/cinza) com detalhes internos também claros.
+# Redesenho dos Assets de Banheiro Baseado na Tileset
 
-## Diagnóstico (por que ainda não está inteligível)
+## Análise da Tileset de Referência (Parte Inferior Esquerda)
 
-1. **Rotação em SVG tende a “borrar”/anti-alias** em tamanhos pequenos, o que enfraquece a leitura “pixel art nítida”.
-2. **A abertura do assento está clara demais**: hoje ela usa `COLORS.metal.top` (quase branco). Em escala pequena, isso não comunica “buraco”; vira apenas mais um highlight.
-3. **Faltam pistas de profundidade 85° no corpo do vaso** (principalmente no assento/bacia): o tanque tem “side/top”, mas o restante parece “oval chapado”.
-4. **Silhueta pouco icônica**: tanque + dois ovais empilhados pode parecer “qualquer coisa” quando reduzido e com opacidade aplicada na célula.
+Analisando a imagem, identifiquei os padrões para assets de banheiro:
 
-## Objetivo do próximo ajuste
+```text
+VASO SANITÁRIO (tileset):
+┌────────────────┐
+│    ╭──────╮    │  ← Tanque arredondado (retângulo com rx alto)
+│   ╭────────╮   │  ← Tampa/Assento oval com borda
+│   │  ●●●   │   │  ← Abertura ESCURA bem definida
+│   ╰────────╯   │  ← Bacia arredondada
+│    ╭────╮      │  ← Base/pedestal
+└────────────────┘
 
-Fazer o vaso ser reconhecido em 1 segundo, mesmo pequeno:
-- Sem vista frontal “placa”
-- Sem vista aérea/top-down
-- Com **perspectiva 85°** consistente com os demais assets (top strip + side depth), e **silhueta de vaso** (tanque atrás + bacia/pedestal na frente).
+BANHEIRA/CHUVEIRO (tileset):
+┌────────────────┐
+│╭──────────────╮│  ← Borda externa elevada (clara)
+││  ░░░░░░░░░░  ││  ← Interior com fundo claro
+││  ░░░░░░░░░░  ││  
+│╰──────────────╯│  ← Bordas arredondadas
+└────────────────┘
 
----
-
-## Mudança proposta (ToiletIcon v3 – 85° com leitura forte, sem rotação)
-
-### Estratégia de desenho
-- **Remover a rotação** (eliminar o `transform="rotate(...)"`) para manter linhas mais nítidas.
-- Construir o vaso com 3 blocos claros, todos com padrão 85°:
-  1. **Tanque (atrás)**: retângulos com `side` (2px) + `top` (1.5–2px) + front com outline.
-  2. **Assento / tampa (meio)**: formato mais “U/oval” mas com **top strip** e **side depth** (mesmo que simplificado).
-  3. **Bacia + pedestal (frente)**: corpo com front + base (um “frontal base” como cama/sofá) para dar volume.
-- **Abertura do vaso escura** (ex.: `COLORS.metal.handle` ou `COLORS.metal.shadow`) para leitura imediata.
-- **Água** com turquesa/claro (`COLORS.water.front/top`) em uma área menor, para reforçar “banheiro” sem virar “piscina”.
-- **Composição em ¾ sem rotação**: ao invés de girar tudo, deslocar levemente a bacia para **baixo/direita** em relação ao tanque (2px), criando sensação de diagonal/perspectiva sem blur.
-
-### Esboço técnico (como ficará o código)
-No `src/components/game/assets/AssetIcons.tsx`, substituir o `ToiletIcon` atual por uma versão baseada em constantes, algo assim (valores finais ajustados “no olho” para não encher a célula e manter respiro):
-
-- Constantes sugeridas:
-  - `const PAD = 6;`
-  - `const TOP_STRIP = 1.5;`
-  - `const DEPTH = 2;`
-- Tanque:
-  - side depth: `rect x={PAD} ... width={DEPTH}`
-  - body: `rect x={PAD+DEPTH} ... stroke={OUTLINE}`
-  - top strip: `rect height={2}`
-- Assento:
-  - usar `rect` arredondado (rx) para manter “pixel nítido” e evitar elipse rotacionada/blur
-  - abertura com fill escuro
-- Bacia/pedestal:
-  - corpo principal (rounded rect)
-  - base frontal (um retângulo na parte inferior com `appliance.front` + top strip) para sugerir volume
-- Opcional: `shapeRendering="crispEdges"` no `<svg>` do vaso para reforçar leitura pixel.
-
-### Ajustes críticos de legibilidade
-- Trocar a cor da abertura do assento de `COLORS.metal.top` para algo **bem mais escuro**, por exemplo:
-  - `COLORS.metal.handle` (mais contrastado) ou `COLORS.metal.shadow`
-- Aumentar levemente a presença do outline no vaso (sem mudar o padrão global):
-  - ou usar `strokeWidth={OUTLINE_WIDTH}` mas com mais áreas sólidas e menos detalhes finos,
-  - ou (se necessário) um `const TOILET_OUTLINE_W = 1` apenas no vaso (último recurso).
+PIA DE BANHEIRO vs COZINHA:
+┌─────────┐  ┌─────────┐
+│ Banheiro│  │ Cozinha │
+├─────────┤  ├─────────┤
+│ Compacta│  │  Larga  │
+│ c/espel.│  │ c/gabine│
+│ Cuba ova│  │ Cuba ret│
+└─────────┘  └─────────┘
+```
 
 ---
 
-## Verificação visual (obrigatória) após implementar
+## Mudanças Propostas
 
-1. Abrir `/game` e ir direto ao banheiro:
-   - Confirmar o vaso em **L3/C5** (row=2 col=4) e o chuveiro em **L3/C6**.
-2. Checar em 2 tamanhos:
-   - Desktop (grid ~420–480px)
-   - Mobile (largura ~390px)
-3. Critérios de sucesso:
-   - O usuário identifica “vaso sanitário” sem precisar de popover/dicionário.
-   - Abertura escura é evidente.
-   - Volume 85° (top strip + depth) é percebido.
-   - Não “enche” a célula: mantém respiro (padding visual).
+### 1. ToiletIcon v4 - Silhueta Orgânica
+
+**Problema atual**: Formas retangulares demais, não reconhecíveis como vaso sanitário.
+
+**Solução baseada na tileset**:
+- Usar **elipses** para tanque, assento e bacia (formas orgânicas)
+- Manter **abertura escura** (`COLORS.metal.handle`) como elemento-chave de reconhecimento
+- Aplicar perspectiva 85° com **depth lateral** apenas onde faz sentido (tanque)
+- Base/pedestal arredondado para ancorar visualmente
+
+**Estrutura visual**:
+```text
+   ╭────────╮     ← Tanque (elipse + retângulo arredondado)
+  ╭──────────╮    ← Tampa/Assento (elipse horizontal)
+  │   ●●●    │    ← Abertura escura (contraste forte)
+  ╰──────────╯    ← Bacia (elipse alongada)
+     ╭──╮         ← Base/pedestal
+```
 
 ---
 
-## Escopo e arquivos afetados
+### 2. ShowerIcon v2 - Base de Banheira Sólida
 
-- **Editar**: `src/components/game/assets/AssetIcons.tsx`
-  - Apenas o `ToiletIcon` (mantendo o restante intacto).
+**Problema atual**: Parece um box de vidro abstrato, não uma banheira/chuveiro reconhecível.
+
+**Solução baseada na tileset**:
+- **Borda externa sólida** com cantos arredondados (como na referência)
+- **Interior claro** (quase branco) representando a banheira
+- Chuveiro reduzido e posicionado como elemento secundário
+- Ralo visível no centro
+
+**Estrutura visual**:
+```text
+╭────────────────╮  ← Borda elevada (appliance.front)
+│╭──────────────╮│  ← Interior da banheira (metal.top)
+││              ││
+││      ○       ││  ← Ralo
+│╰──────────────╯│
+╰────────────────╯
+      ┃┃            ← Chuveiro (pequeno, no canto)
+```
 
 ---
 
-## Plano B (se ainda ficar ambíguo)
+### 3. Pia (Manter Atual ou Criar Variação Futura)
 
-Se mesmo assim a leitura ficar fraca, aí sim faremos um ajuste mínimo de renderização no grid:
-- **Aumentar a opacidade do asset especificamente para `toilet`** no `GameCell` (ex.: 0.85 só para o vaso), sem mexer na opacidade dos demais assets.
-- Isso é opcional e só entra se o redesenho v3 ainda não resolver.
+**Status atual**: A pia (`sink`) é usada apenas na **cozinha** (row 5, col 0).
+
+**Decisão**: Como o banheiro atual não tem pia, manteremos o `SinkIcon` atual (estilo cozinha com gabinete e portas). 
+
+**Nota para o futuro**: Se precisarmos de pia de banheiro, podemos:
+- Criar um novo tipo `bathroom-sink` 
+- Ou detectar o roomId e renderizar diferentemente
+
+---
+
+## Implementação Técnica Detalhada
+
+### ToiletIcon v4 (Formas Orgânicas)
+
+```tsx
+export const ToiletIcon = ({ className }: AssetIconProps) => {
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* ===== TANQUE (atrás) ===== */}
+      {/* Profundidade lateral 85° */}
+      <ellipse cx="11" cy="8" rx="2" ry="4" fill={COLORS.appliance.side} />
+      
+      {/* Corpo do tanque - arredondado */}
+      <rect x="11" y="4" width="10" height="8" rx="2"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Topo do tanque */}
+      <rect x="11" y="4" width="10" height="2" rx="1" 
+        fill={COLORS.appliance.top} />
+      
+      {/* Botão de descarga */}
+      <ellipse cx="16" cy="6.5" rx="1.5" ry="0.8" fill={COLORS.metal.chrome} />
+      
+      {/* ===== ASSENTO/TAMPA (meio) ===== */}
+      {/* Profundidade lateral */}
+      <ellipse cx="8" cy="14" rx="1.5" ry="3" fill={COLORS.appliance.side} />
+      
+      {/* Tampa oval */}
+      <ellipse cx="16" cy="14" rx="10" ry="4"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Superfície do assento */}
+      <ellipse cx="16" cy="13.5" rx="9" ry="3.2" fill={COLORS.appliance.top} />
+      
+      {/* ABERTURA ESCURA - elemento crucial de reconhecimento */}
+      <ellipse cx="16" cy="14" rx="6" ry="2.5" fill={COLORS.metal.handle} />
+      
+      {/* ===== BACIA (frente) ===== */}
+      {/* Profundidade lateral */}
+      <ellipse cx="8" cy="21" rx="1.5" ry="4" fill={COLORS.appliance.side} />
+      
+      {/* Bacia oval alongada */}
+      <ellipse cx="16" cy="21" rx="9" ry="5"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Água no interior */}
+      <ellipse cx="16" cy="20.5" rx="5" ry="3" fill={COLORS.water.top} />
+      
+      {/* ===== BASE/PEDESTAL ===== */}
+      <ellipse cx="16" cy="26" rx="5" ry="2" fill={COLORS.appliance.side} />
+      <ellipse cx="16" cy="26" rx="4" ry="1.5" fill={COLORS.appliance.front} />
+    </svg>
+  );
+};
+```
+
+### ShowerIcon v2 (Base de Banheira)
+
+```tsx
+export const ShowerIcon = ({ className }: AssetIconProps) => {
+  const PAD = 4;
+  const W = 24; // largura da banheira
+  const H = 22; // altura da banheira
+  
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* ===== BORDA EXTERNA DA BANHEIRA ===== */}
+      {/* Profundidade lateral 85° */}
+      <rect x={PAD} y={PAD + 2} width="2" height={H} fill={COLORS.appliance.side} />
+      
+      {/* Borda da banheira - retângulo arredondado */}
+      <rect x={PAD + 2} y={PAD} width={W} height={H} rx="4"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      
+      {/* Superfície superior da borda */}
+      <rect x={PAD} y={PAD} width={W + 2} height="2.5" rx="1" 
+        fill={COLORS.appliance.top} />
+      
+      {/* ===== INTERIOR DA BANHEIRA ===== */}
+      {/* Fundo claro (metal.top = quase branco) */}
+      <rect x={PAD + 4} y={PAD + 3} width={W - 4} height={H - 5} rx="3"
+        fill={COLORS.metal.top}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      
+      {/* Toque de água/reflexo */}
+      <rect x={PAD + 5} y={PAD + 4} width={W - 6} height={H - 7} rx="2"
+        fill={COLORS.water.top} opacity="0.25" />
+      
+      {/* Ralo central */}
+      <ellipse cx="16" cy={PAD + H - 4} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
+      <ellipse cx="16" cy={PAD + H - 4} rx="1.2" ry="0.5" fill={COLORS.metal.handle} />
+      
+      {/* ===== CHUVEIRO (menor, secundário) ===== */}
+      {/* Tubo */}
+      <rect x="23" y={PAD} width="1.5" height="5" fill={COLORS.metal.chrome} />
+      
+      {/* Cabeça do chuveiro */}
+      <ellipse cx="19" cy={PAD + 5} rx="4" ry="1.8"
+        fill={COLORS.metal.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      
+      {/* Furos do chuveiro */}
+      <ellipse cx="17" cy={PAD + 5} rx="0.4" ry="0.3" fill={COLORS.metal.shadow} />
+      <ellipse cx="19" cy={PAD + 5} rx="0.4" ry="0.3" fill={COLORS.metal.shadow} />
+      <ellipse cx="21" cy={PAD + 5} rx="0.4" ry="0.3" fill={COLORS.metal.shadow} />
+      
+      {/* Gotas de água (sutis) */}
+      <ellipse cx="16" cy={PAD + 10} rx="0.6" ry="1.5" fill={COLORS.water.front} opacity="0.5" />
+      <ellipse cx="19" cy={PAD + 12} rx="0.6" ry="1.5" fill={COLORS.water.front} opacity="0.5" />
+      <ellipse cx="22" cy={PAD + 9} rx="0.6" ry="1.5" fill={COLORS.water.front} opacity="0.5" />
+    </svg>
+  );
+};
+```
+
+---
+
+## Resumo das Mudanças
+
+| Asset | Mudança Principal | Elementos-Chave |
+|-------|------------------|-----------------|
+| **ToiletIcon** | Formas orgânicas (elipses) | Tanque arredondado, assento oval, abertura escura oval, base/pedestal |
+| **ShowerIcon** | Base tipo banheira sólida | Borda elevada visível, interior claro, ralo, chuveiro menor |
+| **SinkIcon** | Mantido (cozinha) | Sem alterações - não usado no banheiro atualmente |
+
+---
+
+## Hierarquia de Escala (conforme memória)
+
+| Asset | Tamanho Aproximado |
+|-------|-------------------|
+| Chuveiro | ~24px |
+| Vaso Sanitário | ~23px |
+
+---
+
+## Arquivos Afetados
+
+- `src/components/game/assets/AssetIcons.tsx`
+  - Linhas 955-1036: ToiletIcon
+  - Linhas 1038-1097: ShowerIcon
+
+---
+
+## Critérios de Sucesso Visual
+
+1. **Vaso sanitário**: Silhueta imediatamente reconhecível como vaso (formas ovais + abertura escura)
+2. **Chuveiro**: Aparência de banheira/box com borda elevada visível e interior claro
+3. **Consistência 85°**: Depth lateral mantido onde aplicável
+4. **Proporções**: Vaso ~23px, Chuveiro ~24px
+5. **Respiro visual**: Assets não preenchem toda a célula
 

@@ -952,62 +952,54 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
    );
  };
  
- // Toilet
-// Toilet - 85° perspective with solid rectangular depth indicators
+// Toilet - ¾ diagonal perspective for recognizable silhouette
 export const ToiletIcon = ({ className }: AssetIconProps) => {
-  const left = 5;
-  const right = 27;
-  const top = 4;
-  const tankHeight = 8;
-  const seatTop = top + tankHeight + 1;
-  
   return (
     <svg viewBox="0 0 32 32" className={className}>
-      {/* TANK - perspectiva 85° */}
-      {/* Tank left side depth */}
-      <rect x={left} y={top} width="2" height={tankHeight} fill={COLORS.appliance.side} />
+      {/* Grupo principal rotacionado -25° em torno do centro */}
+      <g transform="rotate(-25, 16, 16)">
+        
+        {/* TANQUE - posicionado atrás */}
+        {/* Tank left side depth */}
+        <rect x="11" y="3" width="2" height="7" fill={COLORS.appliance.side} />
+        
+        {/* Tank body */}
+        <rect x="13" y="3" width="8" height="7" 
+          fill={COLORS.appliance.front}
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Tank top surface */}
+        <rect x="11" y="3" width="10" height="1.5" fill={COLORS.appliance.top} />
+        
+        {/* Flush button */}
+        <ellipse cx="17" cy="5.5" rx="1.5" ry="0.7" fill={COLORS.metal.chrome} />
+        
+        {/* ASSENTO/TAMPA - formato oval */}
+        {/* Seat body */}
+        <ellipse cx="16" cy="14" rx="9" ry="5" 
+          fill={COLORS.appliance.front}
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Seat top surface */}
+        <ellipse cx="16" cy="13" rx="8" ry="4" fill={COLORS.appliance.top} />
+        
+        {/* Seat opening */}
+        <ellipse cx="16" cy="14" rx="6" ry="3" fill={COLORS.metal.top} />
+        
+        {/* BACIA - oval alongada */}
+        {/* Bowl body */}
+        <ellipse cx="16" cy="22" rx="10" ry="6" 
+          fill={COLORS.appliance.front}
+          stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+        
+        {/* Water inside */}
+        <ellipse cx="16" cy="21" rx="6" ry="3.5" fill={COLORS.water.top} />
+        
+      </g>
       
-      {/* Tank body */}
-      <rect x={left + 2} y={top} width={right - left - 2} height={tankHeight} 
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Tank top surface */}
-      <rect x={left} y={top} width={right - left} height="2" fill={COLORS.appliance.top} />
-      
-      {/* Flush button */}
-      <ellipse cx="16" cy={top + 3.5} rx="2" ry="1" fill={COLORS.metal.chrome} />
-      
-      {/* SEAT/LID - perspectiva 85° */}
-      {/* Seat left side depth */}
-      <rect x={left - 1} y={seatTop} width="2" height="6" fill={COLORS.appliance.side} />
-      
-      {/* Seat lid body */}
-      <rect x={left + 1} y={seatTop} width={right - left - 2} height="6" rx="3"
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Seat top surface */}
-      <rect x={left - 1} y={seatTop} width={right - left + 2} height="1.5" rx="1"
-        fill={COLORS.appliance.top} />
-      
-      {/* Seat opening (interior oval) */}
-      <ellipse cx="16" cy={seatTop + 3.5} rx="7" ry="2.8" fill={COLORS.metal.top} />
-      
-      {/* BOWL - com profundidade */}
-      {/* Bowl left side depth */}
-      <rect x={left - 2} y={seatTop + 6} width="2" height="7" fill={COLORS.appliance.side} rx="1" />
-      
-      {/* Bowl body */}
-      <rect x={left} y={seatTop + 6} width={right - left} height="7" rx="3"
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Water inside */}
-      <ellipse cx="16" cy={seatTop + 9} rx="5" ry="2" fill={COLORS.water.top} />
-      
-      {/* Base shadow */}
-      <ellipse cx="16" cy={seatTop + 12.5} rx="8" ry="1.5" fill={COLORS.appliance.shadow} />
+      {/* Sombra base (NÃO rotacionada para ancorar) */}
+      <ellipse cx="16" cy="28" rx="9" ry="2" 
+        fill={COLORS.appliance.shadow} opacity="0.4" />
     </svg>
   );
 };

@@ -44,13 +44,22 @@ export const SuspectClueCards = ({
 
   // Scroll to selected suspect when it changes
   useEffect(() => {
-    if (selectedSuspect && selectedRef.current && containerRef.current) {
-      selectedRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center',
-      });
-    }
+    const container = containerRef.current;
+    const selectedEl = selectedRef.current;
+    if (!selectedSuspect || !container || !selectedEl) return;
+
+    // Center the selected card in the horizontal scroll container
+    const containerRect = container.getBoundingClientRect();
+    const selectedRect = selectedEl.getBoundingClientRect();
+    const selectedCenterInContainer =
+      (selectedRect.left - containerRect.left) + (selectedRect.width / 2);
+    const targetScrollLeft =
+      container.scrollLeft + selectedCenterInContainer - (containerRect.width / 2);
+
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+    const nextScrollLeft = Math.max(0, Math.min(maxScrollLeft, targetScrollLeft));
+
+    container.scrollTo({ left: nextScrollLeft, behavior: "smooth" });
   }, [selectedSuspect]);
 
   return (

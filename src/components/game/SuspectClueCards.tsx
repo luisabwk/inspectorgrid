@@ -21,10 +21,13 @@ const findClueForSuspect = (suspect: Suspect, clues: Clue[]): Clue | undefined =
 
 // Format clue text - remove suspect name from beginning if present
 const formatClueText = (text: string, suspectName: string): string => {
-  const pattern = new RegExp(`^${suspectName}\\s+`, 'i');
-  let result = text.replace(pattern, '');
-  result = result.charAt(0).toUpperCase() + result.slice(1);
-  return result;
+  const lowerText = text.toLowerCase();
+  const lowerName = suspectName.toLowerCase();
+  let result = text;
+  if (lowerText.startsWith(lowerName)) {
+    result = text.slice(suspectName.length).trimStart();
+  }
+  return result.charAt(0).toUpperCase() + result.slice(1);
 };
 
 export const SuspectClueCards = ({

@@ -13,7 +13,6 @@ interface DbCase {
     rooms: { id: string; name: string; color: string }[];
   };
   suspects: Suspect[];
-  solution: Record<string, { row: number; col: number }>;
   clues: Clue[];
 }
 
@@ -27,7 +26,6 @@ const transformCase = (dbCase: DbCase): GameCase => {
     gridSize: dbCase.grid_size,
     layoutConfig: dbCase.layout_config as LayoutConfig,
     suspects: dbCase.suspects,
-    solution: dbCase.solution,
     clues: dbCase.clues,
   };
 };

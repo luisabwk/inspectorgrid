@@ -1,6 +1,3 @@
-import { AssetType } from "@/types/game";
-import { TileSprite } from "./TileSprite";
-
 interface AssetIconProps {
   className?: string;
 }
@@ -953,15 +950,92 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
    );
  };
  
-// Toilet - Testing row 14, column 0
-export const ToiletIcon = ({ className }: AssetIconProps) => (
-  <TileSprite tileX={0} tileY={14} className={className} />
-);
+// Toilet - 85° isometric perspective
+export const ToiletIcon = ({ className }: AssetIconProps) => {
+  const left = 6;
+  const right = 26;
+  const top = 4;
 
-// Shower/Bathtub - Testing row 14, column 1
-export const ShowerIcon = ({ className }: AssetIconProps) => (
-  <TileSprite tileX={1} tileY={14} className={className} />
-);
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Tank (back) with 85° depth */}
+      <rect x={left + 2} y={top} width={right - left - 4} height="8"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} rx="1" />
+      <rect x={left + 2} y={top} width={right - left - 4} height="2"
+        fill={COLORS.appliance.top} rx="1" />
+      {/* Tank left side depth */}
+      <rect x={left + 1} y={top} width="1.5" height="8" fill={COLORS.appliance.side} />
+      {/* Flush button */}
+      <rect x="14" y={top + 1} width="4" height="2" fill={COLORS.metal.chrome} rx="0.5" />
+
+      {/* Bowl - wider elliptical shape */}
+      <ellipse cx="16" cy={top + 16} rx="9" ry="7"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
+      <ellipse cx="16" cy={top + 16} rx="9" ry="7" fill={COLORS.appliance.top} />
+      {/* Bowl top rim */}
+      <ellipse cx="16" cy={top + 15} rx="8" ry="5.5"
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
+      {/* Inner bowl */}
+      <ellipse cx="16" cy={top + 15} rx="6" ry="4" fill={COLORS.water.top} />
+      <ellipse cx="15" cy={top + 14} rx="2" ry="1.5" fill="#FFFFFF" opacity="0.3" />
+
+      {/* Seat hinge dots */}
+      <circle cx={left + 4} cy={top + 9} r="1" fill={COLORS.metal.chrome} />
+      <circle cx={right - 4} cy={top + 9} r="1" fill={COLORS.metal.chrome} />
+    </svg>
+  );
+};
+
+// Shower/Bathtub - 85° isometric perspective
+export const ShowerIcon = ({ className }: AssetIconProps) => {
+  const left = 3;
+  const right = 29;
+  const top = 3;
+  const bottom = 29;
+
+  return (
+    <svg viewBox="0 0 32 32" className={className}>
+      {/* Tub body - left side depth (85°) */}
+      <rect x={left} y={top + 2} width="2" height={bottom - top - 2} fill={COLORS.appliance.side} />
+
+      {/* Tub body */}
+      <rect x={left + 2} y={top + 2} width={right - left - 2} height={bottom - top - 2}
+        fill={COLORS.appliance.front}
+        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} rx="2" />
+
+      {/* Tub top rim with depth */}
+      <rect x={left} y={top + 2} width={right - left} height="3"
+        fill={COLORS.appliance.top} rx="1" />
+
+      {/* Inner tub */}
+      <rect x={left + 3} y={top + 5} width={right - left - 6} height={bottom - top - 8}
+        fill={COLORS.water.top} rx="1" />
+      {/* Water reflection */}
+      <rect x={left + 4} y={top + 6} width="6" height="3" fill="#FFFFFF" opacity="0.25" rx="0.5" />
+
+      {/* Shower head (top right) */}
+      <rect x={right - 6} y={top} width="2" height="5" fill={COLORS.metal.chrome} />
+      <ellipse cx={right - 5} cy={top} rx="3" ry="1.5" fill={COLORS.metal.side} />
+      <ellipse cx={right - 5} cy={top} rx="2.5" ry="1" fill={COLORS.metal.chrome} />
+
+      {/* Water drops */}
+      <circle cx={right - 7} cy={top + 8} r="0.5" fill={COLORS.water.front} opacity="0.5" />
+      <circle cx={right - 4} cy={top + 9} r="0.5" fill={COLORS.water.front} opacity="0.4" />
+      <circle cx={right - 6} cy={top + 11} r="0.5" fill={COLORS.water.front} opacity="0.3" />
+
+      {/* Faucet */}
+      <rect x={right - 8} y={top + 3} width="3" height="2" fill={COLORS.metal.chrome} rx="0.5" />
+      <circle cx={right - 9} cy={top + 4} r="1" fill={COLORS.metal.handle} />
+      <circle cx={right - 4} cy={top + 4} r="1" fill={COLORS.metal.handle} />
+
+      {/* Drain */}
+      <ellipse cx="16" cy={bottom - 5} rx="1.5" ry="0.8" fill={COLORS.metal.shadow} />
+    </svg>
+  );
+};
  
  // Rug
 export const RugIcon = ({ className }: AssetIconProps) => {

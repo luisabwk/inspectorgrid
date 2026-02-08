@@ -20,7 +20,7 @@ const Game = () => {
   const { getPlayerStats } = useProgress();
   
   const [playerLevel, setPlayerLevel] = useState(1);
-  const [startTime] = useState(() => Date.now());
+  const [startTime, setStartTime] = useState(() => Date.now());
   const [resultDialog, setResultDialog] = useState<{ 
     open: boolean; 
     success: boolean; 
@@ -45,10 +45,17 @@ const Game = () => {
     if (user) {
       loadStats();
     }
-  }, [user]);
+  }, [user, getPlayerStats]);
 
   // Load case based on player level
   const { gameCase, loading, error } = useNextCase(playerLevel);
+  
+  // Reset timer when case changes
+  useEffect(() => {
+    if (gameCase?.id) {
+      setStartTime(Date.now());
+    }
+  }, [gameCase?.id]);
 
   const {
     placements,
@@ -120,11 +127,21 @@ const Game = () => {
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
 
-  const handleNextCase = () => {
+  const handleNextCase = async () => {
     setResultDialog({ open: false, success: false, message: '' });
-    // Increment level to trigger loading next case
-    setPlayerLevel(prev => prev + 1);
-    window.location.reload(); // Simple refresh to load new case
+    
+    // Prefer the server-provided level (persistent). If it didn't change for some reason,
+    // fall back to a local increment so the user can still proceed in-session.
+    const stats = await getPlayerStats();
+    if (stats) {
+      if (stats.level === playerLevel) {
+        setPlayerLevel((prev) => prev + 1);
+      } else {
+        setPlayerLevel(stats.level);
+      }
+    } else {
+      setPlayerLevel((prev) => prev + 1);
+    }
   };
 
   const handleGoHome = () => {

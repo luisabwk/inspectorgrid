@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useAuth } from "./useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -10,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const useProgress = () => {
   const { user } = useAuth();
 
-  const getPlayerStats = async () => {
+  const getPlayerStats = useCallback(async () => {
     if (!user) return null;
 
     try {
@@ -33,7 +34,7 @@ export const useProgress = () => {
     } catch {
       return null;
     }
-  };
+  }, [user?.id]);
 
   return { getPlayerStats };
 };

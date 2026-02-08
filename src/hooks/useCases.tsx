@@ -142,7 +142,12 @@ export const useNextCase = (currentLevel: number = 1) => {
 
         if (queryError) throw queryError;
 
-        const data = (casesAtDifficulty || []).find((c) => c.id && !completedSet.has(c.id)) ?? null;
+        const data =
+          (casesAtDifficulty || []).find((c) => c.id && !completedSet.has(c.id)) ??
+          // If the player already completed everything at this difficulty,
+          // fall back to the first available case so the game still loads.
+          (casesAtDifficulty || []).find((c) => c.id) ??
+          null;
 
         // If no case at this difficulty, try lower difficulties
         if (!data) {
@@ -157,7 +162,10 @@ export const useNextCase = (currentLevel: number = 1) => {
           if (fallbackError) throw fallbackError;
           
           const fallbackData =
-            (fallbackCases || []).find((c) => c.id && !completedSet.has(c.id)) ?? null;
+            (fallbackCases || []).find((c) => c.id && !completedSet.has(c.id)) ??
+            // Same fallback: allow replay when nothing new exists
+            (fallbackCases || []).find((c) => c.id) ??
+            null;
 
           if (fallbackData) {
             setGameCase(transformCase(fallbackData as unknown as DbCase));

@@ -953,16 +953,14 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
    );
  };
  
-// Toilet - Using sprite from tileset 
-// Testing: row 12, column 0
+// Toilet - Using sprite from tileset (row 4, column 1 - white toilet)
 export const ToiletIcon = ({ className }: AssetIconProps) => (
-  <TileSprite tileX={0} tileY={12} className={className} />
+  <TileSprite tileX={1} tileY={4} className={className} />
 );
 
-// Shower/Bathtub - Using sprite from tileset
-// Testing: row 12, column 2 (bathtub shape visible)
+// Shower/Bathtub - Using sprite from tileset (row 4, column 0 - white bathtub)
 export const ShowerIcon = ({ className }: AssetIconProps) => (
-  <TileSprite tileX={2} tileY={12} className={className} />
+  <TileSprite tileX={0} tileY={4} className={className} />
 );
  
  // Rug

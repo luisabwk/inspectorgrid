@@ -1137,7 +1137,7 @@ export const RugIcon = ({ className }: AssetIconProps) => {
    <div className={className} />
  );
  
- // Asset map
+ // Asset map (SVG fallback for assets not mapped in GameCell's getFurnitureTile)
 export const AssetIconMap: Record<string, ComponentType<AssetIconProps>> = {
    bed: BedIcon,
    sofa: SofaIcon,

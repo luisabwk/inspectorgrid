@@ -1,43 +1,53 @@
 interface TileSpriteProps {
   tileX: number;      // Coluna do tile (0-indexed)
   tileY: number;      // Linha do tile (0-indexed)
-  tileSize?: number;  // Tamanho do tile em pixels (default: 16px)
+  spanX?: number;     // Quantos tiles de largura (default: 1)
+  spanY?: number;     // Quantos tiles de altura (default: 1)
   className?: string;
 }
 
+const TOTAL_TILES = 16; // 16x16 grid of 16px tiles in a 256x256 tileset
+
 /**
- * Component to render sprites directly from the tileB_inside3.png tileset
- * Uses CSS background-position to extract specific tiles from the spritesheet
- * 
- * Each tile is 16x16 pixels in the source image
- * 
- * Example: <TileSprite tileX={0} tileY={14} className="w-full h-full" />
+ * Renders a region from the tileB_inside3.png spritesheet.
+ *
+ * Single tile:  <TileSprite tileX={0} tileY={0} />
+ * Multi-tile:   <TileSprite tileX={6} tileY={2} spanX={3} spanY={2} /> (3x2 bed)
+ *
+ * The tileset is 256x256px = 16x16 grid of 16px tiles.
+ * CSS background-position percentage formula:
+ *   pos% = tileIndex / (totalTiles - span) * 100
  */
-export const TileSprite = ({ 
-  tileX, 
-  tileY, 
-  tileSize = 16, 
-  className 
+export const TileSprite = ({
+  tileX,
+  tileY,
+  spanX = 1,
+  spanY = 1,
+  className
 }: TileSpriteProps) => {
-  // The tileset is 256x256px (16x16 tiles of 16px each)
-  // We need to scale up from 16px to fill the container
-  // backgroundSize scales the entire tileset proportionally
-  // backgroundPosition must be calculated based on the scaled size
-  
+  // backgroundSize: make spanX tiles fill 100% width, spanY tiles fill 100% height
+  const bgSizeX = (TOTAL_TILES / spanX) * 100;
+  const bgSizeY = (TOTAL_TILES / spanY) * 100;
+
+  // CSS percentage positioning:
+  //   actual_offset = (container - bg_size) * percentage
+  //   We need offset = -(tileX/spanX) * container
+  //   So percentage = tileX / (totalTiles - spanX)
+  const maxX = TOTAL_TILES - spanX;
+  const maxY = TOTAL_TILES - spanY;
+  const bgPosX = maxX > 0 ? (tileX / maxX) * 100 : 0;
+  const bgPosY = maxY > 0 ? (tileY / maxY) * 100 : 0;
+
   return (
-    <div 
+    <div
       className={className}
       style={{
         width: '100%',
         height: '100%',
         backgroundImage: 'url(/tiles/tileB_inside3.png)',
-        // Scale the tileset so each 16px tile fills 100% of the container
-        // Original: 256px tileset, we want 1 tile (16px) to be 100%
-        // So backgroundSize should be 1600% (256/16 * 100%)
-        backgroundSize: '1600% 1600%',
-        // With percentage-based positioning: 0% = first tile, 100/(16-1) = ~6.67% per tile
-        // Formula: (tileIndex / (totalTiles - 1)) * 100%
-        backgroundPosition: `${(tileX / 15) * 100}% ${(tileY / 15) * 100}%`,
+        backgroundSize: `${bgSizeX}% ${bgSizeY}%`,
+        backgroundPosition: `${bgPosX}% ${bgPosY}%`,
+        backgroundRepeat: 'no-repeat',
         imageRendering: 'pixelated' as const,
       }}
     />

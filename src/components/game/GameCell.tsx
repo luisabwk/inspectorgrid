@@ -1,16 +1,16 @@
-import { Cell, Suspect, isCellOccupiable, getCellKey, AssetType } from "@/types/game";
+import { Cell, Suspect, isCellOccupiable, CellRenderInfo } from "@/types/game";
+import { AssetDirection } from "./assets/AssetIcons";
 import { cn } from "@/lib/utils";
-import { 
-  AssetIconMap, 
-  TableIcon, 
-  BedIcon, 
-  SofaIcon, 
-  DeskIcon, 
-  ChairIcon, 
-  FridgeIcon, 
-  StoveIcon, 
+import {
+  AssetIconMap,
+  TableIcon,
+  BedIcon,
+  SofaIcon,
+  DeskIcon,
+  ChairIcon,
+  FridgeIcon,
+  StoveIcon,
   SinkIcon,
-  AssetDirection 
 } from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
 import { assetDictionary } from "@/data/assetDictionary";
@@ -18,14 +18,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useState } from "react";
 import { Check, X } from "lucide-react";
 
-// Helper to convert rotation degrees to direction
+// Convert rotation degrees to direction
 const rotationToDirection = (rotation: number): AssetDirection => {
-  const normalizedRotation = ((rotation % 360) + 360) % 360;
-  if (normalizedRotation === 0) return 'down';
-  if (normalizedRotation === 90) return 'left';
-  if (normalizedRotation === 180) return 'up';
-  if (normalizedRotation === 270) return 'right';
-  return 'down'; // default
+  const normalized = ((rotation % 360) + 360) % 360;
+  if (normalized === 0) return 'down';
+  if (normalized === 90) return 'left';
+  if (normalized === 180) return 'up';
+  if (normalized === 270) return 'right';
+  return 'down';
 };
 
 interface GameCellProps {
@@ -37,60 +37,10 @@ interface GameCellProps {
   isHighlighted: boolean;
   isPencilMode: boolean;
   roomColor?: string;
-  // Whether a suspect is being positioned (to disable dictionary popover)
   isPositioningSuspect: boolean;
-  // Latin square blocking - cell is blocked by another suspect in same row/col
   isBlockedByPlacement: boolean;
-  // Conflict - this cell has a suspect in a blocked position
   hasConflict: boolean;
-  // Walls info from neighboring cells for proper rendering
-  hasWallTop: boolean;
-  hasWallRight: boolean;
-  hasWallBottom: boolean;
-  hasWallLeft: boolean;
-  // Window positions
-  hasWindowTop: boolean;
-  hasWindowRight: boolean;
-  hasWindowBottom: boolean;
-  hasWindowLeft: boolean;
-  // Door positions
-  hasDoorTop: boolean;
-  hasDoorRight: boolean;
-  hasDoorBottom: boolean;
-  hasDoorLeft: boolean;
-  // Adjacent table connections
-  hasTableTop: boolean;
-  hasTableBottom: boolean;
-  hasTableLeft: boolean;
-  hasTableRight: boolean;
-  // Adjacent bed connections
-  hasBedTop: boolean;
-  hasBedBottom: boolean;
-  hasBedLeft: boolean;
-  hasBedRight: boolean;
-  // Adjacent sofa connections
-  hasSofaTop: boolean;
-  hasSofaBottom: boolean;
-  hasSofaLeft: boolean;
-  hasSofaRight: boolean;
-  // Adjacent desk connections
-  hasDeskTop: boolean;
-  hasDeskBottom: boolean;
-  hasDeskLeft: boolean;
-  hasDeskRight: boolean;
-  // Adjacent stove connections
-  hasStoveTop: boolean;
-  hasStoveBottom: boolean;
-  hasStoveLeft: boolean;
-  hasStoveRight: boolean;
-  // Adjacent sink connections
-  hasSinkTop: boolean;
-  hasSinkBottom: boolean;
-  hasSinkLeft: boolean;
-  hasSinkRight: boolean;
-  // Rotation for dynamic assets
-  chairRotation: number;
-  applianceRotation: number;
+  renderInfo: CellRenderInfo;
   onCellClick: (row: number, col: number) => void;
   onCellDrop: (row: number, col: number) => void;
   onDragOver: (e: React.DragEvent) => void;
@@ -108,116 +58,76 @@ export const GameCell = ({
   isPositioningSuspect,
   isBlockedByPlacement,
   hasConflict,
-  hasWallTop,
-  hasWallRight,
-  hasWallBottom,
-  hasWallLeft,
-  hasWindowTop,
-  hasWindowRight,
-  hasWindowBottom,
-  hasWindowLeft,
-  hasDoorTop,
-  hasDoorRight,
-  hasDoorBottom,
-  hasDoorLeft,
-  hasTableTop,
-  hasTableBottom,
-  hasTableLeft,
-  hasTableRight,
-  hasBedTop,
-  hasBedBottom,
-  hasBedLeft,
-  hasBedRight,
-  hasSofaTop,
-  hasSofaBottom,
-  hasSofaLeft,
-  hasSofaRight,
-  hasDeskTop,
-  hasDeskBottom,
-  hasDeskLeft,
-  hasDeskRight,
-  hasStoveTop,
-  hasStoveBottom,
-  hasStoveLeft,
-  hasStoveRight,
-  hasSinkTop,
-  hasSinkBottom,
-  hasSinkLeft,
-  hasSinkRight,
-  chairRotation,
-  applianceRotation,
+  renderInfo,
   onCellClick,
   onCellDrop,
   onDragOver,
 }: GameCellProps) => {
   const [showInfo, setShowInfo] = useState(false);
-  
-  // Window and door cells are occupiable but don't show an icon - they're wall markings
+
+  const { walls, windows, doors, connections } = renderInfo;
+
+  // Classify the asset type for rendering
   const isWindowCell = cell.asset === 'window';
   const isDoorCell = cell.asset === 'door';
+  const isWallMarking = isWindowCell || isDoorCell;
+  const isOccupiable = isCellOccupiable(cell);
+
+  // Connectable assets: rendered with connection-aware components
   const isTableCell = cell.asset === 'table';
   const isBedCell = cell.asset === 'bed';
   const isSofaCell = cell.asset === 'sofa';
   const isDeskCell = cell.asset === 'desk';
-  const isChairCell = cell.asset === 'chair';
-  const isComputerCell = cell.asset === 'computer';
-  const isFridgeCell = cell.asset === 'fridge';
   const isStoveCell = cell.asset === 'stove';
   const isSinkCell = cell.asset === 'sink';
-  const isApplianceCell = isSinkCell || isStoveCell || isFridgeCell;
-  const isLonelySofa =
-    isSofaCell &&
-    !hasSofaTop &&
-    !hasSofaBottom &&
-    !hasSofaLeft &&
-    !hasSofaRight;
-  // Stove and sink are now connectable like table/bed
   const isConnectableCounter = isStoveCell || isSinkCell;
   const isConnectableAsset = isTableCell || isBedCell || isSofaCell || isDeskCell || isConnectableCounter;
-  const isRotatableAsset = isChairCell || isFridgeCell; // Only fridge is purely rotatable now
-  const isWallMarking = isWindowCell || isDoorCell;
-  const isOccupiable = isCellOccupiable(cell);
-  // Computer is handled separately - it overlays on desk/table
-  const AssetIcon = !isWallMarking && !isConnectableAsset && !isRotatableAsset && !isComputerCell ? AssetIconMap[cell.asset] : AssetIconMap['empty'];
-  const ComputerIcon = AssetIconMap['computer'];
-  const ArmchairAssetIcon = AssetIconMap['armchair'];
-  
-  // Get asset info from dictionary - handle lonely sofa as armchair
+
+  // Rotatable assets: chair and fridge
+  const isChairCell = cell.asset === 'chair';
+  const isFridgeCell = cell.asset === 'fridge';
+  const isRotatableAsset = isChairCell || isFridgeCell;
+
+  // Computer overlays on desk
+  const isComputerCell = cell.asset === 'computer';
+
+  // A lone sofa (no connections) renders as armchair
+  const conn = connections.sofa;
+  const isLonelySofa = isSofaCell && !conn.top && !conn.bottom && !conn.left && !conn.right;
+
+  // Get asset info for dictionary popover
   const displayAsset = isLonelySofa ? 'armchair' : cell.asset;
   const assetInfo = assetDictionary[displayAsset];
-  
+
+  // Icon for non-connectable, non-rotatable, non-wall assets
+  const AssetIcon = !isWallMarking && !isConnectableAsset && !isRotatableAsset && !isComputerCell
+    ? AssetIconMap[cell.asset]
+    : AssetIconMap['empty'];
+  const ComputerIcon = AssetIconMap['computer'];
+  const ArmchairAssetIcon = AssetIconMap['armchair'];
+
   const handleClick = () => {
-    // Close popover if open (to prevent staying open during placement)
-    if (showInfo) {
-      setShowInfo(false);
-    }
-    if (isOccupiable) {
-      onCellClick(cell.row, cell.col);
-    }
+    if (showInfo) setShowInfo(false);
+    if (isOccupiable) onCellClick(cell.row, cell.col);
   };
-  
+
   const handleDoubleClick = (e: React.MouseEvent) => {
-    // Don't show popover if there's a suspect in the cell OR if user is positioning a suspect
     if (suspect || isPositioningSuspect) return;
-    
     e.preventDefault();
     e.stopPropagation();
     setShowInfo(true);
   };
-  
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (isOccupiable) {
-      onCellDrop(cell.row, cell.col);
-    }
+    if (isOccupiable) onCellDrop(cell.row, cell.col);
   };
-  
-  // Get pencil mark suspects
+
+  // Pencil mark suspects
   const pencilSuspects = pencilMarks
     .map(id => suspects.find(s => s.id === id))
     .filter(Boolean) as Suspect[];
-  
-  // Get portrait component for placed suspect
+
   const SuspectPortrait = suspect ? PortraitMap[suspect.portraitId] : null;
 
   const WALL_WIDTH = '3px';
@@ -243,296 +153,182 @@ export const GameCell = ({
           onDrop={handleDrop}
           onDragOver={onDragOver}
         >
-      {/* Wall overlays - rendered as absolutely positioned elements */}
-      {hasWallTop && (
-        <div 
-          className="absolute top-0 left-0 right-0 z-20" 
-          style={{ height: WALL_WIDTH, backgroundColor: WALL_COLOR }}
-        >
-          {/* Window marking - framed glass panes */}
-          {hasWindowTop && (
-            <div className="absolute inset-x-[15%] inset-y-0 flex items-center justify-center">
-              <div className="w-full h-full bg-amber-800 flex items-center justify-center" style={{ padding: '0.5px' }}>
-                <div className="w-full h-full flex gap-[1px]">
-                  <div className="flex-1 bg-sky-300" />
-                  <div className="flex-1 bg-sky-200" />
-                </div>
-              </div>
-            </div>
-          )}
-          {/* Door marking - framed with handle */}
-          {hasDoorTop && (
-            <div className="absolute inset-x-[20%] inset-y-0">
-              <div className="w-full h-full bg-amber-900 border-x border-amber-950 flex items-center justify-end" style={{ paddingRight: '1px' }}>
-                <div className="w-[2px] h-[35%] bg-yellow-500 rounded-sm" />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-      {hasWallBottom && (
-        <div 
-          className="absolute bottom-0 left-0 right-0 z-20" 
-          style={{ height: WALL_WIDTH, backgroundColor: WALL_COLOR }}
-        >
-          {/* Window marking - framed glass panes */}
-          {hasWindowBottom && (
-            <div className="absolute inset-x-[15%] inset-y-0 flex items-center justify-center">
-              <div className="w-full h-full bg-amber-800 flex items-center justify-center" style={{ padding: '0.5px' }}>
-                <div className="w-full h-full flex gap-[1px]">
-                  <div className="flex-1 bg-sky-300" />
-                  <div className="flex-1 bg-sky-200" />
-                </div>
-              </div>
-            </div>
-          )}
-          {/* Door marking - framed with handle */}
-          {hasDoorBottom && (
-            <div className="absolute inset-x-[20%] inset-y-0">
-              <div className="w-full h-full bg-amber-900 border-x border-amber-950 flex items-center justify-end" style={{ paddingRight: '1px' }}>
-                <div className="w-[2px] h-[35%] bg-yellow-500 rounded-sm" />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-      {hasWallLeft && (
-        <div 
-          className="absolute top-0 left-0 bottom-0 z-20" 
-          style={{ width: WALL_WIDTH, backgroundColor: WALL_COLOR }}
-        >
-          {/* Window marking - framed glass panes */}
-          {hasWindowLeft && (
-            <div className="absolute inset-y-[15%] inset-x-0 flex items-center justify-center">
-              <div className="w-full h-full bg-amber-800 flex flex-col items-center justify-center" style={{ padding: '0.5px' }}>
-                <div className="w-full h-full flex flex-col gap-[1px]">
-                  <div className="flex-1 bg-sky-300" />
-                  <div className="flex-1 bg-sky-200" />
-                </div>
-              </div>
-            </div>
-          )}
-          {/* Door marking - framed with handle */}
-          {hasDoorLeft && (
-            <div className="absolute inset-y-[20%] inset-x-0">
-              <div className="w-full h-full bg-amber-900 border-y border-amber-950 flex flex-col items-end justify-center" style={{ paddingBottom: '1px' }}>
-                <div className="h-[2px] w-[35%] bg-yellow-500 rounded-sm" />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-      {hasWallRight && (
-        <div 
-          className="absolute top-0 right-0 bottom-0 z-20" 
-          style={{ width: WALL_WIDTH, backgroundColor: WALL_COLOR }}
-        >
-          {/* Window marking - framed glass panes */}
-          {hasWindowRight && (
-            <div className="absolute inset-y-[15%] inset-x-0 flex items-center justify-center">
-              <div className="w-full h-full bg-amber-800 flex flex-col items-center justify-center" style={{ padding: '0.5px' }}>
-                <div className="w-full h-full flex flex-col gap-[1px]">
-                  <div className="flex-1 bg-sky-300" />
-                  <div className="flex-1 bg-sky-200" />
-                </div>
-              </div>
-            </div>
-          )}
-          {/* Door marking - framed with handle */}
-          {hasDoorRight && (
-            <div className="absolute inset-y-[20%] inset-x-0">
-              <div className="w-full h-full bg-amber-900 border-y border-amber-950 flex flex-col items-end justify-center" style={{ paddingBottom: '1px' }}>
-                <div className="h-[2px] w-[35%] bg-yellow-500 rounded-sm" />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+          {/* Wall overlays */}
+          <WallOverlay side="top" visible={walls.top} window={windows.top} door={doors.top} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
+          <WallOverlay side="bottom" visible={walls.bottom} window={windows.bottom} door={doors.bottom} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
+          <WallOverlay side="left" visible={walls.left} window={windows.left} door={doors.left} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
+          <WallOverlay side="right" visible={walls.right} window={windows.right} door={doors.right} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
 
-      {/* Asset layer - non-connectable, non-rotatable assets */}
-      {cell.asset !== 'empty' && !isWallMarking && !isConnectableAsset && !isRotatableAsset && (
-        <div className={cn(
-          "absolute inset-1 flex items-center justify-center",
-          isOccupiable ? "opacity-70" : "opacity-80"
-        )}>
-          <AssetIcon className="w-full h-full" />
-        </div>
-      )}
-      
-      {/* Directional assets - Chair */}
-      {isChairCell && (
-        <div className="absolute inset-1 flex items-center justify-center opacity-70">
-          <ChairIcon className="w-full h-full" direction={rotationToDirection(chairRotation)} />
-        </div>
-      )}
-      
-      {/* Directional assets - Fridge only (stove/sink are connectable now) */}
-      {isFridgeCell && (
-        <div className="absolute inset-1 flex items-center justify-center opacity-80">
-          <FridgeIcon className="w-full h-full" direction={rotationToDirection(applianceRotation)} />
-        </div>
-      )}
-      
-      {/* Stove with connection support */}
-      {isStoveCell && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-80">
-          <StoveIcon 
-            className="w-full h-full" 
-            direction={rotationToDirection(applianceRotation)}
-            connectedTop={hasStoveTop}
-            connectedBottom={hasStoveBottom}
-            connectedLeft={hasStoveLeft}
-            connectedRight={hasStoveRight}
-          />
-        </div>
-      )}
-      
-      {/* Sink with connection support */}
-      {isSinkCell && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-80">
-          <SinkIcon 
-            className="w-full h-full" 
-            direction={rotationToDirection(applianceRotation)}
-            connectedTop={hasSinkTop}
-            connectedBottom={hasSinkBottom}
-            connectedLeft={hasSinkLeft}
-            connectedRight={hasSinkRight}
-          />
-        </div>
-      )}
-      
-      {/* Table asset with connection support */}
-      {isTableCell && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-80">
-          <TableIcon 
-            className="w-full h-full" 
-            connectedTop={hasTableTop}
-            connectedBottom={hasTableBottom}
-            connectedLeft={hasTableLeft}
-            connectedRight={hasTableRight}
-          />
-        </div>
-      )}
-      
-      {/* Bed asset with connection support */}
-      {isBedCell && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-70">
-          <BedIcon 
-            className="w-full h-full" 
-            connectedTop={hasBedTop}
-            connectedBottom={hasBedBottom}
-            connectedLeft={hasBedLeft}
-            connectedRight={hasBedRight}
-          />
-        </div>
-      )}
-      
-      {/* Sofa asset with connection support */}
-      {isSofaCell && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-70">
-          {isLonelySofa ? (
-            <ArmchairAssetIcon className="w-full h-full" />
-          ) : (
-            <SofaIcon 
-              className="w-full h-full" 
-              connectedTop={hasSofaTop}
-              connectedBottom={hasSofaBottom}
-              connectedLeft={hasSofaLeft}
-              connectedRight={hasSofaRight}
-            />
+          {/* Asset layer - non-connectable, non-rotatable */}
+          {cell.asset !== 'empty' && !isWallMarking && !isConnectableAsset && !isRotatableAsset && (
+            <div className={cn("absolute inset-1 flex items-center justify-center", isOccupiable ? "opacity-70" : "opacity-80")}>
+              <AssetIcon className="w-full h-full" />
+            </div>
           )}
-        </div>
-      )}
-      
-      {/* Desk asset with connection support */}
-      {isDeskCell && (
-        <div className="absolute inset-0 flex items-center justify-center opacity-80">
-          <DeskIcon 
-            className="w-full h-full" 
-            connectedTop={hasDeskTop}
-            connectedBottom={hasDeskBottom}
-            connectedLeft={hasDeskLeft}
-            connectedRight={hasDeskRight}
-          />
-        </div>
-      )}
-      
-      {/* Computer overlay - always renders on top of desk in the same cell */}
-      {isComputerCell && (
-        <>
-          {/* Base surface - always use desk */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-80">
-            <DeskIcon 
-              className="w-full h-full" 
-              connectedTop={hasDeskTop}
-              connectedBottom={hasDeskBottom}
-              connectedLeft={hasDeskLeft}
-              connectedRight={hasDeskRight}
-            />
-          </div>
-          {/* Laptop on top - smaller and centered */}
-          <div className="absolute inset-0 flex items-center justify-center z-[5]" style={{ padding: '20%' }}>
-            <ComputerIcon className="w-full h-full opacity-95" />
-          </div>
-        </>
-      )}
-      
-      {/* Suspect layer (overlay) */}
-      {suspect && SuspectPortrait && (
-        <div 
-          className="absolute inset-0 flex items-center justify-center z-10 overflow-hidden"
-          style={{ 
-            backgroundColor: `${suspect.color.replace(')', ' / 0.15)').replace('hsl(', 'hsla(')}`,
-          }}
-        >
-          <div 
-            className="w-4/5 h-4/5 drop-shadow-md"
-            title={suspect.name}
-            style={{ color: suspect.color }}
-          >
-            <SuspectPortrait className="w-full h-full" />
-          </div>
-        </div>
-      )}
-      
-      {/* Pencil marks */}
-      {!suspect && pencilSuspects.length > 0 && (
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 p-0.5 z-10">
-          {pencilSuspects.slice(0, 6).map((s) => {
-            const MiniPortrait = PortraitMap[s.portraitId];
-            return (
-              <div 
-                key={s.id}
-                className="flex items-center justify-center opacity-50"
-                title={s.name}
-                style={{ color: s.color }}
-              >
-                {MiniPortrait && <MiniPortrait className="w-full h-full" />}
+
+          {/* Chair (rotatable) */}
+          {isChairCell && (
+            <div className="absolute inset-1 flex items-center justify-center opacity-70">
+              <ChairIcon className="w-full h-full" direction={rotationToDirection(renderInfo.chairRotation)} />
+            </div>
+          )}
+
+          {/* Fridge (rotatable) */}
+          {isFridgeCell && (
+            <div className="absolute inset-1 flex items-center justify-center opacity-80">
+              <FridgeIcon className="w-full h-full" direction={rotationToDirection(renderInfo.applianceRotation)} />
+            </div>
+          )}
+
+          {/* Stove (connectable counter) */}
+          {isStoveCell && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-80">
+              <StoveIcon
+                className="w-full h-full"
+                direction={rotationToDirection(renderInfo.applianceRotation)}
+                connectedTop={connections.stove.top}
+                connectedBottom={connections.stove.bottom}
+                connectedLeft={connections.stove.left}
+                connectedRight={connections.stove.right}
+              />
+            </div>
+          )}
+
+          {/* Sink (connectable counter) */}
+          {isSinkCell && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-80">
+              <SinkIcon
+                className="w-full h-full"
+                direction={rotationToDirection(renderInfo.applianceRotation)}
+                connectedTop={connections.sink.top}
+                connectedBottom={connections.sink.bottom}
+                connectedLeft={connections.sink.left}
+                connectedRight={connections.sink.right}
+              />
+            </div>
+          )}
+
+          {/* Table (connectable) */}
+          {isTableCell && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-80">
+              <TableIcon
+                className="w-full h-full"
+                connectedTop={connections.table.top}
+                connectedBottom={connections.table.bottom}
+                connectedLeft={connections.table.left}
+                connectedRight={connections.table.right}
+              />
+            </div>
+          )}
+
+          {/* Bed (connectable) */}
+          {isBedCell && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-70">
+              <BedIcon
+                className="w-full h-full"
+                connectedTop={connections.bed.top}
+                connectedBottom={connections.bed.bottom}
+                connectedLeft={connections.bed.left}
+                connectedRight={connections.bed.right}
+              />
+            </div>
+          )}
+
+          {/* Sofa (connectable, or armchair if alone) */}
+          {isSofaCell && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-70">
+              {isLonelySofa ? (
+                <ArmchairAssetIcon className="w-full h-full" />
+              ) : (
+                <SofaIcon
+                  className="w-full h-full"
+                  connectedTop={connections.sofa.top}
+                  connectedBottom={connections.sofa.bottom}
+                  connectedLeft={connections.sofa.left}
+                  connectedRight={connections.sofa.right}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Desk (connectable) */}
+          {isDeskCell && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-80">
+              <DeskIcon
+                className="w-full h-full"
+                connectedTop={connections.desk.top}
+                connectedBottom={connections.desk.bottom}
+                connectedLeft={connections.desk.left}
+                connectedRight={connections.desk.right}
+              />
+            </div>
+          )}
+
+          {/* Computer overlays on desk */}
+          {isComputerCell && (
+            <>
+              <div className="absolute inset-0 flex items-center justify-center opacity-80">
+                <DeskIcon
+                  className="w-full h-full"
+                  connectedTop={connections.desk.top}
+                  connectedBottom={connections.desk.bottom}
+                  connectedLeft={connections.desk.left}
+                  connectedRight={connections.desk.right}
+                />
               </div>
-            );
-          })}
-        </div>
-      )}
-      
-      {/* Blocked indicator - asset not occupiable */}
-      {!isOccupiable && (
-        <div className="absolute inset-0 bg-foreground/5 pointer-events-none" />
-      )}
-      
-      {/* Latin square block indicator - X for blocked row/col */}
-      {isBlockedByPlacement && !suspect && isOccupiable && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]">
-          <X className="w-3/5 h-3/5 text-red-500 opacity-30" strokeWidth={3} />
-        </div>
-      )}
-      
-      {/* Conflict indicator - suspect placed in blocked position */}
-      {hasConflict && suspect && (
-        <div className="absolute inset-0 ring-2 ring-red-500 ring-inset pointer-events-none z-[15] animate-pulse" />
-      )}
+              <div className="absolute inset-0 flex items-center justify-center z-[5]" style={{ padding: '20%' }}>
+                <ComputerIcon className="w-full h-full opacity-95" />
+              </div>
+            </>
+          )}
+
+          {/* Suspect portrait */}
+          {suspect && SuspectPortrait && (
+            <div
+              className="absolute inset-0 flex items-center justify-center z-10 overflow-hidden"
+              style={{
+                backgroundColor: `${suspect.color.replace(')', ' / 0.15)').replace('hsl(', 'hsla(')}`,
+              }}
+            >
+              <div className="w-4/5 h-4/5 drop-shadow-md" title={suspect.name} style={{ color: suspect.color }}>
+                <SuspectPortrait className="w-full h-full" />
+              </div>
+            </div>
+          )}
+
+          {/* Pencil marks */}
+          {!suspect && pencilSuspects.length > 0 && (
+            <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 p-0.5 z-10">
+              {pencilSuspects.slice(0, 6).map((s) => {
+                const MiniPortrait = PortraitMap[s.portraitId];
+                return (
+                  <div key={s.id} className="flex items-center justify-center opacity-50" title={s.name} style={{ color: s.color }}>
+                    {MiniPortrait && <MiniPortrait className="w-full h-full" />}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Non-occupiable overlay */}
+          {!isOccupiable && (
+            <div className="absolute inset-0 bg-foreground/5 pointer-events-none" />
+          )}
+
+          {/* Latin square block indicator */}
+          {isBlockedByPlacement && !suspect && isOccupiable && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]">
+              <X className="w-3/5 h-3/5 text-red-500 opacity-30" strokeWidth={3} />
+            </div>
+          )}
+
+          {/* Conflict indicator */}
+          {hasConflict && suspect && (
+            <div className="absolute inset-0 ring-2 ring-red-500 ring-inset pointer-events-none z-[15] animate-pulse" />
+          )}
         </div>
       </PopoverTrigger>
-      
+
       <PopoverContent side="top" className="pixel-card w-64 p-3">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -540,7 +336,7 @@ export const GameCell = ({
             {assetInfo.canOccupy ? (
               <span className="flex items-center gap-1 text-xs font-pixel text-green-700 bg-green-100 px-2 py-0.5">
                 <Check className="w-3 h-3" />
-                Ocupável
+                Ocupavel
               </span>
             ) : (
               <span className="flex items-center gap-1 text-xs font-pixel text-red-700 bg-red-100 px-2 py-0.5">
@@ -554,5 +350,61 @@ export const GameCell = ({
         </div>
       </PopoverContent>
     </Popover>
+  );
+};
+
+// Wall overlay sub-component to reduce repetition
+interface WallOverlayProps {
+  side: 'top' | 'bottom' | 'left' | 'right';
+  visible: boolean;
+  window: boolean;
+  door: boolean;
+  wallWidth: string;
+  wallColor: string;
+}
+
+const WallOverlay = ({ side, visible, window: hasWindow, door: hasDoor, wallWidth, wallColor }: WallOverlayProps) => {
+  if (!visible) return null;
+
+  const isHorizontal = side === 'top' || side === 'bottom';
+  const positionClass = {
+    top: 'top-0 left-0 right-0',
+    bottom: 'bottom-0 left-0 right-0',
+    left: 'top-0 left-0 bottom-0',
+    right: 'top-0 right-0 bottom-0',
+  }[side];
+
+  const sizeStyle = isHorizontal
+    ? { height: wallWidth, backgroundColor: wallColor }
+    : { width: wallWidth, backgroundColor: wallColor };
+
+  return (
+    <div className={`absolute ${positionClass} z-20`} style={sizeStyle}>
+      {hasWindow && (
+        <div className={`absolute ${isHorizontal ? 'inset-x-[15%] inset-y-0' : 'inset-y-[15%] inset-x-0'} flex items-center justify-center`}>
+          <div
+            className={`w-full h-full bg-amber-800 flex ${isHorizontal ? '' : 'flex-col'} items-center justify-center`}
+            style={{ padding: '0.5px' }}
+          >
+            <div className={`w-full h-full flex ${isHorizontal ? '' : 'flex-col'} gap-[1px]`}>
+              <div className="flex-1 bg-sky-300" />
+              <div className="flex-1 bg-sky-200" />
+            </div>
+          </div>
+        </div>
+      )}
+      {hasDoor && (
+        <div className={`absolute ${isHorizontal ? 'inset-x-[20%] inset-y-0' : 'inset-y-[20%] inset-x-0'}`}>
+          <div
+            className={`w-full h-full bg-amber-900 ${isHorizontal ? 'border-x border-amber-950 flex items-center justify-end' : 'border-y border-amber-950 flex flex-col items-end justify-center'}`}
+            style={isHorizontal ? { paddingRight: '1px' } : { paddingBottom: '1px' }}
+          >
+            <div
+              className={`${isHorizontal ? 'w-[2px] h-[35%]' : 'h-[2px] w-[35%]'} bg-yellow-500 rounded-sm`}
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

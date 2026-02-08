@@ -107,14 +107,6 @@ export const testCase: GameCase = {
     { id: 'suspect-5', name: 'Eduardo', portraitId: 'portrait5', color: 'hsl(45 70% 50%)' },
     { id: 'suspect-6', name: 'Vitória', portraitId: 'portrait6', color: 'hsl(340 60% 55%)', isVictim: true },
   ],
-  solution: {
-    'suspect-1': { row: 0, col: 0 }, // Coronel no sofá
-    'suspect-2': { row: 0, col: 3 }, // Professora na cabeceira da cama
-    'suspect-3': { row: 2, col: 3 }, // Srta. Scarlet no corredor
-    'suspect-4': { row: 3, col: 2 }, // Dr. Orchid no corredor
-    'suspect-5': { row: 5, col: 2 }, // Chef no corredor perto da cozinha
-    'suspect-6': { row: 5, col: 5 }, // Mordomo no tapete do escritório
-  },
   clues: [
     { id: 'clue-1', text: 'Alberto estava relaxando no sofá da sala quando ouviu o grito.', type: 'position' },
     { id: 'clue-2', text: 'Beatriz estava dormindo no quarto.', type: 'room' },

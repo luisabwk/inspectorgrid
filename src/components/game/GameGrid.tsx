@@ -1,4 +1,4 @@
-import { Cell, Suspect, PlacementState, PencilMarks, getCellKey, LayoutConfig } from "@/types/game";
+import { Cell, Suspect, PlacementState, PencilMarks, getCellKey, LayoutConfig, CellRenderInfo, DirectionalFlags } from "@/types/game";
 import { GameCell } from "./GameCell";
 import { useMemo } from "react";
 
@@ -16,72 +16,22 @@ interface GameGridProps {
   onDragOver: (e: React.DragEvent) => void;
 }
 
-interface RoomLabel {
-  id: string;
-  name: string;
-  color: string;
-}
-
-// Helper to check if two cells are in different rooms
+// Check if two cells are in different rooms
 const areDifferentRooms = (cell1: Cell | undefined, cell2: Cell | undefined): boolean => {
-  if (!cell1 || !cell2) return true; // Edge of grid = wall
+  if (!cell1 || !cell2) return true;
   return cell1.roomId !== cell2.roomId;
 };
 
-// Helper to check if cell has window asset
-const hasWindowAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'window';
-};
+// Check if an asset matches a given type
+const hasAsset = (cell: Cell | undefined, asset: string): boolean => cell?.asset === asset;
 
-// Helper to check if cell has door asset
-const hasDoorAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'door';
-};
+// Check if cell has a wall-oriented appliance
+const isWallAppliance = (cell: Cell | undefined): boolean =>
+  cell?.asset === 'sink' || cell?.asset === 'stove' || cell?.asset === 'fridge';
 
-// Helper to check if cell has table asset
-const hasTableAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'table';
-};
-
-// Helper to check if cell has bed asset
-const hasBedAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'bed';
-};
-
-// Helper to check if cell has sofa asset
-const hasSofaAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'sofa';
-};
-
-// Helper to check if cell has desk asset
-const hasDeskAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'desk';
-};
-
-// Helper to check if cell has chair asset
-const hasChairAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'chair';
-};
-
-// Helper to check if cell has wall-oriented appliance (sink, stove, fridge)
-const isWallAppliance = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'sink' || cell?.asset === 'stove' || cell?.asset === 'fridge';
-};
-
-// Helper to check if cell has stove asset
-const hasStoveAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'stove';
-};
-
-// Helper to check if cell has sink asset
-const hasSinkAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'sink';
-};
-
-// Check if two cells are connectable counter assets (stove or sink)
-const isCounterAsset = (cell: Cell | undefined): boolean => {
-  return cell?.asset === 'stove' || cell?.asset === 'sink';
-};
+// Check if cell is a counter (connectable kitchen) asset
+const isCounterAsset = (cell: Cell | undefined): boolean =>
+  cell?.asset === 'stove' || cell?.asset === 'sink';
 
 // Calculate rotation for chair based on nearest table/desk
 const getChairRotation = (
@@ -89,29 +39,20 @@ const getChairRotation = (
   getCell: (row: number, col: number) => Cell | undefined
 ): number => {
   if (cell.asset !== 'chair') return 0;
-  
   const { row, col } = cell;
-  const topCell = getCell(row - 1, col);
-  const bottomCell = getCell(row + 1, col);
-  const leftCell = getCell(row, col - 1);
-  const rightCell = getCell(row, col + 1);
-  
-  // Check adjacent cells for table or desk
-  const hasTableOrDeskTop = hasTableAsset(topCell) || hasDeskAsset(topCell);
-  const hasTableOrDeskBottom = hasTableAsset(bottomCell) || hasDeskAsset(bottomCell);
-  const hasTableOrDeskLeft = hasTableAsset(leftCell) || hasDeskAsset(leftCell);
-  const hasTableOrDeskRight = hasTableAsset(rightCell) || hasDeskAsset(rightCell);
-  
-  // Return rotation to face the table (0 = facing down, 90 = facing left, 180 = facing up, 270 = facing right)
-  if (hasTableOrDeskTop) return 180;    // Face up towards table
-  if (hasTableOrDeskBottom) return 0;   // Face down (default)
-  if (hasTableOrDeskLeft) return 90;    // Face left
-  if (hasTableOrDeskRight) return 270;  // Face right (or -90)
-  
-  return 0; // Default facing down
+  const neighbors = [
+    { cell: getCell(row - 1, col), rotation: 180 },   // top -> face up
+    { cell: getCell(row + 1, col), rotation: 0 },      // bottom -> face down
+    { cell: getCell(row, col - 1), rotation: 90 },     // left -> face left
+    { cell: getCell(row, col + 1), rotation: 270 },    // right -> face right
+  ];
+  for (const { cell: neighbor, rotation } of neighbors) {
+    if (hasAsset(neighbor, 'table') || hasAsset(neighbor, 'desk')) return rotation;
+  }
+  return 0;
 };
 
-// Calculate rotation for wall appliances (sink, stove, fridge) based on walls
+// Calculate rotation for wall appliances based on walls
 const getApplianceRotation = (
   cell: Cell,
   hasWallTop: boolean,
@@ -120,15 +61,11 @@ const getApplianceRotation = (
   hasWallRight: boolean
 ): number => {
   if (!isWallAppliance(cell)) return 0;
-  
-  // Appliance should face AWAY from the wall (front faces room)
-  // Priority: back against wall
-  if (hasWallTop) return 0;      // Wall at top, face down (default)
-  if (hasWallBottom) return 180; // Wall at bottom, face up
-  if (hasWallLeft) return 270;   // Wall at left, face right
-  if (hasWallRight) return 90;   // Wall at right, face left
-  
-  return 0; // Default facing down
+  if (hasWallTop) return 0;
+  if (hasWallBottom) return 180;
+  if (hasWallLeft) return 270;
+  if (hasWallRight) return 90;
+  return 0;
 };
 
 export const GameGrid = ({
@@ -145,182 +82,132 @@ export const GameGrid = ({
   onDragOver,
 }: GameGridProps) => {
   const gridSize = cells.length;
-  
-  // Parse selected cell to get row/col for highlighting
+
   const selectedRow = selectedCell ? parseInt(selectedCell.split('-')[0]) : null;
   const selectedCol = selectedCell ? parseInt(selectedCell.split('-')[1]) : null;
-  
-  // Create room color lookup
-  const roomColors: Record<string, string> = {};
-  rooms.forEach((room) => {
-    roomColors[room.id] = room.color;
-  });
 
-  // Get cell at position (with bounds checking)
+  const roomColors: Record<string, string> = {};
+  rooms.forEach((room) => { roomColors[room.id] = room.color; });
+
   const getCell = (row: number, col: number): Cell | undefined => {
     if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) return undefined;
     return cells[row]?.[col];
   };
 
-  // Calculate wall and window info for each cell
-  const getCellWallInfo = (cell: Cell) => {
+  // Build CellRenderInfo for a cell
+  const getCellRenderInfo = (cell: Cell): CellRenderInfo => {
     const { row, col } = cell;
-    const topCell = getCell(row - 1, col);
-    const bottomCell = getCell(row + 1, col);
-    const leftCell = getCell(row, col - 1);
-    const rightCell = getCell(row, col + 1);
+    const top = getCell(row - 1, col);
+    const bottom = getCell(row + 1, col);
+    const left = getCell(row, col - 1);
+    const right = getCell(row, col + 1);
 
-    // Walls appear between different rooms OR at grid edges
-    const hasWallTop =
-      row === 0 ||
-      areDifferentRooms(cell, topCell) ||
-      cell.walls.includes('top') ||
-      (topCell?.walls.includes('bottom') ?? false);
-    const hasWallBottom =
-      row === gridSize - 1 ||
-      areDifferentRooms(cell, bottomCell) ||
-      cell.walls.includes('bottom') ||
-      (bottomCell?.walls.includes('top') ?? false);
-    const hasWallLeft =
-      col === 0 ||
-      areDifferentRooms(cell, leftCell) ||
-      cell.walls.includes('left') ||
-      (leftCell?.walls.includes('right') ?? false);
-    const hasWallRight =
-      col === gridSize - 1 ||
-      areDifferentRooms(cell, rightCell) ||
-      cell.walls.includes('right') ||
-      (rightCell?.walls.includes('left') ?? false);
+    // Walls between different rooms or at grid edges
+    const hasWallTop = row === 0 || areDifferentRooms(cell, top) || cell.walls.includes('top') || (top?.walls.includes('bottom') ?? false);
+    const hasWallBottom = row === gridSize - 1 || areDifferentRooms(cell, bottom) || cell.walls.includes('bottom') || (bottom?.walls.includes('top') ?? false);
+    const hasWallLeft = col === 0 || areDifferentRooms(cell, left) || cell.walls.includes('left') || (left?.walls.includes('right') ?? false);
+    const hasWallRight = col === gridSize - 1 || areDifferentRooms(cell, right) || cell.walls.includes('right') || (right?.walls.includes('left') ?? false);
 
-    // Windows on walls - check if this cell or neighbor has window asset at the wall boundary
-    const hasWindowTop = hasWallTop && (hasWindowAsset(cell) || hasWindowAsset(topCell));
-    const hasWindowBottom = hasWallBottom && (hasWindowAsset(cell) || hasWindowAsset(bottomCell));
-    const hasWindowLeft = hasWallLeft && (hasWindowAsset(cell) || hasWindowAsset(leftCell));
-    const hasWindowRight = hasWallRight && (hasWindowAsset(cell) || hasWindowAsset(rightCell));
+    const walls: DirectionalFlags = {
+      // Exclude outer grid border (rendered by the grid container)
+      top: hasWallTop && row !== 0,
+      bottom: hasWallBottom && row !== gridSize - 1,
+      left: hasWallLeft && col !== 0,
+      right: hasWallRight && col !== gridSize - 1,
+    };
 
-    // Doors on walls - check if this cell or neighbor has door asset at the wall boundary
-    const hasDoorTop = hasWallTop && (hasDoorAsset(cell) || hasDoorAsset(topCell));
-    const hasDoorBottom = hasWallBottom && (hasDoorAsset(cell) || hasDoorAsset(bottomCell));
-    const hasDoorLeft = hasWallLeft && (hasDoorAsset(cell) || hasDoorAsset(leftCell));
-    const hasDoorRight = hasWallRight && (hasDoorAsset(cell) || hasDoorAsset(rightCell));
+    // Helper for window/door on wall boundaries
+    const windowAt = (hasWall: boolean, neighbor: Cell | undefined): boolean =>
+      hasWall && (hasAsset(cell, 'window') || hasAsset(neighbor, 'window'));
+    const doorAt = (hasWall: boolean, neighbor: Cell | undefined): boolean =>
+      hasWall && (hasAsset(cell, 'door') || hasAsset(neighbor, 'door'));
 
-    // Table connections - check if adjacent cells also have tables
-    const hasTableTop = hasTableAsset(cell) && hasTableAsset(topCell) && !hasWallTop;
-    const hasTableBottom = hasTableAsset(cell) && hasTableAsset(bottomCell) && !hasWallBottom;
-    const hasTableLeft = hasTableAsset(cell) && hasTableAsset(leftCell) && !hasWallLeft;
-    const hasTableRight = hasTableAsset(cell) && hasTableAsset(rightCell) && !hasWallRight;
+    const windows: DirectionalFlags = {
+      top: windowAt(hasWallTop, top),
+      bottom: windowAt(hasWallBottom, bottom),
+      left: windowAt(hasWallLeft, left),
+      right: windowAt(hasWallRight, right),
+    };
 
-    // Bed connections - check if adjacent cells also have beds
-    // BOTH horizontal and vertical connections allowed
-    const hasBedTop = hasBedAsset(cell) && hasBedAsset(topCell) && !hasWallTop;
-    const hasBedBottom = hasBedAsset(cell) && hasBedAsset(bottomCell) && !hasWallBottom;
-    const hasBedLeft = hasBedAsset(cell) && hasBedAsset(leftCell) && !hasWallLeft;
-    const hasBedRight = hasBedAsset(cell) && hasBedAsset(rightCell) && !hasWallRight;
+    const doors: DirectionalFlags = {
+      top: doorAt(hasWallTop, top),
+      bottom: doorAt(hasWallBottom, bottom),
+      left: doorAt(hasWallLeft, left),
+      right: doorAt(hasWallRight, right),
+    };
 
-    // Sofa connections - check if adjacent cells also have sofas
-    const hasSofaTop = hasSofaAsset(cell) && hasSofaAsset(topCell) && !hasWallTop;
-    const hasSofaBottom = hasSofaAsset(cell) && hasSofaAsset(bottomCell) && !hasWallBottom;
-    const hasSofaLeft = hasSofaAsset(cell) && hasSofaAsset(leftCell) && !hasWallLeft;
-    const hasSofaRight = hasSofaAsset(cell) && hasSofaAsset(rightCell) && !hasWallRight;
+    // Asset connections: same asset type, no wall between
+    const connected = (assetCheck: (c: Cell | undefined) => boolean, neighbor: Cell | undefined, wallBetween: boolean): boolean =>
+      assetCheck(cell) && assetCheck(neighbor) && !wallBetween;
 
-    // Desk connections - check if adjacent cells also have desks
-    const hasDeskTop = hasDeskAsset(cell) && hasDeskAsset(topCell) && !hasWallTop;
-    const hasDeskBottom = hasDeskAsset(cell) && hasDeskAsset(bottomCell) && !hasWallBottom;
-    const hasDeskLeft = hasDeskAsset(cell) && hasDeskAsset(leftCell) && !hasWallLeft;
-    const hasDeskRight = hasDeskAsset(cell) && hasDeskAsset(rightCell) && !hasWallRight;
+    const isTable = (c: Cell | undefined) => hasAsset(c, 'table');
+    const isBed = (c: Cell | undefined) => hasAsset(c, 'bed');
+    const isSofa = (c: Cell | undefined) => hasAsset(c, 'sofa');
+    const isDesk = (c: Cell | undefined) => hasAsset(c, 'desk');
+    const isStove = (c: Cell | undefined) => hasAsset(c, 'stove');
+    const isSink = (c: Cell | undefined) => hasAsset(c, 'sink');
 
-    // Stove connections - stove can connect to other stoves or sinks
-    const hasStoveTop = hasStoveAsset(cell) && isCounterAsset(topCell) && !hasWallTop;
-    const hasStoveBottom = hasStoveAsset(cell) && isCounterAsset(bottomCell) && !hasWallBottom;
-    const hasStoveLeft = hasStoveAsset(cell) && isCounterAsset(leftCell) && !hasWallLeft;
-    const hasStoveRight = hasStoveAsset(cell) && isCounterAsset(rightCell) && !hasWallRight;
+    const buildConnections = (check: (c: Cell | undefined) => boolean): DirectionalFlags => ({
+      top: connected(check, top, hasWallTop),
+      bottom: connected(check, bottom, hasWallBottom),
+      left: connected(check, left, hasWallLeft),
+      right: connected(check, right, hasWallRight),
+    });
 
-    // Sink connections - sink can connect to other sinks or stoves
-    const hasSinkTop = hasSinkAsset(cell) && isCounterAsset(topCell) && !hasWallTop;
-    const hasSinkBottom = hasSinkAsset(cell) && isCounterAsset(bottomCell) && !hasWallBottom;
-    const hasSinkLeft = hasSinkAsset(cell) && isCounterAsset(leftCell) && !hasWallLeft;
-    const hasSinkRight = hasSinkAsset(cell) && isCounterAsset(rightCell) && !hasWallRight;
-
-    // Chair rotation based on adjacent tables/desks
-    const chairRotation = getChairRotation(cell, getCell);
-    
-    // Appliance rotation based on walls
-    const applianceRotation = getApplianceRotation(
-      cell,
-      hasWallTop || row === 0,
-      hasWallBottom || row === gridSize - 1,
-      hasWallLeft || col === 0,
-      hasWallRight || col === gridSize - 1
-    );
+    // Stove/sink connect to each other (counter)
+    const stoveConn: DirectionalFlags = {
+      top: hasAsset(cell, 'stove') && isCounterAsset(top) && !hasWallTop,
+      bottom: hasAsset(cell, 'stove') && isCounterAsset(bottom) && !hasWallBottom,
+      left: hasAsset(cell, 'stove') && isCounterAsset(left) && !hasWallLeft,
+      right: hasAsset(cell, 'stove') && isCounterAsset(right) && !hasWallRight,
+    };
+    const sinkConn: DirectionalFlags = {
+      top: hasAsset(cell, 'sink') && isCounterAsset(top) && !hasWallTop,
+      bottom: hasAsset(cell, 'sink') && isCounterAsset(bottom) && !hasWallBottom,
+      left: hasAsset(cell, 'sink') && isCounterAsset(left) && !hasWallLeft,
+      right: hasAsset(cell, 'sink') && isCounterAsset(right) && !hasWallRight,
+    };
 
     return {
-      hasWallTop,
-      hasWallBottom,
-      hasWallLeft,
-      hasWallRight,
-      hasWindowTop,
-      hasWindowBottom,
-      hasWindowLeft,
-      hasWindowRight,
-      hasDoorTop,
-      hasDoorBottom,
-      hasDoorLeft,
-      hasDoorRight,
-      hasTableTop,
-      hasTableBottom,
-      hasTableLeft,
-      hasTableRight,
-      hasBedTop,
-      hasBedBottom,
-      hasBedLeft,
-      hasBedRight,
-      hasSofaTop,
-      hasSofaBottom,
-      hasSofaLeft,
-      hasSofaRight,
-      hasDeskTop,
-      hasDeskBottom,
-      hasDeskLeft,
-      hasDeskRight,
-      hasStoveTop,
-      hasStoveBottom,
-      hasStoveLeft,
-      hasStoveRight,
-      hasSinkTop,
-      hasSinkBottom,
-      hasSinkLeft,
-      hasSinkRight,
-      chairRotation,
-      applianceRotation,
+      walls,
+      windows,
+      doors,
+      connections: {
+        table: buildConnections(isTable),
+        bed: buildConnections(isBed),
+        sofa: buildConnections(isSofa),
+        desk: buildConnections(isDesk),
+        stove: stoveConn,
+        sink: sinkConn,
+      },
+      chairRotation: getChairRotation(cell, getCell),
+      applianceRotation: getApplianceRotation(
+        cell,
+        hasWallTop || row === 0,
+        hasWallBottom || row === gridSize - 1,
+        hasWallLeft || col === 0,
+        hasWallRight || col === gridSize - 1
+      ),
     };
   };
 
-  // Calculate room labels with positions (center of each room)
+  // Calculate room labels
   const roomLabels = useMemo(() => {
     const labelMap: Record<string, { id: string; name: string; color: string; minRow: number; maxRow: number; minCol: number; maxCol: number }> = {};
 
-    // Find bounds of each room
     cells.flat().forEach((cell) => {
-      if (cell.roomId) {
-        if (!labelMap[cell.roomId]) {
-          const room = rooms.find(r => r.id === cell.roomId);
-          if (room) {
-            labelMap[cell.roomId] = {
-              id: room.id,
-              name: room.name,
-              color: room.color,
-              minRow: cell.row,
-              maxRow: cell.row,
-              minCol: cell.col,
-              maxCol: cell.col,
-            };
-          }
-        } else {
-          labelMap[cell.roomId].minRow = Math.min(labelMap[cell.roomId].minRow, cell.row);
-          labelMap[cell.roomId].maxRow = Math.max(labelMap[cell.roomId].maxRow, cell.row);
-          labelMap[cell.roomId].minCol = Math.min(labelMap[cell.roomId].minCol, cell.col);
-          labelMap[cell.roomId].maxCol = Math.max(labelMap[cell.roomId].maxCol, cell.col);
-        }
+      if (!cell.roomId) return;
+      const room = rooms.find(r => r.id === cell.roomId);
+      if (!room) return;
+
+      if (!labelMap[cell.roomId]) {
+        labelMap[cell.roomId] = { ...room, minRow: cell.row, maxRow: cell.row, minCol: cell.col, maxCol: cell.col };
+      } else {
+        const entry = labelMap[cell.roomId];
+        entry.minRow = Math.min(entry.minRow, cell.row);
+        entry.maxRow = Math.max(entry.maxRow, cell.row);
+        entry.minCol = Math.min(entry.minCol, cell.col);
+        entry.maxCol = Math.max(entry.maxCol, cell.col);
       }
     });
 
@@ -330,20 +217,17 @@ export const GameGrid = ({
       centerCol: (room.minCol + room.maxCol) / 2,
     }));
   }, [cells, rooms]);
-  
+
   const cellSizePercent = 100 / gridSize;
 
   return (
     <div className="relative w-full">
       <div className="flex">
-        {/* Row labels (left side) */}
-        <div 
-          className="flex flex-col justify-around pr-1"
-          style={{ height: 'auto' }}
-        >
+        {/* Row labels */}
+        <div className="flex flex-col justify-around pr-1">
           {Array.from({ length: gridSize }, (_, i) => (
-            <div 
-              key={`row-${i}`} 
+            <div
+              key={`row-${i}`}
               className="text-[8px] sm:text-[10px] text-foreground/70 font-bold flex items-center justify-end"
               style={{ height: `${100 / gridSize}%` }}
             >
@@ -353,7 +237,7 @@ export const GameGrid = ({
         </div>
 
         {/* Main Grid */}
-        <div 
+        <div
           className="relative flex-1 bg-card border-[3px] border-foreground/70 rounded-sm overflow-hidden shadow-lg"
           style={{
             display: 'grid',
@@ -361,98 +245,58 @@ export const GameGrid = ({
             aspectRatio: '1',
           }}
         >
-        {cells.flat().map((cell) => {
-          const cellKey = getCellKey(cell.row, cell.col);
-          const suspectId = placements[cellKey];
-          const suspect = suspectId ? suspects.find(s => s.id === suspectId) || null : null;
-          const cellPencilMarks = pencilMarks[cellKey] || [];
-          const roomColor = cell.roomId ? roomColors[cell.roomId] : undefined;
-          const wallInfo = getCellWallInfo(cell);
-          
-          const isInSelectedRow = selectedRow !== null && cell.row === selectedRow;
-          const isInSelectedCol = selectedCol !== null && cell.col === selectedCol;
-          
-          // Calculate if this cell is blocked by another placement in same row/col
-          const blockingPlacements = Object.entries(placements).filter(([key, sId]) => {
-            if (!sId) return false;
-            const [r, c] = key.split('-').map(Number);
-            // Same row or same column, but not this cell
-            return (r === cell.row || c === cell.col) && key !== cellKey;
-          });
-          const isBlockedByPlacement = blockingPlacements.length > 0;
-          
-          // Check if this cell has a conflict (suspect placed where another suspect blocks)
-          let hasConflict = false;
-          if (suspectId) {
-            // Check if any other cell in same row/col has a placement
-            for (const [key, sId] of Object.entries(placements)) {
-              if (!sId || key === cellKey) continue;
+          {cells.flat().map((cell) => {
+            const cellKey = getCellKey(cell.row, cell.col);
+            const suspectId = placements[cellKey];
+            const suspect = suspectId ? suspects.find(s => s.id === suspectId) || null : null;
+            const cellPencilMarks = pencilMarks[cellKey] || [];
+            const roomColor = cell.roomId ? roomColors[cell.roomId] : undefined;
+            const renderInfo = getCellRenderInfo(cell);
+
+            const isInSelectedRow = selectedRow !== null && cell.row === selectedRow;
+            const isInSelectedCol = selectedCol !== null && cell.col === selectedCol;
+
+            // Check if row/col is blocked by another placement
+            const isBlockedByPlacement = Object.entries(placements).some(([key, sId]) => {
+              if (!sId) return false;
               const [r, c] = key.split('-').map(Number);
-              if (r === cell.row || c === cell.col) {
-                hasConflict = true;
-                break;
+              return (r === cell.row || c === cell.col) && key !== cellKey;
+            });
+
+            // Check for latin square conflict
+            let hasConflict = false;
+            if (suspectId) {
+              for (const [key, sId] of Object.entries(placements)) {
+                if (!sId || key === cellKey) continue;
+                const [r, c] = key.split('-').map(Number);
+                if (r === cell.row || c === cell.col) {
+                  hasConflict = true;
+                  break;
+                }
               }
             }
-          }
-          
-          return (
-            <GameCell
-              key={cellKey}
-              cell={cell}
-              suspect={suspect}
-              pencilMarks={cellPencilMarks}
-              suspects={suspects}
-              isSelected={selectedCell === cellKey}
-              isHighlighted={isInSelectedRow || isInSelectedCol}
-              isPencilMode={isPencilMode}
-              roomColor={roomColor}
-              isPositioningSuspect={selectedSuspect !== null}
-              isBlockedByPlacement={isBlockedByPlacement}
-              hasConflict={hasConflict}
-              hasWallTop={wallInfo.hasWallTop && cell.row !== 0}
-              hasWallBottom={wallInfo.hasWallBottom && cell.row !== gridSize - 1}
-              hasWallLeft={wallInfo.hasWallLeft && cell.col !== 0}
-              hasWallRight={wallInfo.hasWallRight && cell.col !== gridSize - 1}
-              hasWindowTop={wallInfo.hasWindowTop}
-              hasWindowBottom={wallInfo.hasWindowBottom}
-              hasWindowLeft={wallInfo.hasWindowLeft}
-              hasWindowRight={wallInfo.hasWindowRight}
-              hasDoorTop={wallInfo.hasDoorTop}
-              hasDoorBottom={wallInfo.hasDoorBottom}
-              hasDoorLeft={wallInfo.hasDoorLeft}
-              hasDoorRight={wallInfo.hasDoorRight}
-              hasTableTop={wallInfo.hasTableTop}
-              hasTableBottom={wallInfo.hasTableBottom}
-              hasTableLeft={wallInfo.hasTableLeft}
-              hasTableRight={wallInfo.hasTableRight}
-              hasBedTop={wallInfo.hasBedTop}
-              hasBedBottom={wallInfo.hasBedBottom}
-              hasBedLeft={wallInfo.hasBedLeft}
-              hasBedRight={wallInfo.hasBedRight}
-              hasSofaTop={wallInfo.hasSofaTop}
-              hasSofaBottom={wallInfo.hasSofaBottom}
-              hasSofaLeft={wallInfo.hasSofaLeft}
-              hasSofaRight={wallInfo.hasSofaRight}
-              hasDeskTop={wallInfo.hasDeskTop}
-              hasDeskBottom={wallInfo.hasDeskBottom}
-              hasDeskLeft={wallInfo.hasDeskLeft}
-              hasDeskRight={wallInfo.hasDeskRight}
-              hasStoveTop={wallInfo.hasStoveTop}
-              hasStoveBottom={wallInfo.hasStoveBottom}
-              hasStoveLeft={wallInfo.hasStoveLeft}
-              hasStoveRight={wallInfo.hasStoveRight}
-              hasSinkTop={wallInfo.hasSinkTop}
-              hasSinkBottom={wallInfo.hasSinkBottom}
-              hasSinkLeft={wallInfo.hasSinkLeft}
-              hasSinkRight={wallInfo.hasSinkRight}
-              chairRotation={wallInfo.chairRotation}
-              applianceRotation={wallInfo.applianceRotation}
-              onCellClick={onCellClick}
-              onCellDrop={onCellDrop}
-              onDragOver={onDragOver}
-            />
-          );
-        })}
+
+            return (
+              <GameCell
+                key={cellKey}
+                cell={cell}
+                suspect={suspect}
+                pencilMarks={cellPencilMarks}
+                suspects={suspects}
+                isSelected={selectedCell === cellKey}
+                isHighlighted={isInSelectedRow || isInSelectedCol}
+                isPencilMode={isPencilMode}
+                roomColor={roomColor}
+                isPositioningSuspect={selectedSuspect !== null}
+                isBlockedByPlacement={isBlockedByPlacement}
+                hasConflict={hasConflict}
+                renderInfo={renderInfo}
+                onCellClick={onCellClick}
+                onCellDrop={onCellDrop}
+                onDragOver={onDragOver}
+              />
+            );
+          })}
 
           {/* Room Labels Overlay */}
           {roomLabels.map((room) => (
@@ -466,7 +310,7 @@ export const GameGrid = ({
                 height: `${cellSizePercent}%`,
               }}
             >
-              <span 
+              <span
                 className="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-center leading-tight px-2 py-0.5 rounded-sm bg-white/40"
                 style={{ color: 'hsl(var(--foreground))' }}
               >
@@ -477,14 +321,11 @@ export const GameGrid = ({
         </div>
       </div>
 
-      {/* Column labels (bottom) */}
-      <div 
-        className="flex justify-around pt-1"
-        style={{ marginLeft: '16px' }}
-      >
+      {/* Column labels */}
+      <div className="flex justify-around pt-1" style={{ marginLeft: '16px' }}>
         {Array.from({ length: gridSize }, (_, i) => (
-          <div 
-            key={`col-${i}`} 
+          <div
+            key={`col-${i}`}
             className="text-[8px] sm:text-[10px] text-foreground/70 font-bold text-center"
             style={{ width: `${100 / gridSize}%` }}
           >

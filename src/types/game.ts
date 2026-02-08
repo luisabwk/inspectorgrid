@@ -78,7 +78,6 @@ export interface GameCase {
   gridSize: number;
   layoutConfig: LayoutConfig;
   suspects: Suspect[];
-  solution: Record<string, { row: number; col: number }>; // suspectId -> position
   clues: Clue[];
 }
 
@@ -101,6 +100,32 @@ export interface GameState {
   isPencilMode: boolean;
   isComplete: boolean;
   startTime: number;
+}
+
+// Directional info for each side of a cell (top, right, bottom, left)
+export interface DirectionalFlags {
+  top: boolean;
+  right: boolean;
+  bottom: boolean;
+  left: boolean;
+}
+
+// Rendering info computed by GameGrid and passed to GameCell
+export interface CellRenderInfo {
+  walls: DirectionalFlags;
+  windows: DirectionalFlags;
+  doors: DirectionalFlags;
+  // Asset connections (adjacent same-type asset, no wall between)
+  connections: {
+    table: DirectionalFlags;
+    bed: DirectionalFlags;
+    sofa: DirectionalFlags;
+    desk: DirectionalFlags;
+    stove: DirectionalFlags;
+    sink: DirectionalFlags;
+  };
+  chairRotation: number;
+  applianceRotation: number;
 }
 
 // Helper to get cell key

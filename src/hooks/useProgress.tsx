@@ -10,21 +10,22 @@ import { supabase } from "@/integrations/supabase/client";
  */
 export const useProgress = () => {
   const { user } = useAuth();
+  const userId = user?.id;
 
   const getPlayerStats = useCallback(async () => {
-    if (!user) return null;
+    if (!userId) return null;
 
     try {
       const { data: profile } = await supabase
         .from("profiles")
         .select("current_level, total_score")
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .maybeSingle();
 
       const { count } = await supabase
         .from("progress")
         .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id);
+        .eq("user_id", userId);
 
       return {
         level: profile?.current_level || 1,
@@ -34,7 +35,7 @@ export const useProgress = () => {
     } catch {
       return null;
     }
-  }, [user?.id]);
+  }, [userId]);
 
   return { getPlayerStats };
 };

@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import { AssetType } from "@/types/game";
 
 interface AssetIconProps {
@@ -790,7 +791,7 @@ export const EmptyIcon = ({ className }: AssetIconProps) => (
 );
 
 // Asset map
-export const AssetIconMap: Record<string, React.FC<any>> = {
+export const AssetIconMap: Record<string, ComponentType<AssetIconProps>> = {
   bed: BedIcon,
   sofa: SofaIcon,
   armchair: ArmchairIcon,

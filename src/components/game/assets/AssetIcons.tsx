@@ -1,8 +1,9 @@
- import { AssetType } from "@/types/game";
- 
- interface AssetIconProps {
-   className?: string;
- }
+import { AssetType } from "@/types/game";
+import { TileSprite } from "./TileSprite";
+
+interface AssetIconProps {
+  className?: string;
+}
  
  // Direction type for rotatable assets
  export type AssetDirection = 'down' | 'up' | 'left' | 'right';
@@ -952,118 +953,15 @@ export const FridgeIcon = ({ className, direction = 'down' }: DirectionalAssetPr
    );
  };
  
-// Toilet v4 - Organic silhouette based on tileset reference
-// Uses ellipses for natural toilet shape with high-contrast dark opening
-export const ToiletIcon = ({ className }: AssetIconProps) => {
-  return (
-    <svg viewBox="0 0 32 32" className={className}>
-      {/* ===== TANQUE (atrás) ===== */}
-      {/* Profundidade lateral 85° */}
-      <ellipse cx="11" cy="8" rx="2" ry="4" fill={COLORS.appliance.side} />
-      
-      {/* Corpo do tanque - arredondado */}
-      <rect x="11" y="4" width="10" height="8" rx="2"
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Topo do tanque */}
-      <rect x="11" y="4" width="10" height="2" rx="1" 
-        fill={COLORS.appliance.top} />
-      
-      {/* Botão de descarga */}
-      <ellipse cx="16" cy="6.5" rx="1.5" ry="0.8" fill={COLORS.metal.chrome} />
-      
-      {/* ===== ASSENTO/TAMPA (meio) ===== */}
-      {/* Profundidade lateral */}
-      <ellipse cx="8" cy="14" rx="1.5" ry="3" fill={COLORS.appliance.side} />
-      
-      {/* Tampa oval */}
-      <ellipse cx="16" cy="14" rx="10" ry="4"
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Superfície do assento */}
-      <ellipse cx="16" cy="13.5" rx="9" ry="3.2" fill={COLORS.appliance.top} />
-      
-      {/* ABERTURA ESCURA - elemento crucial de reconhecimento */}
-      <ellipse cx="16" cy="14" rx="6" ry="2.5" fill={COLORS.metal.handle} />
-      
-      {/* ===== BACIA (frente) ===== */}
-      {/* Profundidade lateral */}
-      <ellipse cx="8" cy="21" rx="1.5" ry="4" fill={COLORS.appliance.side} />
-      
-      {/* Bacia oval alongada */}
-      <ellipse cx="16" cy="21" rx="9" ry="5"
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Água no interior */}
-      <ellipse cx="16" cy="20.5" rx="5" ry="3" fill={COLORS.water.top} />
-      
-      {/* ===== BASE/PEDESTAL ===== */}
-      <ellipse cx="16" cy="26" rx="5" ry="2" fill={COLORS.appliance.side} />
-      <ellipse cx="16" cy="26" rx="4" ry="1.5" fill={COLORS.appliance.front} />
-    </svg>
-  );
-};
+// Toilet - Using sprite from tileset (tileX=0, tileY=14)
+export const ToiletIcon = ({ className }: AssetIconProps) => (
+  <TileSprite tileX={0} tileY={14} className={className} />
+);
 
-// Shower v2 - Solid bathtub base based on tileset reference
-// Features elevated border, clear interior, drain, and smaller showerhead
-export const ShowerIcon = ({ className }: AssetIconProps) => {
-  const PAD = 4;
-  const W = 24; // largura da banheira
-  const H = 22; // altura da banheira
-  
-  return (
-    <svg viewBox="0 0 32 32" className={className}>
-      {/* ===== BORDA EXTERNA DA BANHEIRA ===== */}
-      {/* Profundidade lateral 85° */}
-      <rect x={PAD} y={PAD + 2} width="2" height={H} fill={COLORS.appliance.side} />
-      
-      {/* Borda da banheira - retângulo arredondado */}
-      <rect x={PAD + 2} y={PAD} width={W} height={H} rx="4"
-        fill={COLORS.appliance.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH} />
-      
-      {/* Superfície superior da borda */}
-      <rect x={PAD} y={PAD} width={W + 2} height="2.5" rx="1" 
-        fill={COLORS.appliance.top} />
-      
-      {/* ===== INTERIOR DA BANHEIRA ===== */}
-      {/* Fundo claro (metal.top = quase branco) */}
-      <rect x={PAD + 4} y={PAD + 3} width={W - 4} height={H - 5} rx="3"
-        fill={COLORS.metal.top}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-      
-      {/* Toque de água/reflexo */}
-      <rect x={PAD + 5} y={PAD + 4} width={W - 6} height={H - 7} rx="2"
-        fill={COLORS.water.top} opacity="0.25" />
-      
-      {/* Ralo central */}
-      <ellipse cx="16" cy={PAD + H - 4} rx="2.5" ry="1" fill={COLORS.metal.shadow} />
-      <ellipse cx="16" cy={PAD + H - 4} rx="1.2" ry="0.5" fill={COLORS.metal.handle} />
-      
-      {/* ===== CHUVEIRO (menor, secundário) ===== */}
-      {/* Tubo */}
-      <rect x="23" y={PAD} width="1.5" height="5" fill={COLORS.metal.chrome} />
-      
-      {/* Cabeça do chuveiro */}
-      <ellipse cx="19" cy={PAD + 5} rx="4" ry="1.8"
-        fill={COLORS.metal.front}
-        stroke={OUTLINE} strokeWidth={OUTLINE_WIDTH * 0.5} />
-      
-      {/* Furos do chuveiro */}
-      <ellipse cx="17" cy={PAD + 5} rx="0.4" ry="0.3" fill={COLORS.metal.shadow} />
-      <ellipse cx="19" cy={PAD + 5} rx="0.4" ry="0.3" fill={COLORS.metal.shadow} />
-      <ellipse cx="21" cy={PAD + 5} rx="0.4" ry="0.3" fill={COLORS.metal.shadow} />
-      
-      {/* Gotas de água (sutis) */}
-      <ellipse cx="16" cy={PAD + 10} rx="0.6" ry="1.5" fill={COLORS.water.front} opacity="0.5" />
-      <ellipse cx="19" cy={PAD + 12} rx="0.6" ry="1.5" fill={COLORS.water.front} opacity="0.5" />
-      <ellipse cx="22" cy={PAD + 9} rx="0.6" ry="1.5" fill={COLORS.water.front} opacity="0.5" />
-    </svg>
-  );
-};
+// Shower - Using sprite from tileset (tileX=1, tileY=14)
+export const ShowerIcon = ({ className }: AssetIconProps) => (
+  <TileSprite tileX={1} tileY={14} className={className} />
+);
  
  // Rug
 export const RugIcon = ({ className }: AssetIconProps) => {

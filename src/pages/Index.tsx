@@ -20,7 +20,7 @@ const Index = () => {
       }
     };
     loadStats();
-  }, [user]);
+  }, [user, getPlayerStats]);
 
   const handlePlay = () => {
     navigate('/game');

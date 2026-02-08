@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { GameCase, Cell, Suspect, Clue, LayoutConfig } from "@/types/game";
+import { useAuth } from "@/hooks/useAuth";
 
 interface DbCase {
   id: string;
@@ -106,6 +107,7 @@ export const useNextCase = (currentLevel: number = 1) => {
   const [gameCase, setGameCase] = useState<GameCase | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchNextCase = async () => {
@@ -114,29 +116,49 @@ export const useNextCase = (currentLevel: number = 1) => {
         
         // Get difficulty based on level (increases every 3 levels)
         const difficulty = Math.ceil(currentLevel / 3);
+
+        // Fetch completed case ids so we can pick the next unplayed case
+        let completedCaseIds: string[] = [];
+        if (user?.id) {
+          const { data: progressRows, error: progressError } = await supabase
+            .from("progress")
+            .select("case_id")
+            .eq("user_id", user.id);
+
+          if (progressError) throw progressError;
+          completedCaseIds = (progressRows || [])
+            .map((r) => r.case_id)
+            .filter((id): id is string => Boolean(id));
+        }
+        const completedSet = new Set(completedCaseIds);
         
         // Fetch a case at the appropriate difficulty
-        const { data, error: queryError } = await supabase
+        const { data: casesAtDifficulty, error: queryError } = await supabase
           .from("cases_public")
           .select("*")
           .eq("difficulty", difficulty)
-          .limit(1)
-          .maybeSingle();
+          .order("created_at", { ascending: true })
+          .limit(50);
 
         if (queryError) throw queryError;
 
+        const data = (casesAtDifficulty || []).find((c) => c.id && !completedSet.has(c.id)) ?? null;
+
         // If no case at this difficulty, try lower difficulties
         if (!data) {
-          const { data: fallbackData, error: fallbackError } = await supabase
+          const { data: fallbackCases, error: fallbackError } = await supabase
             .from("cases_public")
             .select("*")
             .lte("difficulty", difficulty)
             .order("difficulty", { ascending: false })
-            .limit(1)
-            .maybeSingle();
+            .order("created_at", { ascending: true })
+            .limit(50);
 
           if (fallbackError) throw fallbackError;
           
+          const fallbackData =
+            (fallbackCases || []).find((c) => c.id && !completedSet.has(c.id)) ?? null;
+
           if (fallbackData) {
             setGameCase(transformCase(fallbackData as unknown as DbCase));
           } else {
@@ -153,7 +175,7 @@ export const useNextCase = (currentLevel: number = 1) => {
     };
 
     fetchNextCase();
-  }, [currentLevel]);
+  }, [currentLevel, user?.id]);
 
   return { gameCase, loading, error };
 };

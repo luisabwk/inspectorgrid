@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { GameCase, Cell, Suspect, Clue, LayoutConfig } from "@/types/game";
 import { useAuth } from "@/hooks/useAuth";
-import { buildInFilter } from "@/lib/postgrest";
 
 interface DbCase {
   id: string;
@@ -131,40 +130,35 @@ export const useNextCase = (currentLevel: number = 1) => {
             .map((r) => r.case_id)
             .filter((id): id is string => Boolean(id));
         }
-        const completedInFilter = buildInFilter(completedCaseIds);
+        const completedSet = new Set(completedCaseIds);
         
         // Fetch a case at the appropriate difficulty
-        let query = supabase
+        const { data: casesAtDifficulty, error: queryError } = await supabase
           .from("cases_public")
           .select("*")
           .eq("difficulty", difficulty)
-          .order("created_at", { ascending: true });
-
-        if (completedInFilter) {
-          query = query.not("id", "in", completedInFilter);
-        }
-
-        const { data, error: queryError } = await query.limit(1).maybeSingle();
+          .order("created_at", { ascending: true })
+          .limit(50);
 
         if (queryError) throw queryError;
 
+        const data = (casesAtDifficulty || []).find((c) => c.id && !completedSet.has(c.id)) ?? null;
+
         // If no case at this difficulty, try lower difficulties
         if (!data) {
-          let fallbackQuery = supabase
+          const { data: fallbackCases, error: fallbackError } = await supabase
             .from("cases_public")
             .select("*")
             .lte("difficulty", difficulty)
             .order("difficulty", { ascending: false })
-            .order("created_at", { ascending: true });
-
-          if (completedInFilter) {
-            fallbackQuery = fallbackQuery.not("id", "in", completedInFilter);
-          }
-
-          const { data: fallbackData, error: fallbackError } = await fallbackQuery.limit(1).maybeSingle();
+            .order("created_at", { ascending: true })
+            .limit(50);
 
           if (fallbackError) throw fallbackError;
           
+          const fallbackData =
+            (fallbackCases || []).find((c) => c.id && !completedSet.has(c.id)) ?? null;
+
           if (fallbackData) {
             setGameCase(transformCase(fallbackData as unknown as DbCase));
           } else {

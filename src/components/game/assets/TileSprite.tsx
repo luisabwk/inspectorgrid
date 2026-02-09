@@ -1,43 +1,72 @@
+/**
+ * Available tileset files in /public/tiles/.
+ * Each is 256x256px = 16x16 grid of 16px tiles.
+ */
+export const TILESETS = {
+  inside:    '/tiles/tileB_inside3.png',    // Original: beds, kitchen, rugs, windows
+  furniture: '/tiles/furniture_outdoor.png', // Desks, chairs, sofas, plants, benches, fences
+  living:    '/tiles/living_decoration.png', // Windows, bookshelves, sofas, lamps, paintings
+} as const;
+
+export type TilesetKey = keyof typeof TILESETS;
+
 interface TileSpriteProps {
-  tileX: number;      // Coluna do tile (0-indexed)
-  tileY: number;      // Linha do tile (0-indexed)
-  tileSize?: number;  // Tamanho do tile em pixels (default: 16px)
+  tileX: number;      // Tile column (0-indexed)
+  tileY: number;      // Tile row (0-indexed)
+  spanX?: number;     // Width in tiles (default: 1)
+  spanY?: number;     // Height in tiles (default: 1)
+  tileset?: TilesetKey | string; // Which tileset to use (key or raw path)
   className?: string;
 }
 
+const TOTAL_TILES = 16; // 16x16 grid
+
 /**
- * Component to render sprites directly from the tileB_inside3.png tileset
- * Uses CSS background-position to extract specific tiles from the spritesheet
- * 
- * Each tile is 16x16 pixels in the source image
- * 
- * Example: <TileSprite tileX={0} tileY={14} className="w-full h-full" />
+ * Renders a region from a tileset spritesheet.
+ *
+ * Single tile:  <TileSprite tileX={0} tileY={0} />
+ * Multi-tile:   <TileSprite tileX={6} tileY={2} spanX={3} spanY={2} />
+ * Other tileset: <TileSprite tileX={0} tileY={0} tileset="furniture" />
+ *
+ * CSS background-position percentage formula:
+ *   pos% = tileIndex / (totalTiles - span) * 100
  */
-export const TileSprite = ({ 
-  tileX, 
-  tileY, 
-  tileSize = 16, 
-  className 
+export const TileSprite = ({
+  tileX,
+  tileY,
+  spanX = 1,
+  spanY = 1,
+  tileset = 'inside',
+  className
 }: TileSpriteProps) => {
-  // The tileset is 256x256px (16x16 tiles of 16px each)
-  // We need to scale up from 16px to fill the container
-  // backgroundSize scales the entire tileset proportionally
-  // backgroundPosition must be calculated based on the scaled size
-  
+  // Resolve tileset path
+  const tilesetPath = tileset in TILESETS
+    ? TILESETS[tileset as TilesetKey]
+    : tileset;
+
+  // backgroundSize: make spanX tiles fill 100% width, spanY tiles fill 100% height
+  const bgSizeX = (TOTAL_TILES / spanX) * 100;
+  const bgSizeY = (TOTAL_TILES / spanY) * 100;
+
+  // CSS percentage positioning:
+  //   actual_offset = (container - bg_size) * percentage
+  //   We need offset = -(tileX/spanX) * container
+  //   So percentage = tileX / (totalTiles - spanX)
+  const maxX = TOTAL_TILES - spanX;
+  const maxY = TOTAL_TILES - spanY;
+  const bgPosX = maxX > 0 ? (tileX / maxX) * 100 : 0;
+  const bgPosY = maxY > 0 ? (tileY / maxY) * 100 : 0;
+
   return (
-    <div 
+    <div
       className={className}
       style={{
         width: '100%',
         height: '100%',
-        backgroundImage: 'url(/tiles/tileB_inside3.png)',
-        // Scale the tileset so each 16px tile fills 100% of the container
-        // Original: 256px tileset, we want 1 tile (16px) to be 100%
-        // So backgroundSize should be 1600% (256/16 * 100%)
-        backgroundSize: '1600% 1600%',
-        // With percentage-based positioning: 0% = first tile, 100/(16-1) = ~6.67% per tile
-        // Formula: (tileIndex / (totalTiles - 1)) * 100%
-        backgroundPosition: `${(tileX / 15) * 100}% ${(tileY / 15) * 100}%`,
+        backgroundImage: `url(${tilesetPath})`,
+        backgroundSize: `${bgSizeX}% ${bgSizeY}%`,
+        backgroundPosition: `${bgPosX}% ${bgPosY}%`,
+        backgroundRepeat: 'no-repeat',
         imageRendering: 'pixelated' as const,
       }}
     />

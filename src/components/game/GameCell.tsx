@@ -6,7 +6,7 @@ import { assetDictionary } from "@/data/assetDictionary";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
-import { TileSprite } from "./assets/TileSprite";
+import { TileSprite, TilesetKey } from "./assets/TileSprite";
 
 // Convert rotation degrees to direction
 const rotationToDirection = (rotation: number): AssetDirection => {
@@ -96,7 +96,7 @@ export const GameCell = ({
 
   type TileCoord = { x: number; y: number };
 
-  const getFurnitureTile = (): { tile: TileCoord; rotation?: number; inset?: "inset-0" | "inset-1" } | null => {
+  const getFurnitureTile = (): { tile: TileCoord; rotation?: number; inset?: "inset-0" | "inset-1"; tileset?: TilesetKey } | null => {
     // Doors/windows remain as overlays for now
     if (isWallMarking) return null;
     if (displayAsset === "empty") return null;
@@ -241,7 +241,7 @@ export const GameCell = ({
               }}
             >
               {furnitureSprite ? (
-                <TileSprite tileX={furnitureSprite.tile.x} tileY={furnitureSprite.tile.y} className="w-full h-full" />
+                <TileSprite tileX={furnitureSprite.tile.x} tileY={furnitureSprite.tile.y} tileset={furnitureSprite.tileset} className="w-full h-full" />
               ) : (
                 // Fallback to existing SVG icons for non-mapped assets
                 <FallbackAssetIcon className="w-full h-full" />

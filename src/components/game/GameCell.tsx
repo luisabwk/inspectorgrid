@@ -95,77 +95,83 @@ export const GameCell = ({
   const assetInfo = assetDictionary[displayAsset];
 
   type TileCoord = { x: number; y: number };
+  type TileSpan = { x: number; y: number };
 
-  const getFurnitureTile = (): { tile: TileCoord; rotation?: number; inset?: "inset-0" | "inset-1"; tileset?: TilesetKey } | null => {
+  const getFurnitureTile = (): { tile: TileCoord; span?: TileSpan; rotation?: number; inset?: "inset-0" | "inset-1"; tileset?: TilesetKey } | null => {
     // Doors/windows remain as overlays for now
     if (isWallMarking) return null;
     if (displayAsset === "empty") return null;
 
-    // Most sprites look best with a small padding, but kitchen/big items can fill the cell.
-    const defaultInset: "inset-0" | "inset-1" = "inset-1";
+    // All sprites use 2×2 tile regions for recognizable full items.
+    // Items without a good tileset match return null → SVG fallback.
+    const s2x2: TileSpan = { x: 2, y: 2 };
 
     switch (displayAsset) {
-      // Living room
-      case "sofa": {
-        // 2-tile couch (left/right)
-        const c = connections.sofa;
-        if (c.right && !c.left) return { tile: { x: 9, y: 6 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 10, y: 6 }, inset: "inset-0" };
-        return { tile: { x: 9, y: 6 }, inset: "inset-0" };
-      }
+      // === Living room ===
+      case "sofa":
+        return null; // SVG fallback (no clear sofa in tileset)
       case "armchair":
-        return { tile: { x: 1, y: 3 }, inset: defaultInset };
+        return null; // SVG fallback
       case "tv":
-        return { tile: { x: 4, y: 6 }, inset: defaultInset };
+        // (4,6) 2×2 = TV stand/cabinet in inside tileset
+        return { tile: { x: 4, y: 6 }, span: s2x2, inset: "inset-0" };
       case "bookshelf":
-        return { tile: { x: 8, y: 0 }, inset: defaultInset };
+        // (2,12) 2×2 = bookshelf with colorful books
+        return { tile: { x: 2, y: 12 }, span: s2x2, inset: "inset-0" };
       case "plant":
-        return { tile: { x: 7, y: 1 }, inset: defaultInset };
+        return null; // SVG fallback (no plant in inside tileset)
       case "rug":
-        return { tile: { x: 9, y: 12 }, inset: defaultInset };
+        // (12,14) 2×2 = pink rug/mat
+        return { tile: { x: 12, y: 14 }, span: s2x2, inset: "inset-0" };
 
-      // Bedroom
+      // === Bedroom ===
       case "bed": {
-        // 2-tile bed (head/foot)
+        // Blue bed at (6,2) spans 3×2. Show 2×2 portions:
         const c = connections.bed;
-        if (c.right && !c.left) return { tile: { x: 8, y: 7 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 9, y: 7 }, inset: "inset-0" };
-        return { tile: { x: 8, y: 7 }, inset: "inset-0" };
+        // Head (left end): headboard + pillow area
+        if (c.right && !c.left) return { tile: { x: 6, y: 2 }, span: s2x2, inset: "inset-0" };
+        // Foot (right end): middle + foot area
+        if (c.left && !c.right) return { tile: { x: 7, y: 2 }, span: s2x2, inset: "inset-0" };
+        // Single bed: show headboard
+        return { tile: { x: 6, y: 2 }, span: s2x2, inset: "inset-0" };
       }
 
-      // Kitchen
+      // === Kitchen ===
       case "fridge":
-        return { tile: { x: 7, y: 3 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
+        return null; // SVG fallback (no fridge in tileset)
       case "stove":
-        return { tile: { x: 6, y: 3 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
+        // (0,2) 2×2 = cooktop/oven area
+        return { tile: { x: 0, y: 2 }, span: s2x2, inset: "inset-0" };
       case "sink":
-        return { tile: { x: 2, y: 10 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
+        // (2,10) 2×2 = bathroom sink/vanity with basin
+        return { tile: { x: 2, y: 10 }, span: s2x2, inset: "inset-0" };
       case "chair":
-        return { tile: { x: 6, y: 1 }, rotation: renderInfo.chairRotation, inset: defaultInset };
+        return null; // SVG fallback
       case "table": {
+        // Orange counter at (0,0) spans 4×2. Show 2×2 portions:
         const c = connections.table;
-        if (c.right && !c.left) return { tile: { x: 0, y: 2 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 1, y: 2 }, inset: "inset-0" };
-        return { tile: { x: 0, y: 2 }, inset: "inset-0" };
+        if (c.right && !c.left) return { tile: { x: 0, y: 0 }, span: s2x2, inset: "inset-0" };
+        if (c.left && !c.right) return { tile: { x: 2, y: 0 }, span: s2x2, inset: "inset-0" };
+        return { tile: { x: 0, y: 0 }, span: s2x2, inset: "inset-0" };
       }
 
-      // Bathroom
+      // === Bathroom ===
       case "toilet":
-        return { tile: { x: 0, y: 8 }, inset: defaultInset };
+        return null; // SVG fallback (only 1×1 in tileset, too small)
       case "shower":
-        return { tile: { x: 4, y: 9 }, inset: "inset-0" };
+        // (4,4) 2×2 = purple curtain, works as shower curtain
+        return { tile: { x: 4, y: 4 }, span: s2x2, inset: "inset-0" };
 
-      // Office
+      // === Office ===
       case "desk": {
-        const c = connections.desk;
-        if (c.right && !c.left) return { tile: { x: 0, y: 13 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 1, y: 13 }, inset: "inset-0" };
-        return { tile: { x: 0, y: 13 }, inset: "inset-0" };
+        // (0,12) 2×2 = writing desk with drawer
+        return { tile: { x: 0, y: 12 }, span: s2x2, inset: "inset-0" };
       }
       case "computer":
-        return { tile: { x: 5, y: 2 }, inset: defaultInset };
+        // (4,2) 2×2 = monitors/screens on desk
+        return { tile: { x: 4, y: 2 }, span: s2x2, inset: "inset-0" };
 
-      // Fallback (keeps non-mapped assets working)
+      // Fallback (keeps non-mapped assets working via SVG)
       default:
         return null;
     }
@@ -241,7 +247,14 @@ export const GameCell = ({
               }}
             >
               {furnitureSprite ? (
-                <TileSprite tileX={furnitureSprite.tile.x} tileY={furnitureSprite.tile.y} tileset={furnitureSprite.tileset} className="w-full h-full" />
+                <TileSprite
+                  tileX={furnitureSprite.tile.x}
+                  tileY={furnitureSprite.tile.y}
+                  spanX={furnitureSprite.span?.x}
+                  spanY={furnitureSprite.span?.y}
+                  tileset={furnitureSprite.tileset}
+                  className="w-full h-full"
+                />
               ) : (
                 // Fallback to existing SVG icons for non-mapped assets
                 <FallbackAssetIcon className="w-full h-full" />

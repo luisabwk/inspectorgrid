@@ -17,6 +17,7 @@ import { assetDictionary } from "@/data/assetDictionary";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
+import { TileSprite, TilesetKey } from "./assets/TileSprite";
 
 // Convert rotation degrees to direction
 const rotationToDirection = (rotation: number): AssetDirection => {
@@ -87,6 +88,60 @@ export const GameCell = ({
   const displayAsset = isLonelySofa ? 'armchair' : cell.asset;
   const assetInfo = assetDictionary[displayAsset];
 
+  // Tileset sprite mapping — corrected coordinates with multi-tile spans
+  type SpriteInfo = { tileX: number; tileY: number; spanX: number; spanY: number; tileset: TilesetKey; rotation?: number };
+
+  const getFurnitureTile = (): SpriteInfo | null => {
+    if (isWallMarking || displayAsset === "empty") return null;
+
+    switch (displayAsset) {
+      // === CONNECTED ASSETS (different tile per connection side) ===
+      case "bed": {
+        const c = connections.bed;
+        if (c.right && !c.left) return { tileX: 6, tileY: 2, spanX: 2, spanY: 2, tileset: 'inside' };
+        if (c.left && !c.right) return { tileX: 8, tileY: 2, spanX: 1, spanY: 2, tileset: 'inside' };
+        return { tileX: 6, tileY: 2, spanX: 3, spanY: 2, tileset: 'inside' };
+      }
+      case "sofa": {
+        const c = connections.sofa;
+        if (c.right && !c.left) return { tileX: 4, tileY: 4, spanX: 1, spanY: 2, tileset: 'living' };
+        if (c.left && !c.right) return { tileX: 5, tileY: 4, spanX: 1, spanY: 2, tileset: 'living' };
+        return { tileX: 4, tileY: 4, spanX: 2, spanY: 2, tileset: 'living' };
+      }
+      case "table": {
+        const c = connections.table;
+        if (c.right && !c.left) return { tileX: 0, tileY: 0, spanX: 2, spanY: 2, tileset: 'inside' };
+        if (c.left && !c.right) return { tileX: 2, tileY: 0, spanX: 2, spanY: 2, tileset: 'inside' };
+        return { tileX: 0, tileY: 0, spanX: 2, spanY: 2, tileset: 'inside' };
+      }
+      case "desk": {
+        const c = connections.desk;
+        if (c.right && !c.left) return { tileX: 0, tileY: 0, spanX: 2, spanY: 2, tileset: 'furniture' };
+        if (c.left && !c.right) return { tileX: 1, tileY: 0, spanX: 2, spanY: 2, tileset: 'furniture' };
+        return { tileX: 0, tileY: 0, spanX: 2, spanY: 2, tileset: 'furniture' };
+      }
+
+      // === SINGLE-CELL ASSETS ===
+      case "armchair":  return { tileX: 8, tileY: 4, spanX: 2, spanY: 2, tileset: 'furniture' };
+      case "tv":        return { tileX: 6, tileY: 2, spanX: 2, spanY: 2, tileset: 'living' };
+      case "bookshelf": return { tileX: 8, tileY: 0, spanX: 2, spanY: 2, tileset: 'living' };
+      case "plant":     return { tileX: 5, tileY: 4, spanX: 1, spanY: 2, tileset: 'furniture' };
+      case "rug":       return { tileX: 12, tileY: 14, spanX: 2, spanY: 2, tileset: 'inside' };
+      case "computer":  return { tileX: 3, tileY: 0, spanX: 2, spanY: 2, tileset: 'furniture' };
+      case "chair":     return { tileX: 0, tileY: 6, spanX: 2, spanY: 2, tileset: 'furniture', rotation: renderInfo.chairRotation };
+      case "fridge":    return { tileX: 10, tileY: 0, spanX: 2, spanY: 2, tileset: 'inside', rotation: renderInfo.applianceRotation };
+      case "toilet":    return { tileX: 0, tileY: 8, spanX: 2, spanY: 2, tileset: 'inside' };
+      case "shower":    return { tileX: 2, tileY: 4, spanX: 2, spanY: 2, tileset: 'inside' };
+      case "stove":     return { tileX: 0, tileY: 2, spanX: 2, spanY: 2, tileset: 'inside', rotation: renderInfo.applianceRotation };
+      case "sink":      return { tileX: 2, tileY: 2, spanX: 2, spanY: 2, tileset: 'inside', rotation: renderInfo.applianceRotation };
+
+      default: return null;
+    }
+  };
+
+  const sprite = getFurnitureTile();
+
+  // SVG fallback for assets without tileset sprite
   // Render the correct SVG icon with connection/rotation props
   const renderAssetIcon = () => {
     if (isWallMarking || displayAsset === "empty") return null;
@@ -183,15 +238,29 @@ export const GameCell = ({
           <WallOverlay side="left" visible={walls.left} window={windows.left} door={doors.left} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
           <WallOverlay side="right" visible={walls.right} window={windows.right} door={doors.right} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
 
-          {/* Furniture layer (SVG icons with connection/rotation awareness) */}
+          {/* Furniture layer (tileset sprite primary, SVG fallback) */}
           {cell.asset !== "empty" && !isWallMarking && (
             <div
               className={cn(
-                "absolute flex items-center justify-center inset-1",
+                "absolute flex items-center justify-center",
+                sprite ? "inset-0" : "inset-1",
                 isOccupiable ? "opacity-80" : "opacity-90",
               )}
+              style={{
+                transform: sprite?.rotation ? `rotate(${sprite.rotation}deg)` : undefined,
+                transformOrigin: "center",
+              }}
             >
-              {renderAssetIcon()}
+              {sprite ? (
+                <TileSprite
+                  tileX={sprite.tileX} tileY={sprite.tileY}
+                  spanX={sprite.spanX} spanY={sprite.spanY}
+                  tileset={sprite.tileset}
+                  className="w-full h-full"
+                />
+              ) : (
+                renderAssetIcon()
+              )}
             </div>
           )}
 

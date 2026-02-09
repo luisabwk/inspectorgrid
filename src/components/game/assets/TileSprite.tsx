@@ -5,7 +5,7 @@
 export const TILESETS = {
   inside:    '/tiles/tileB_inside3.png',    // Beds, kitchen, rugs, windows, bathroom
   furniture: '/tiles/tileB_inside2.png',    // Chairs, fences, fireplaces, tables, plants
-  living:    '/tiles/living_decoration.png', // Windows, bookshelves, sofas, lamps, paintings
+  living:    '/tiles/tileB_inside1.png',     // Windows, bookshelves, sofas, lamps, paintings
 } as const;
 
 export type TilesetKey = keyof typeof TILESETS;

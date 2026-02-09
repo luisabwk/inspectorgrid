@@ -1,20 +1,33 @@
+/**
+ * Available tileset files in /public/tiles/.
+ * Each is 256x256px = 16x16 grid of 16px tiles.
+ */
+export const TILESETS = {
+  inside:    '/tiles/tileB_inside3.png',    // Original: beds, kitchen, rugs, windows
+  furniture: '/tiles/furniture_outdoor.png', // Desks, chairs, sofas, plants, benches, fences
+  living:    '/tiles/living_decoration.png', // Windows, bookshelves, sofas, lamps, paintings
+} as const;
+
+export type TilesetKey = keyof typeof TILESETS;
+
 interface TileSpriteProps {
-  tileX: number;      // Coluna do tile (0-indexed)
-  tileY: number;      // Linha do tile (0-indexed)
-  spanX?: number;     // Quantos tiles de largura (default: 1)
-  spanY?: number;     // Quantos tiles de altura (default: 1)
+  tileX: number;      // Tile column (0-indexed)
+  tileY: number;      // Tile row (0-indexed)
+  spanX?: number;     // Width in tiles (default: 1)
+  spanY?: number;     // Height in tiles (default: 1)
+  tileset?: TilesetKey | string; // Which tileset to use (key or raw path)
   className?: string;
 }
 
-const TOTAL_TILES = 16; // 16x16 grid of 16px tiles in a 256x256 tileset
+const TOTAL_TILES = 16; // 16x16 grid
 
 /**
- * Renders a region from the tileB_inside3.png spritesheet.
+ * Renders a region from a tileset spritesheet.
  *
  * Single tile:  <TileSprite tileX={0} tileY={0} />
- * Multi-tile:   <TileSprite tileX={6} tileY={2} spanX={3} spanY={2} /> (3x2 bed)
+ * Multi-tile:   <TileSprite tileX={6} tileY={2} spanX={3} spanY={2} />
+ * Other tileset: <TileSprite tileX={0} tileY={0} tileset="furniture" />
  *
- * The tileset is 256x256px = 16x16 grid of 16px tiles.
  * CSS background-position percentage formula:
  *   pos% = tileIndex / (totalTiles - span) * 100
  */
@@ -23,8 +36,14 @@ export const TileSprite = ({
   tileY,
   spanX = 1,
   spanY = 1,
+  tileset = 'inside',
   className
 }: TileSpriteProps) => {
+  // Resolve tileset path
+  const tilesetPath = tileset in TILESETS
+    ? TILESETS[tileset as TilesetKey]
+    : tileset;
+
   // backgroundSize: make spanX tiles fill 100% width, spanY tiles fill 100% height
   const bgSizeX = (TOTAL_TILES / spanX) * 100;
   const bgSizeY = (TOTAL_TILES / spanY) * 100;
@@ -44,7 +63,7 @@ export const TileSprite = ({
       style={{
         width: '100%',
         height: '100%',
-        backgroundImage: 'url(/tiles/tileB_inside3.png)',
+        backgroundImage: `url(${tilesetPath})`,
         backgroundSize: `${bgSizeX}% ${bgSizeY}%`,
         backgroundPosition: `${bgPosX}% ${bgPosY}%`,
         backgroundRepeat: 'no-repeat',

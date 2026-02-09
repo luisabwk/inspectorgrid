@@ -3,9 +3,9 @@
  * Each is 256x256px = 16x16 grid of 16px tiles.
  */
 export const TILESETS = {
-  inside:    '/tiles/tileB_inside3.png',    // Original: beds, kitchen, rugs, windows
-  furniture: '/tiles/furniture_outdoor.png', // Desks, chairs, sofas, plants, benches, fences
-  living:    '/tiles/living_decoration.png', // Windows, bookshelves, sofas, lamps, paintings
+  inside:    '/tiles/tileB_inside3.png',    // Beds, kitchen, rugs, windows, bathroom
+  furniture: '/tiles/tileB_inside2.png',    // Chairs, fences, fireplaces, tables, plants
+  living:    '/tiles/tileB_inside1.png',     // Windows, bookshelves, sofas, lamps, paintings
 } as const;
 
 export type TilesetKey = keyof typeof TILESETS;

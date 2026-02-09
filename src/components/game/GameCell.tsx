@@ -96,74 +96,77 @@ export const GameCell = ({
 
   type TileCoord = { x: number; y: number };
 
-  const getFurnitureTile = (): { tile: TileCoord; rotation?: number; inset?: "inset-0" | "inset-1" } | null => {
+  const getFurnitureTile = (): { tile: TileCoord; rotation?: number; insetClass?: string; scale?: number } | null => {
     // Doors/windows remain as overlays for now
     if (isWallMarking) return null;
     if (displayAsset === "empty") return null;
 
-    // Most sprites look best with a small padding, but kitchen/big items can fill the cell.
-    const defaultInset: "inset-0" | "inset-1" = "inset-1";
+    // Most sprites look best with a bit of padding to avoid touching grid lines.
+    const defaultInsetClass = "inset-[3px]";
+    const tightInsetClass = "inset-[2px]";
+    const looseInsetClass = "inset-[4px]";
 
     switch (displayAsset) {
       // Living room
       case "sofa": {
         // 2-tile couch (left/right)
         const c = connections.sofa;
-        if (c.right && !c.left) return { tile: { x: 9, y: 6 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 10, y: 6 }, inset: "inset-0" };
-        return { tile: { x: 9, y: 6 }, inset: "inset-0" };
+        if (c.right && !c.left) return { tile: { x: 9, y: 6 }, insetClass: tightInsetClass };
+        if (c.left && !c.right) return { tile: { x: 10, y: 6 }, insetClass: tightInsetClass };
+        return { tile: { x: 9, y: 6 }, insetClass: tightInsetClass };
       }
       case "armchair":
-        return { tile: { x: 1, y: 3 }, inset: defaultInset };
+        return { tile: { x: 1, y: 3 }, insetClass: defaultInsetClass };
       case "tv":
-        return { tile: { x: 4, y: 6 }, inset: defaultInset };
+        return { tile: { x: 4, y: 6 }, insetClass: looseInsetClass };
       case "bookshelf":
-        return { tile: { x: 8, y: 0 }, inset: defaultInset };
+        return { tile: { x: 8, y: 0 }, insetClass: defaultInsetClass };
       case "plant":
-        return { tile: { x: 7, y: 1 }, inset: defaultInset };
+        return { tile: { x: 7, y: 1 }, insetClass: looseInsetClass };
       case "rug":
-        return { tile: { x: 9, y: 12 }, inset: defaultInset };
+        return { tile: { x: 9, y: 12 }, insetClass: defaultInsetClass, scale: 0.96 };
 
       // Bedroom
       case "bed": {
         // 2-tile bed (head/foot)
         const c = connections.bed;
-        if (c.right && !c.left) return { tile: { x: 8, y: 7 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 9, y: 7 }, inset: "inset-0" };
-        return { tile: { x: 8, y: 7 }, inset: "inset-0" };
+        // Use the "body" row so it reads well in a single-tile cell height.
+        if (c.right && !c.left) return { tile: { x: 8, y: 3 }, insetClass: tightInsetClass };
+        if (c.left && !c.right) return { tile: { x: 9, y: 3 }, insetClass: tightInsetClass };
+        return { tile: { x: 8, y: 3 }, insetClass: tightInsetClass };
       }
 
       // Kitchen
       case "fridge":
-        return { tile: { x: 7, y: 3 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
+        return { tile: { x: 7, y: 3 }, rotation: renderInfo.applianceRotation, insetClass: defaultInsetClass };
       case "stove":
-        return { tile: { x: 6, y: 3 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
+        return { tile: { x: 6, y: 3 }, rotation: renderInfo.applianceRotation, insetClass: defaultInsetClass };
       case "sink":
-        return { tile: { x: 2, y: 10 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
+        return { tile: { x: 2, y: 10 }, rotation: renderInfo.applianceRotation, insetClass: defaultInsetClass };
       case "chair":
-        return { tile: { x: 6, y: 1 }, rotation: renderInfo.chairRotation, inset: defaultInset };
+        return { tile: { x: 6, y: 1 }, rotation: renderInfo.chairRotation, insetClass: looseInsetClass };
       case "table": {
         const c = connections.table;
-        if (c.right && !c.left) return { tile: { x: 0, y: 2 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 1, y: 2 }, inset: "inset-0" };
-        return { tile: { x: 0, y: 2 }, inset: "inset-0" };
+        if (c.right && !c.left) return { tile: { x: 0, y: 2 }, insetClass: tightInsetClass };
+        if (c.left && !c.right) return { tile: { x: 1, y: 2 }, insetClass: tightInsetClass };
+        return { tile: { x: 0, y: 2 }, insetClass: tightInsetClass };
       }
 
       // Bathroom
       case "toilet":
-        return { tile: { x: 0, y: 8 }, inset: defaultInset };
+        return { tile: { x: 0, y: 8 }, insetClass: defaultInsetClass };
       case "shower":
-        return { tile: { x: 4, y: 9 }, inset: "inset-0" };
+        return { tile: { x: 4, y: 9 }, insetClass: tightInsetClass };
 
       // Office
       case "desk": {
         const c = connections.desk;
-        if (c.right && !c.left) return { tile: { x: 0, y: 13 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 1, y: 13 }, inset: "inset-0" };
-        return { tile: { x: 0, y: 13 }, inset: "inset-0" };
+        if (c.right && !c.left) return { tile: { x: 0, y: 13 }, insetClass: tightInsetClass };
+        if (c.left && !c.right) return { tile: { x: 1, y: 13 }, insetClass: tightInsetClass };
+        return { tile: { x: 0, y: 13 }, insetClass: tightInsetClass };
       }
       case "computer":
-        return { tile: { x: 5, y: 2 }, inset: defaultInset };
+        return { tile: { x: 5, y: 2 }, insetClass: looseInsetClass };
 
       // Fallback (keeps non-mapped assets working)
       default:
@@ -232,11 +235,17 @@ export const GameCell = ({
             <div
               className={cn(
                 "absolute flex items-center justify-center",
-                furnitureSprite?.inset ?? "inset-1",
+                furnitureSprite?.insetClass ?? "inset-[3px]",
                 isOccupiable ? "opacity-80" : "opacity-90",
               )}
               style={{
-                transform: furnitureSprite?.rotation ? `rotate(${furnitureSprite.rotation}deg)` : undefined,
+                transform: (() => {
+                  const parts: string[] = [];
+                  if (furnitureSprite?.rotation) parts.push(`rotate(${furnitureSprite.rotation}deg)`);
+                  const scale = furnitureSprite?.scale ?? 1;
+                  if (scale !== 1) parts.push(`scale(${scale})`);
+                  return parts.length ? parts.join(" ") : undefined;
+                })(),
                 transformOrigin: "center",
               }}
             >

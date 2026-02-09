@@ -1,12 +1,22 @@
 import { Cell, Suspect, isCellOccupiable, CellRenderInfo } from "@/types/game";
 import { cn } from "@/lib/utils";
-import { AssetDirection, AssetIconMap } from "./assets/AssetIcons";
+import {
+  AssetDirection,
+  AssetIconMap,
+  BedIcon,
+  SofaIcon,
+  TableIcon,
+  DeskIcon,
+  StoveIcon,
+  SinkIcon,
+  ChairIcon,
+  FridgeIcon,
+} from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
 import { assetDictionary } from "@/data/assetDictionary";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
-import { TileSprite, TilesetKey } from "./assets/TileSprite";
 
 // Convert rotation degrees to direction
 const rotationToDirection = (rotation: number): AssetDirection => {
@@ -68,25 +78,8 @@ export const GameCell = ({
   const isWallMarking = isWindowCell || isDoorCell;
   const isOccupiable = isCellOccupiable(cell);
 
-  // Connectable assets: rendered with connection-aware components
-  const isTableCell = cell.asset === 'table';
-  const isBedCell = cell.asset === 'bed';
-  const isSofaCell = cell.asset === 'sofa';
-  const isDeskCell = cell.asset === 'desk';
-  const isStoveCell = cell.asset === 'stove';
-  const isSinkCell = cell.asset === 'sink';
-  const isConnectableCounter = isStoveCell || isSinkCell;
-  const isConnectableAsset = isTableCell || isBedCell || isSofaCell || isDeskCell || isConnectableCounter;
-
-  // Rotatable assets: chair and fridge
-  const isChairCell = cell.asset === 'chair';
-  const isFridgeCell = cell.asset === 'fridge';
-  const isRotatableAsset = isChairCell || isFridgeCell;
-
-  // Computer overlays on desk
-  const isComputerCell = cell.asset === 'computer';
-
   // A lone sofa (no connections) renders as armchair
+  const isSofaCell = cell.asset === 'sofa';
   const conn = connections.sofa;
   const isLonelySofa = isSofaCell && !conn.top && !conn.bottom && !conn.left && !conn.right;
 
@@ -94,85 +87,48 @@ export const GameCell = ({
   const displayAsset = isLonelySofa ? 'armchair' : cell.asset;
   const assetInfo = assetDictionary[displayAsset];
 
-  type TileCoord = { x: number; y: number };
+  // Render the correct SVG icon with connection/rotation props
+  const renderAssetIcon = () => {
+    if (isWallMarking || displayAsset === "empty") return null;
 
-  const getFurnitureTile = (): { tile: TileCoord; rotation?: number; inset?: "inset-0" | "inset-1"; tileset?: TilesetKey } | null => {
-    // Doors/windows remain as overlays for now
-    if (isWallMarking) return null;
-    if (displayAsset === "empty") return null;
-
-    // Most sprites look best with a small padding, but kitchen/big items can fill the cell.
-    const defaultInset: "inset-0" | "inset-1" = "inset-1";
+    const iconClass = "w-full h-full";
+    const dir = (rotation: number): AssetDirection => rotationToDirection(rotation);
 
     switch (displayAsset) {
-      // Living room
-      case "sofa": {
-        // 2-tile couch (left/right)
-        const c = connections.sofa;
-        if (c.right && !c.left) return { tile: { x: 9, y: 6 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 10, y: 6 }, inset: "inset-0" };
-        return { tile: { x: 9, y: 6 }, inset: "inset-0" };
+      case 'bed':
+        return <BedIcon className={iconClass}
+          connectedTop={connections.bed.top} connectedBottom={connections.bed.bottom}
+          connectedLeft={connections.bed.left} connectedRight={connections.bed.right} />;
+      case 'sofa':
+        return <SofaIcon className={iconClass}
+          connectedTop={connections.sofa.top} connectedBottom={connections.sofa.bottom}
+          connectedLeft={connections.sofa.left} connectedRight={connections.sofa.right} />;
+      case 'table':
+        return <TableIcon className={iconClass}
+          connectedTop={connections.table.top} connectedBottom={connections.table.bottom}
+          connectedLeft={connections.table.left} connectedRight={connections.table.right} />;
+      case 'desk':
+        return <DeskIcon className={iconClass}
+          connectedTop={connections.desk.top} connectedBottom={connections.desk.bottom}
+          connectedLeft={connections.desk.left} connectedRight={connections.desk.right} />;
+      case 'stove':
+        return <StoveIcon className={iconClass} direction={dir(renderInfo.applianceRotation)}
+          connectedTop={connections.stove.top} connectedBottom={connections.stove.bottom}
+          connectedLeft={connections.stove.left} connectedRight={connections.stove.right} />;
+      case 'sink':
+        return <SinkIcon className={iconClass} direction={dir(renderInfo.applianceRotation)}
+          connectedTop={connections.sink.top} connectedBottom={connections.sink.bottom}
+          connectedLeft={connections.sink.left} connectedRight={connections.sink.right} />;
+      case 'chair':
+        return <ChairIcon className={iconClass} direction={dir(renderInfo.chairRotation)} />;
+      case 'fridge':
+        return <FridgeIcon className={iconClass} direction={dir(renderInfo.applianceRotation)} />;
+      default: {
+        const Icon = AssetIconMap[displayAsset];
+        return Icon ? <Icon className={iconClass} /> : null;
       }
-      case "armchair":
-        return { tile: { x: 1, y: 3 }, inset: defaultInset };
-      case "tv":
-        return { tile: { x: 4, y: 6 }, inset: defaultInset };
-      case "bookshelf":
-        return { tile: { x: 8, y: 0 }, inset: defaultInset };
-      case "plant":
-        return { tile: { x: 7, y: 1 }, inset: defaultInset };
-      case "rug":
-        return { tile: { x: 9, y: 12 }, inset: defaultInset };
-
-      // Bedroom
-      case "bed": {
-        // 2-tile bed (head/foot)
-        const c = connections.bed;
-        if (c.right && !c.left) return { tile: { x: 8, y: 7 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 9, y: 7 }, inset: "inset-0" };
-        return { tile: { x: 8, y: 7 }, inset: "inset-0" };
-      }
-
-      // Kitchen
-      case "fridge":
-        return { tile: { x: 7, y: 3 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
-      case "stove":
-        return { tile: { x: 6, y: 3 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
-      case "sink":
-        return { tile: { x: 2, y: 10 }, rotation: renderInfo.applianceRotation, inset: "inset-1" };
-      case "chair":
-        return { tile: { x: 6, y: 1 }, rotation: renderInfo.chairRotation, inset: defaultInset };
-      case "table": {
-        const c = connections.table;
-        if (c.right && !c.left) return { tile: { x: 0, y: 2 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 1, y: 2 }, inset: "inset-0" };
-        return { tile: { x: 0, y: 2 }, inset: "inset-0" };
-      }
-
-      // Bathroom
-      case "toilet":
-        return { tile: { x: 0, y: 8 }, inset: defaultInset };
-      case "shower":
-        return { tile: { x: 4, y: 9 }, inset: "inset-0" };
-
-      // Office
-      case "desk": {
-        const c = connections.desk;
-        if (c.right && !c.left) return { tile: { x: 0, y: 13 }, inset: "inset-0" };
-        if (c.left && !c.right) return { tile: { x: 1, y: 13 }, inset: "inset-0" };
-        return { tile: { x: 0, y: 13 }, inset: "inset-0" };
-      }
-      case "computer":
-        return { tile: { x: 5, y: 2 }, inset: defaultInset };
-
-      // Fallback (keeps non-mapped assets working)
-      default:
-        return null;
     }
   };
-
-  const FallbackAssetIcon = !isWallMarking ? AssetIconMap[cell.asset] : AssetIconMap["empty"];
-  const furnitureSprite = getFurnitureTile();
 
   const handleClick = () => {
     if (showInfo) setShowInfo(false);
@@ -227,25 +183,15 @@ export const GameCell = ({
           <WallOverlay side="left" visible={walls.left} window={windows.left} door={doors.left} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
           <WallOverlay side="right" visible={walls.right} window={windows.right} door={doors.right} wallWidth={WALL_WIDTH} wallColor={WALL_COLOR} />
 
-          {/* Furniture layer (tileset). Doors/windows remain as overlays above. */}
+          {/* Furniture layer (SVG icons with connection/rotation awareness) */}
           {cell.asset !== "empty" && !isWallMarking && (
             <div
               className={cn(
-                "absolute flex items-center justify-center",
-                furnitureSprite?.inset ?? "inset-1",
+                "absolute flex items-center justify-center inset-1",
                 isOccupiable ? "opacity-80" : "opacity-90",
               )}
-              style={{
-                transform: furnitureSprite?.rotation ? `rotate(${furnitureSprite.rotation}deg)` : undefined,
-                transformOrigin: "center",
-              }}
             >
-              {furnitureSprite ? (
-                <TileSprite tileX={furnitureSprite.tile.x} tileY={furnitureSprite.tile.y} tileset={furnitureSprite.tileset} className="w-full h-full" />
-              ) : (
-                // Fallback to existing SVG icons for non-mapped assets
-                <FallbackAssetIcon className="w-full h-full" />
-              )}
+              {renderAssetIcon()}
             </div>
           )}
 

@@ -31,9 +31,8 @@ const buildGrid = (): Cell[][] => {
   return grid;
 };
 
-// Note: tests intentionally omit `isVictim` so the victim-killer adjacency rule is
-// vacuously satisfied. That rule is mutually exclusive with the global Sudoku rule
-// (orthogonal neighbors always share a row or column) — see TODO in the work order.
+// Most tests omit `isVictim` so the victim-killer rule is vacuously satisfied; the
+// dedicated victim tests opt in via a spread.
 const baseSuspects: Suspect[] = [
   { id: "s1", name: "Alice", portraitId: "portrait1", color: "hsl(0 0% 0%)" },
   { id: "s2", name: "Bob", portraitId: "portrait2", color: "hsl(0 0% 0%)" },
@@ -199,10 +198,9 @@ describe("solvePuzzle", () => {
     expect(result.solutionCount).toBe(0);
   });
 
-  it("enforces victim-killer adjacency (rejects when victim has zero neighbors)", () => {
-    // Pin s1 at (0,0), s2 at (3,1), s3 (victim) at (1,2). Sudoku-valid (all rows/cols
-    // distinct). None of s1/s2 sits at a cell orthogonally adjacent to s3 → victim has
-    // 0 neighbors → must reject.
+  it("rejects when more than one other suspect shares the victim's room", () => {
+    // All 3 suspects forced into the same single-room grid → victim has 2 same-room
+    // suspects, but the rule requires exactly 1 (the killer).
     const grid: Cell[][] = [];
     for (let r = 0; r < 4; r++) {
       const row: Cell[] = [];
@@ -216,7 +214,7 @@ describe("solvePuzzle", () => {
     grid[1][2].asset = "rug";
 
     const gameCase: GameCase = {
-      id: "victim",
+      id: "victim-too-many",
       title: "",
       description: "",
       difficulty: 1,
@@ -254,5 +252,69 @@ describe("solvePuzzle", () => {
 
     const result = solvePuzzle(gameCase);
     expect(result.solutionCount).toBe(0);
+  });
+
+  it("accepts when exactly one other suspect shares the victim's room", () => {
+    // Two-room grid: s1 (killer) and s3 (victim) in room A; s2 in room B → victim
+    // has exactly 1 same-room suspect → solvable.
+    const grid: Cell[][] = [];
+    for (let r = 0; r < 4; r++) {
+      const row: Cell[] = [];
+      for (let c = 0; c < 4; c++) {
+        row.push(makeCell(r, c, "empty", r < 2 ? "A" : "B"));
+      }
+      grid.push(row);
+    }
+    grid[0][0].asset = "bed";   // room A, row 0, col 0
+    grid[1][2].asset = "rug";   // room A, row 1, col 2 — victim
+    grid[3][1].asset = "sofa";  // room B, row 3, col 1
+
+    const gameCase: GameCase = {
+      id: "victim-ok",
+      title: "",
+      description: "",
+      difficulty: 1,
+      gridSize: 4,
+      layoutConfig: {
+        cells: grid,
+        rooms: [
+          { id: "A", name: "A", color: "" },
+          { id: "B", name: "B", color: "" },
+        ],
+      },
+      suspects: [
+        baseSuspects[0],
+        baseSuspects[1],
+        { ...baseSuspects[2], isVictim: true },
+      ],
+      clues: [
+        {
+          id: "c1",
+          text: "",
+          type: "position",
+          constraint: { kind: "on_asset", suspectId: "s1", assetType: "bed" },
+        },
+        {
+          id: "c2",
+          text: "",
+          type: "position",
+          constraint: { kind: "on_asset", suspectId: "s2", assetType: "sofa" },
+        },
+        {
+          id: "c3",
+          text: "",
+          type: "position",
+          constraint: { kind: "on_asset", suspectId: "s3", assetType: "rug" },
+        },
+      ],
+    };
+
+    const result = solvePuzzle(gameCase);
+    expect(result.solutionCount).toBe(1);
+    expect(result.solution).toEqual({
+      "0-0": "s1",
+      "3-1": "s2",
+      "1-2": "s3",
+    });
   });
 });

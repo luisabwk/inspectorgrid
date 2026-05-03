@@ -94,14 +94,14 @@ export function solvePuzzle(gameCase: GameCase): SolveResult {
     const victimCell = placement.get(victim.id);
     if (!victimCell) return false;
 
-    let neighbors = 0;
+    let sameRoom = 0;
     for (const s of suspects) {
       if (s.id === victim.id) continue;
       const c = placement.get(s.id);
-      if (c && areAdjacent(victimCell, c, grid)) neighbors++;
-      if (neighbors > 1) return false;
+      if (c && c.roomId === victimCell.roomId) sameRoom++;
+      if (sameRoom > 1) return false;
     }
-    return neighbors === 1;
+    return sameRoom === 1;
   };
 
   const snapshotPlacement = (): PlacementState => {

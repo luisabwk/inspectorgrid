@@ -17,8 +17,13 @@ const authSchema = z.object({
   displayName: z.string().min(2, "Nome deve ter pelo menos 2 caracteres").optional(),
 });
 
+const emailSchema = z.object({
+  email: z.string().email("Email inválido"),
+});
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -93,9 +98,60 @@ const Auth = () => {
     }
   };
 
+  const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      emailSchema.parse({ email });
+      setErrors({});
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as string] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        toast({
+          title: "Erro ao enviar email",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Email enviado!",
+        description: "Verifique sua caixa de entrada para redefinir sua senha.",
+      });
+      setIsForgotPassword(false);
+    } catch (error) {
+      toast({
+        title: "Erro inesperado",
+        description: "Algo deu errado. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -193,12 +249,67 @@ const Auth = () => {
               InspectorGrid
             </CardTitle>
             <CardDescription className="text-muted-foreground mt-2 font-pixel text-base">
-              {isLogin ? "Entre para continuar sua investigação" : "Registre-se para começar a investigar"}
+              {isForgotPassword
+                ? "Digite seu email para receber o link de recuperação"
+                : isLogin
+                ? "Entre para continuar sua investigação"
+                : "Registre-se para começar a investigar"}
             </CardDescription>
           </div>
         </CardHeader>
 
         <CardContent>
+          {isForgotPassword ? (
+            <form onSubmit={handleForgotPasswordSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-foreground font-pixel text-base">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="detetive@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pixel-input"
+                  disabled={isLoading}
+                />
+                {errors.email && (
+                  <p className="text-sm text-destructive font-pixel">{errors.email}</p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full pixel-btn text-lg h-12"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  "Enviar link de recuperação"
+                )}
+              </Button>
+
+              <div className="mt-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsForgotPassword(false);
+                    setErrors({});
+                  }}
+                  className="text-base text-muted-foreground hover:text-primary transition-colors font-pixel"
+                  disabled={isLoading}
+                >
+                  Voltar para <span className="text-primary font-bold">login</span>
+                </button>
+              </div>
+            </form>
+          ) : (
+          <>
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
@@ -262,6 +373,22 @@ const Auth = () => {
               </div>
               {errors.password && (
                 <p className="text-sm text-destructive font-pixel">{errors.password}</p>
+              )}
+              {isLogin && (
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsForgotPassword(true);
+                      setErrors({});
+                      setPassword("");
+                    }}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors font-pixel"
+                    disabled={isLoading || isGoogleLoading}
+                  >
+                    Esqueci minha senha
+                  </button>
+                </div>
               )}
             </div>
 
@@ -337,6 +464,8 @@ const Auth = () => {
               )}
             </button>
           </div>
+          </>
+          )}
         </CardContent>
       </Card>
     </div>

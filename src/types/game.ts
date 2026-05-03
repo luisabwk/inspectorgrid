@@ -62,11 +62,25 @@ export interface LayoutConfig {
   }[];
 }
 
+// Machine-readable constraint encoded by each Clue. The solver consumes this.
+export type ClueConstraint =
+  | { kind: 'in_room'; suspectId: string; roomId: string }
+  | { kind: 'not_in_room'; suspectId: string; roomId: string }
+  | { kind: 'on_asset'; suspectId: string; assetType: AssetType }
+  | { kind: 'not_on_asset'; suspectId: string; assetType: AssetType }
+  | { kind: 'adjacent_to_suspect'; suspectId: string; targetSuspectId: string }
+  | { kind: 'not_adjacent_to_suspect'; suspectId: string; targetSuspectId: string }
+  | { kind: 'adjacent_to_asset'; suspectId: string; assetType: AssetType }
+  | { kind: 'same_room_as'; suspectId: string; targetSuspectId: string }
+  | { kind: 'in_corner'; suspectId: string }
+  | { kind: 'in_last_row_of_room'; suspectId: string; roomId: string };
+
 // Clue for the puzzle
 export interface Clue {
   id: string;
   text: string;
   type: 'position' | 'adjacency' | 'room' | 'negation';
+  constraint: ClueConstraint;
 }
 
 // Game case/puzzle

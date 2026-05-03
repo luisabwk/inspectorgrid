@@ -108,11 +108,41 @@ export const testCase: GameCase = {
     { id: 'suspect-6', name: 'Vitória', portraitId: 'portrait6', color: 'hsl(340 60% 55%)', isVictim: true },
   ],
   clues: [
-    { id: 'clue-1', text: 'Alberto estava relaxando no sofá da sala quando ouviu o grito.', type: 'position' },
-    { id: 'clue-2', text: 'Beatriz estava dormindo no quarto.', type: 'room' },
-    { id: 'clue-3', text: 'Carlos estava no corredor, mas não perto da cozinha.', type: 'position' },
-    { id: 'clue-4', text: 'Diana não estava adjacente a nenhuma parede externa.', type: 'position' },
-    { id: 'clue-5', text: 'Eduardo estava próximo à cozinha, mas não dentro dela.', type: 'adjacency' },
-    { id: 'clue-6', text: 'Vitória foi vista pela última vez no escritório.', type: 'room' },
+    {
+      id: 'clue-1',
+      text: 'Alberto estava relaxando no sofá da sala quando ouviu o grito.',
+      type: 'position',
+      constraint: { kind: 'on_asset', suspectId: 'suspect-1', assetType: 'sofa' },
+    },
+    {
+      id: 'clue-2',
+      text: 'Beatriz estava dormindo no quarto.',
+      type: 'room',
+      constraint: { kind: 'in_room', suspectId: 'suspect-2', roomId: 'bedroom' },
+    },
+    {
+      id: 'clue-3',
+      text: 'Carlos estava no corredor, mas não perto da cozinha.',
+      type: 'position',
+      constraint: { kind: 'in_room', suspectId: 'suspect-3', roomId: 'corridor' },
+    },
+    {
+      id: 'clue-4',
+      text: 'Diana não estava adjacente a nenhuma parede externa.',
+      type: 'position',
+      constraint: { kind: 'not_in_room', suspectId: 'suspect-4', roomId: 'corridor' },
+    },
+    {
+      id: 'clue-5',
+      text: 'Eduardo estava próximo à cozinha, mas não dentro dela.',
+      type: 'adjacency',
+      constraint: { kind: 'adjacent_to_asset', suspectId: 'suspect-5', assetType: 'door' },
+    },
+    {
+      id: 'clue-6',
+      text: 'Vitória foi vista pela última vez no escritório.',
+      type: 'room',
+      constraint: { kind: 'in_room', suspectId: 'suspect-6', roomId: 'study' },
+    },
   ],
 };

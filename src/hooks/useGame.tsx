@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { GameCase, GameState, PlacementState, PencilMarks, getCellKey, isCellOccupiable } from "@/types/game";
-import { supabase } from "@/integrations/supabase/client";
+import { useApi } from "@/hooks/useApi";
 
 export const useGame = (gameCase: GameCase | null) => {
+  const api = useApi();
   const [placements, setPlacements] = useState<PlacementState>({});
   const [pencilMarks, setPencilMarks] = useState<PencilMarks>({});
   const [selectedSuspect, setSelectedSuspect] = useState<string | null>(null);
@@ -182,45 +183,43 @@ export const useGame = (gameCase: GameCase | null) => {
     if (!gameCase) return { valid: false, message: 'Caso não carregado' };
     
     try {
-      // Convert placements to the format expected by the server
-      // Filter out null values and create a clean JSONB object
       const cleanPlacements: Record<string, string> = {};
       for (const [cellKey, suspectId] of Object.entries(placements)) {
         if (suspectId) {
           cleanPlacements[cellKey] = suspectId;
         }
       }
-      
-      const { data, error } = await supabase.rpc('verify_case_solution', {
-        _case_id: gameCase.id,
-        _placements: cleanPlacements,
-        _time_taken: timeTakenSeconds ?? null
+
+      const res = await api(`/api/verify/${gameCase.id}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          placements: cleanPlacements,
+          timeTaken: timeTakenSeconds ?? null,
+        }),
       });
-      
-      if (error) {
-        console.error('Solution verification error:', error);
-        return { valid: false, message: 'Erro ao verificar solução. Tente novamente.' };
-      }
-      
-      // Parse the response - it comes as a JSON object
-      const result = data as { 
-        valid?: boolean; 
+
+      const result = (await res.json()) as {
+        valid?: boolean;
         message?: string;
         score?: number;
-        already_completed?: boolean;
-      } | null;
-      
+        alreadyCompleted?: boolean;
+      };
+
+      if (!res.ok) {
+        return { valid: false, message: result?.message ?? 'Erro ao verificar solução. Tente novamente.' };
+      }
+
       return {
-        valid: result?.valid ?? false,
-        message: result?.message ?? 'Erro desconhecido',
-        score: result?.score,
-        alreadyCompleted: result?.already_completed
+        valid: result.valid ?? false,
+        message: result.message ?? 'Erro desconhecido',
+        score: result.score,
+        alreadyCompleted: result.alreadyCompleted,
       };
     } catch (err) {
       console.error('Solution check failed:', err);
       return { valid: false, message: 'Erro ao verificar solução. Tente novamente.' };
     }
-  }, [placements, gameCase]);
+  }, [placements, gameCase, api]);
 
   return {
     placements,

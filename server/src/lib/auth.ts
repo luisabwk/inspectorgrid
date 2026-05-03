@@ -4,11 +4,26 @@ import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import { db } from "../db/client.js";
 import { profiles, type Profile } from "../db/schema.js";
+import { clerk } from "./clerk.js";
 
 export type AuthVariables = {
   userId: string;
   profile: Profile;
 };
+
+export const requireAdmin = createMiddleware<{ Variables: AuthVariables }>(
+  async (c, next) => {
+    const userId = c.get("userId");
+    if (!userId) {
+      throw new HTTPException(401, { message: "Não autenticado" });
+    }
+    const user = await clerk.users.getUser(userId);
+    if (user.publicMetadata?.role !== "admin") {
+      throw new HTTPException(403, { message: "Acesso restrito a admins" });
+    }
+    await next();
+  }
+);
 
 export const requireAuth = createMiddleware<{ Variables: AuthVariables }>(
   async (c, next) => {

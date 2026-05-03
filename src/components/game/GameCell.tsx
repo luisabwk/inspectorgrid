@@ -1,33 +1,12 @@
 import { Cell, Suspect, isCellOccupiable, CellRenderInfo } from "@/types/game";
 import { cn } from "@/lib/utils";
-import {
-  AssetDirection,
-  AssetIconMap,
-  BedIcon,
-  SofaIcon,
-  TableIcon,
-  DeskIcon,
-  StoveIcon,
-  SinkIcon,
-  ChairIcon,
-  FridgeIcon,
-} from "./assets/AssetIcons";
+import { AssetIcon } from "./assets/AssetIcons";
 import { PortraitMap } from "./assets/SuspectPortraits";
 import { assetDictionary } from "@/data/assetDictionary";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
 import { TileSprite, TilesetKey } from "./assets/TileSprite";
-
-// Convert rotation degrees to direction
-const rotationToDirection = (rotation: number): AssetDirection => {
-  const normalized = ((rotation % 360) + 360) % 360;
-  if (normalized === 0) return 'down';
-  if (normalized === 90) return 'left';
-  if (normalized === 180) return 'up';
-  if (normalized === 270) return 'right';
-  return 'down';
-};
 
 interface GameCellProps {
   cell: Cell;
@@ -144,44 +123,7 @@ export const GameCell = ({
   // SVG fallback for assets without tileset sprite
   const renderAssetIcon = () => {
     if (isWallMarking || displayAsset === "empty") return null;
-
-    const iconClass = "w-full h-full";
-    const dir = (rotation: number): AssetDirection => rotationToDirection(rotation);
-
-    switch (displayAsset) {
-      case 'bed':
-        return <BedIcon className={iconClass}
-          connectedTop={connections.bed.top} connectedBottom={connections.bed.bottom}
-          connectedLeft={connections.bed.left} connectedRight={connections.bed.right} />;
-      case 'sofa':
-        return <SofaIcon className={iconClass}
-          connectedTop={connections.sofa.top} connectedBottom={connections.sofa.bottom}
-          connectedLeft={connections.sofa.left} connectedRight={connections.sofa.right} />;
-      case 'table':
-        return <TableIcon className={iconClass}
-          connectedTop={connections.table.top} connectedBottom={connections.table.bottom}
-          connectedLeft={connections.table.left} connectedRight={connections.table.right} />;
-      case 'desk':
-        return <DeskIcon className={iconClass}
-          connectedTop={connections.desk.top} connectedBottom={connections.desk.bottom}
-          connectedLeft={connections.desk.left} connectedRight={connections.desk.right} />;
-      case 'stove':
-        return <StoveIcon className={iconClass} direction={dir(renderInfo.applianceRotation)}
-          connectedTop={connections.stove.top} connectedBottom={connections.stove.bottom}
-          connectedLeft={connections.stove.left} connectedRight={connections.stove.right} />;
-      case 'sink':
-        return <SinkIcon className={iconClass} direction={dir(renderInfo.applianceRotation)}
-          connectedTop={connections.sink.top} connectedBottom={connections.sink.bottom}
-          connectedLeft={connections.sink.left} connectedRight={connections.sink.right} />;
-      case 'chair':
-        return <ChairIcon className={iconClass} direction={dir(renderInfo.chairRotation)} />;
-      case 'fridge':
-        return <FridgeIcon className={iconClass} direction={dir(renderInfo.applianceRotation)} />;
-      default: {
-        const Icon = AssetIconMap[displayAsset];
-        return Icon ? <Icon className={iconClass} /> : null;
-      }
-    }
+    return <AssetIcon assetType={displayAsset} className="w-full h-full" />;
   };
 
   const handleClick = () => {

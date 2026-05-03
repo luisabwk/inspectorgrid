@@ -56,6 +56,51 @@ export type Database = {
         }
         Relationships: []
       }
+      game_cases: {
+        Row: {
+          clues: Json
+          created_at: string | null
+          description: string | null
+          difficulty: number
+          grid_size: number
+          id: string
+          is_published: boolean | null
+          layout_config: Json
+          scene_name: string | null
+          solution: Json
+          suspects: Json
+          title: string
+        }
+        Insert: {
+          clues: Json
+          created_at?: string | null
+          description?: string | null
+          difficulty: number
+          grid_size: number
+          id?: string
+          is_published?: boolean | null
+          layout_config: Json
+          scene_name?: string | null
+          solution: Json
+          suspects: Json
+          title: string
+        }
+        Update: {
+          clues?: Json
+          created_at?: string | null
+          description?: string | null
+          difficulty?: number
+          grid_size?: number
+          id?: string
+          is_published?: boolean | null
+          layout_config?: Json
+          scene_name?: string | null
+          solution?: Json
+          suspects?: Json
+          title?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -151,6 +196,48 @@ export type Database = {
       }
     }
     Views: {
+      game_cases_public: {
+        Row: {
+          clues: Json | null
+          created_at: string | null
+          description: string | null
+          difficulty: number | null
+          grid_size: number | null
+          id: string | null
+          is_published: boolean | null
+          layout_config: Json | null
+          scene_name: string | null
+          suspects: Json | null
+          title: string | null
+        }
+        Insert: {
+          clues?: Json | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: number | null
+          grid_size?: number | null
+          id?: string | null
+          is_published?: boolean | null
+          layout_config?: Json | null
+          scene_name?: string | null
+          suspects?: Json | null
+          title?: string | null
+        }
+        Update: {
+          clues?: Json | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: number | null
+          grid_size?: number | null
+          id?: string | null
+          is_published?: boolean | null
+          layout_config?: Json | null
+          scene_name?: string | null
+          suspects?: Json | null
+          title?: string | null
+        }
+        Relationships: []
+      }
       cases_public: {
         Row: {
           clues: Json | null

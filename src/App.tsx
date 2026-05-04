@@ -7,6 +7,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Game from "./pages/Game";
+import Generate from "./pages/Generate";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <Game />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/generate"
+            element={
+              <ProtectedRoute>
+                <Generate />
               </ProtectedRoute>
             }
           />

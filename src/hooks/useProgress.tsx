@@ -1,41 +1,27 @@
 import { useCallback } from "react";
-import { useAuth } from "./useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@clerk/clerk-react";
+import { useApi } from "@/hooks/useApi";
+import { parseJson } from "@/lib/api";
 
-/**
- * Hook for retrieving player statistics.
- * 
- * NOTE: Progress recording is handled server-side via the verify_case_solution RPC.
- * This hook only provides read access to player stats.
- */
+interface PlayerStats {
+  level: number;
+  totalScore: number;
+  completedCases: number;
+}
+
 export const useProgress = () => {
-  const { user } = useAuth();
-  const userId = user?.id;
+  const { isSignedIn } = useAuth();
+  const api = useApi();
 
-  const getPlayerStats = useCallback(async () => {
-    if (!userId) return null;
-
+  const getPlayerStats = useCallback(async (): Promise<PlayerStats | null> => {
+    if (!isSignedIn) return null;
     try {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("current_level, total_score")
-        .eq("user_id", userId)
-        .maybeSingle();
-
-      const { count } = await supabase
-        .from("progress")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", userId);
-
-      return {
-        level: profile?.current_level || 1,
-        totalScore: profile?.total_score || 0,
-        completedCases: count || 0,
-      };
+      const res = await api("/api/progress/stats");
+      return await parseJson<PlayerStats>(res);
     } catch {
       return null;
     }
-  }, [userId]);
+  }, [api, isSignedIn]);
 
   return { getPlayerStats };
 };

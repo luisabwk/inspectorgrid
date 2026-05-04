@@ -1,5 +1,3 @@
-import { supabase } from "@/integrations/supabase/client";
-import type { Json } from "@/integrations/supabase/types";
 import type {
   GameCase,
   LayoutConfig,
@@ -7,77 +5,86 @@ import type {
   Clue,
   PlacementState,
 } from "@/types/game";
+import { type FetchAuthed, parseJson } from "@/lib/api";
 
-const toJson = <T,>(value: T): Json => value as unknown as Json;
-
-interface PublicRow {
+interface ApiCase {
   id: string;
   title: string;
-  description: string | null;
+  description: string;
   difficulty: number;
-  grid_size: number;
-  layout_config: unknown;
-  suspects: unknown;
-  clues: unknown;
+  gridSize: number;
+  layoutConfig: LayoutConfig;
+  suspects: Suspect[];
+  clues: Clue[];
 }
 
-const toGameCase = (row: PublicRow): GameCase => ({
+const transform = (row: ApiCase): GameCase => ({
   id: row.id,
   title: row.title,
-  description: row.description ?? "",
+  description: row.description,
   difficulty: row.difficulty,
-  gridSize: row.grid_size,
-  layoutConfig: row.layout_config as LayoutConfig,
-  suspects: row.suspects as Suspect[],
-  clues: row.clues as Clue[],
+  gridSize: row.gridSize,
+  layoutConfig: row.layoutConfig,
+  suspects: row.suspects,
+  clues: row.clues,
 });
 
-export async function getPublishedCases(): Promise<GameCase[]> {
-  const { data, error } = await supabase
-    .from("game_cases_public")
-    .select("id, title, description, difficulty, grid_size, layout_config, suspects, clues")
-    .order("difficulty", { ascending: true })
-    .order("created_at", { ascending: true });
-
-  if (error) throw error;
-  return (data ?? []).map((row) => toGameCase(row as unknown as PublicRow));
+export async function getPublishedCases(api: FetchAuthed): Promise<GameCase[]> {
+  const res = await api("/api/cases");
+  const data = await parseJson<ApiCase[]>(res);
+  return data.map(transform);
 }
 
-export async function getCaseById(id: string): Promise<GameCase> {
-  const { data, error } = await supabase
-    .from("game_cases_public")
-    .select("id, title, description, difficulty, grid_size, layout_config, suspects, clues")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (error) throw error;
-  if (!data) throw new Error(`Case ${id} not found`);
-  return toGameCase(data as unknown as PublicRow);
+export async function getCaseById(api: FetchAuthed, id: string): Promise<GameCase> {
+  const res = await api(`/api/cases/${encodeURIComponent(id)}`);
+  return transform(await parseJson<ApiCase>(res));
 }
+
+interface SaveBody {
+  title: string;
+  description: string;
+  difficulty: number;
+  gridSize: number;
+  layoutConfig: LayoutConfig;
+  suspects: Suspect[];
+  clues: Clue[];
+  solution: Record<string, { row: number; col: number }>;
+}
+
+// Backend stores `solution` as { suspectId: { row, col } }; the generator/solver
+// produce `PlacementState` as { "row-col": suspectId }. Translate before posting.
+const placementToBackendSolution = (
+  placement: PlacementState,
+): Record<string, { row: number; col: number }> => {
+  const out: Record<string, { row: number; col: number }> = {};
+  for (const [key, suspectId] of Object.entries(placement)) {
+    if (!suspectId) continue;
+    const [rowStr, colStr] = key.split("-");
+    out[suspectId] = { row: Number(rowStr), col: Number(colStr) };
+  }
+  return out;
+};
 
 export async function saveGeneratedCase(
+  api: FetchAuthed,
   gameCase: GameCase,
   solution: PlacementState,
   sceneName: string,
 ): Promise<string> {
-  const { data, error } = await supabase
-    .from("game_cases")
-    .insert({
-      title: gameCase.title,
-      description: gameCase.description,
-      difficulty: gameCase.difficulty,
-      grid_size: gameCase.gridSize,
-      layout_config: toJson(gameCase.layoutConfig),
-      suspects: toJson(gameCase.suspects),
-      clues: toJson(gameCase.clues),
-      solution: toJson(solution),
-      scene_name: sceneName,
-      is_published: true,
-    })
-    .select("id")
-    .single();
-
-  if (error) throw error;
-  if (!data) throw new Error("Insert returned no row");
-  return data.id;
+  const body: SaveBody = {
+    title: sceneName ? `${gameCase.title} — ${sceneName}` : gameCase.title,
+    description: gameCase.description,
+    difficulty: gameCase.difficulty,
+    gridSize: gameCase.gridSize,
+    layoutConfig: gameCase.layoutConfig,
+    suspects: gameCase.suspects,
+    clues: gameCase.clues,
+    solution: placementToBackendSolution(solution),
+  };
+  const res = await api("/api/cases", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+  const inserted = await parseJson<{ id: string }>(res);
+  return inserted.id;
 }

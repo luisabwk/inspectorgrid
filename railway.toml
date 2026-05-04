@@ -6,3 +6,6 @@ dockerfilePath = "Dockerfile"
 healthcheckPath = "/"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
+
+# Frontend service. The backend lives in /server (separate Railway service
+# pointed at root directory `server/` with its own Dockerfile/railway.toml).

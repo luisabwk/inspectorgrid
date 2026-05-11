@@ -15,7 +15,7 @@ COPY --from=build /app/package.json /app/package-lock.json* ./
 RUN npm install --omit=dev
 
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/drizzle ./drizzle
+COPY ./drizzle ./drizzle
 
 EXPOSE 8080
 CMD ["sh", "-c", "node dist/db/migrate.js && node dist/index.js"]
